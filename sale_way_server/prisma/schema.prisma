@@ -1,0 +1,137 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Notifications {
+  user_id    Int
+  branch_id  Int
+  title      String?   @db.VarChar(255)
+  message    String?   @db.VarChar(255)
+  created_at DateTime? @db.DateTime(0)
+  clicked    Int?      @db.TinyInt
+  clicked_at DateTime? @db.DateTime(0)
+  branches   branches  @relation(fields: [branch_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_users_has_branches_branches2")
+  users      users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_users_has_branches_users2")
+
+  @@id([user_id, branch_id])
+  @@index([branch_id], map: "fk_users_has_branches_branches2_idx")
+  @@index([user_id], map: "fk_users_has_branches_users2_idx")
+}
+
+model accesses {
+  user_id   Int
+  branch_id Int
+  branches  branches @relation(fields: [branch_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_users_has_branches_branches1")
+  users     users    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_users_has_branches_users1")
+
+  @@id([user_id, branch_id])
+  @@index([branch_id], map: "fk_users_has_branches_branches1_idx")
+  @@index([user_id], map: "fk_users_has_branches_users1_idx")
+}
+
+model branches {
+  id            Int             @id @default(autoincrement())
+  store_id      Int
+  name          String?         @db.VarChar(255)
+  phone         String?         @db.VarChar(255)
+  about         String?         @db.VarChar(255)
+  longitude     String?         @db.VarChar(255)
+  latitude      String?         @db.VarChar(255)
+  stores        stores          @relation(fields: [store_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_branches_stores1")
+  Notifications Notifications[]
+  accesses      accesses[]
+  products      products[]
+  store_types   store_types[]
+
+  @@index([store_id], map: "fk_branches_stores1_idx")
+}
+
+model categories {
+  id                 Int                  @id @default(autoincrement())
+  category           String?              @db.VarChar(255)
+  product_categories product_categories[]
+  store_types        store_types[]
+}
+
+model images {
+  id         Int      @id @default(autoincrement())
+  product_id Int
+  image      String?  @db.VarChar(255)
+  products   products @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_images_products1")
+
+  @@index([product_id], map: "fk_images_products1_idx")
+}
+
+model product_categories {
+  product_id  Int
+  category_id Int
+  categories  categories @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_products_has_categories_categories1")
+  products    products   @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_products_has_categories_products1")
+
+  @@id([product_id, category_id])
+  @@index([category_id], map: "fk_products_has_categories_categories1_idx")
+  @@index([product_id], map: "fk_products_has_categories_products1_idx")
+}
+
+model products {
+  id                 Int                  @id @default(autoincrement())
+  branch_id          Int
+  name               String?              @db.VarChar(255)
+  description        String?              @db.VarChar(255)
+  discount           String?              @db.VarChar(255)
+  created_at         DateTime?            @db.DateTime(0)
+  updated_at         DateTime?            @db.DateTime(0)
+  branches           branches             @relation(fields: [branch_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_products_branches1")
+  images             images[]
+  product_categories product_categories[]
+
+  @@index([branch_id], map: "fk_products_branches1_idx")
+}
+
+model store_types {
+  branch_id   Int
+  category_id Int
+  branches    branches   @relation(fields: [branch_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_branches_has_categories_branches1")
+  categories  categories @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_branches_has_categories_categories1")
+
+  @@id([branch_id, category_id])
+  @@index([branch_id], map: "fk_branches_has_categories_branches1_idx")
+  @@index([category_id], map: "fk_branches_has_categories_categories1_idx")
+}
+
+model stores {
+  id       Int        @id
+  name     String?    @db.VarChar(255)
+  about    String?    @db.VarChar(255)
+  phone    String?    @db.VarChar(255)
+  branches branches[]
+}
+
+model user_types {
+  id        Int     @id @default(autoincrement())
+  user_type String? @db.VarChar(255)
+  users     users[]
+}
+
+model users {
+  id            Int             @id @default(autoincrement())
+  email         String?         @db.VarChar(255)
+  password      String?         @db.VarChar(255)
+  name          String?         @db.VarChar(255)
+  profile       String?         @db.VarChar(255)
+  user_type     Int
+  created_at    DateTime?       @db.DateTime(0)
+  updated_at    DateTime?       @db.DateTime(0)
+  gender        String?         @db.VarChar(255)
+  DOB           DateTime?       @db.DateTime(0)
+  user_types    user_types      @relation(fields: [user_type], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_master_users_user_types1")
+  Notifications Notifications[]
+  accesses      accesses[]
+
+  @@index([user_type], map: "fk_master_users_user_types1_idx")
+}
