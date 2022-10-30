@@ -1,8 +1,27 @@
 const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 let Validator = require("validatorjs");
 
 const prisma = new PrismaClient();
+
+const login = async (req, res) => {
+	const { email, password } = req.body;
+
+	// getting user by email
+	const user = await prisma.users.findUnique({
+		where: {
+			email: email,
+		},
+	});
+	if (!user) return res.status(404).json({ message: "Invalid Credentials" });
+
+	// checking password
+	const isMatch = bcrypt.compare(password, user.password);
+	if (!isMatch)
+        return res.status(404).json({ message: "Invalid Credentials" });
+    
+};
 
 const signup = async (req, res) => {
 	const { name, email, password, user_type } = req.body;
@@ -57,13 +76,12 @@ const signup = async (req, res) => {
 					},
 				},
 			},
-        });
-        
+		});
+
 		res.status(200).json({
 			status: "done",
 			user: user,
-        });
-        
+		});
 	} catch (err) {
 		console.error(err);
 		res.status(400).json({
@@ -73,5 +91,6 @@ const signup = async (req, res) => {
 };
 
 module.exports = {
+	login,
 	signup,
 };
