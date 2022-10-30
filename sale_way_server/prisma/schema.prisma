@@ -12,8 +12,8 @@ model Notifications {
   branch_id  Int
   title      String?   @db.VarChar(255)
   message    String?   @db.VarChar(255)
-  created_at DateTime? @db.DateTime(0)
-  clicked    Int?      @db.TinyInt
+  created_at DateTime  @default(now())
+  clicked    Boolean   @default(false)
   clicked_at DateTime? @db.DateTime(0)
   branches   branches  @relation(fields: [branch_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_users_has_branches_branches2")
   users      users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_users_has_branches_users2")
@@ -84,8 +84,8 @@ model products {
   name               String?              @db.VarChar(255)
   description        String?              @db.VarChar(255)
   discount           String?              @db.VarChar(255)
-  created_at         DateTime?            @db.DateTime(0)
-  updated_at         DateTime?            @db.DateTime(0)
+  created_at         DateTime             @default(now())
+  updated_at         DateTime             @updatedAt
   branches           branches             @relation(fields: [branch_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_products_branches1")
   images             images[]
   product_categories product_categories[]
@@ -120,13 +120,13 @@ model user_types {
 
 model users {
   id            Int             @id @default(autoincrement())
-  email         String?         @db.VarChar(255)
-  password      String?         @db.VarChar(255)
-  name          String?         @db.VarChar(255)
+  email         String          @unique @db.VarChar(255)
+  password      String          @db.VarChar(255)
+  name          String          @db.VarChar(255)
   profile       String?         @db.VarChar(255)
   user_type     Int
-  created_at    DateTime?       @db.DateTime(0)
-  updated_at    DateTime?       @db.DateTime(0)
+  created_at    DateTime        @default(now())
+  updated_at    DateTime        @updatedAt
   gender        String?         @db.VarChar(255)
   DOB           DateTime?       @db.DateTime(0)
   user_types    user_types      @relation(fields: [user_type], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_master_users_user_types1")
