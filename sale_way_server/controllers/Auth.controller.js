@@ -34,10 +34,44 @@ const signup = async (req, res) => {
 				message: validation.errors.all(),
 			});
 		}
+
+		// getting user type id ftom user type input
+		const user_type_id = await prisma.user_types.findFirst({
+			where: {
+				user_type: user_type.toLowerCase(),
+			},
+			select: {
+				id: true,
+			},
+		});
+
+		// creating new user
+		const user = await prisma.users.create({
+			data: {
+				name: name,
+				email: email,
+				password: await bcrypt.hash(password, 10),
+				user_types: {
+					connect: {
+						id: user_type_id["id"],
+					},
+				},
+			},
+        });
+        
+		res.status(200).json({
+			status: "done",
+			user: user,
+        });
+        
 	} catch (err) {
 		console.error(err);
 		res.status(400).json({
 			message: err.message,
 		});
 	}
+};
+
+module.exports = {
+	signup,
 };
