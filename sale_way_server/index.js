@@ -4,6 +4,9 @@ require("dotenv").config();
 
 app.use(express.json());
 
+const userRoutes = require("./routes/auth.routes");
+app.use("/", userRoutes);
+
 // const userRoutes = require("./routes/users.routes");
 // app.use("/users", userRoutes);
 
