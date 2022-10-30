@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `stores` MODIFY `id` INTEGER NOT NULL AUTO_INCREMENT;
