@@ -35,9 +35,15 @@ const getAllProducts = async (req, res) => {
 			where: {
 				branch_id: { in: branches_id_array },
 			},
+			include: {
+				images: {
+					select: {
+						image: true,
+					},
+				},
+			},
 		});
 
-		// TODO: get images of products
 		res.status(200).json({ products: products });
 	} catch (err) {
 		console.error(err);
