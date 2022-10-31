@@ -80,7 +80,57 @@ const getProduct = async (req, res) => {
 	}
 };
 
+const productSearch = async (req, res) => {
+	try {
+		// getting search products
+		const products = await prisma.products.findMany({
+			where: {
+				// getting the user products only
+				branches: {
+					accesses: { some: { users: { email: req.email } } },
+				},
+				// matching the search words
+				OR: [
+					{
+						name: { contains: req.params.search },
+					},
+					{
+						description: { contains: req.params.search },
+					},
+					{
+						discount: { gte: req.params.search },
+					},
+					{
+						product_categories: {
+							some: {
+								categories: {
+									category: { contains: req.params.search },
+								},
+							},
+						},
+					},
+				],
+			},
+			// selecting images
+			include: {
+				images: {
+					select: {
+						image: true,
+					},
+				},
+			},
+		});
+
+		res.status(200).json({ products: products });
+	} catch (err) {
+		res.status(400).json({
+			message: err.message,
+		});
+	}
+};
+
 module.exports = {
 	getAllProducts,
 	getProduct,
+	productSearch,
 };
