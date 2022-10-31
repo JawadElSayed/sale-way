@@ -86,11 +86,9 @@ model products {
   discount           String?              @db.VarChar(255)
   created_at         DateTime             @default(now())
   updated_at         DateTime             @updatedAt
-  branches           branches             @relation(fields: [branch_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_products_branches1")
+  branches           branches[]
   images             images[]
   product_categories product_categories[]
-
-  @@index([branch_id], map: "fk_products_branches1_idx")
 }
 
 model store_types {
