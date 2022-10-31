@@ -46,7 +46,34 @@ const getAllProducts = async (req, res) => {
 
 		res.status(200).json({ products: products });
 	} catch (err) {
-		console.error(err);
+		res.status(400).json({
+			message: err.message,
+		});
+	}
+};
+
+const getProduct = async (req, res) => {
+	// checking if id is Integer
+	if (!parseInt(req.params.id))
+		return res.status(400).json({
+			message: "params must be Integer",
+		});
+
+	try {
+		// getting product by id
+		const product = await prisma.products.findUnique({
+			where: { id: parseInt(req.params.id) },
+			include: {
+				images: {
+					select: {
+						image: true,
+					},
+				},
+			},
+		});
+
+		res.status(200).json({ product: product });
+	} catch (err) {
 		res.status(400).json({
 			message: err.message,
 		});
@@ -55,4 +82,5 @@ const getAllProducts = async (req, res) => {
 
 module.exports = {
 	getAllProducts,
+	getProduct,
 };
