@@ -71,19 +71,15 @@ const productSearch = async (req, res) => {
 			where: {
 				// getting the user products only
 				branches: {
-					accesses: { some: { users: { email: req.email } } },
+					some: {
+						accesses: { some: { users: { email: req.email } } },
+					},
 				},
 				// matching the search words
 				OR: [
-					{
-						name: { contains: req.params.search },
-					},
-					{
-						description: { contains: req.params.search },
-					},
-					{
-						discount: { gte: req.params.search },
-					},
+					{ name: { contains: req.params.search } },
+					{ description: { contains: req.params.search } },
+					{ discount: { gte: req.params.search } },
 					{
 						product_categories: {
 							some: {
@@ -107,6 +103,7 @@ const productSearch = async (req, res) => {
 
 		res.status(200).json({ products: products });
 	} catch (err) {
+		console.error(err.message);
 		res.status(400).json({
 			message: err.message,
 		});
