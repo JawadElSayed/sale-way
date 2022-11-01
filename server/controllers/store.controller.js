@@ -103,7 +103,6 @@ const productSearch = async (req, res) => {
 
 		res.status(200).json({ products: products });
 	} catch (err) {
-		console.error(err.message);
 		res.status(400).json({
 			message: err.message,
 		});
@@ -198,7 +197,6 @@ const addProduct = async (req, res) => {
 		});
 		res.status(200).json({ product: product });
 	} catch (err) {
-		console.error(err);
 		res.status(400).json({
 			message: err.message,
 		});
@@ -242,7 +240,6 @@ const editProduct = async (req, res) => {
 		});
 		res.status(200).json({ product: product });
 	} catch (err) {
-		console.error(err);
 		res.status(400).json({
 			message: err.message,
 		});
@@ -250,6 +247,12 @@ const editProduct = async (req, res) => {
 };
 
 const deleteProduct = async (req, res) => {
+	// checking if id is Integer
+	if (!parseInt(req.params.id))
+		return res.status(400).json({
+			message: "params must be Integer",
+		});
+
 	try {
 		// delete connection of images
 		await prisma.images.deleteMany({
@@ -268,7 +271,6 @@ const deleteProduct = async (req, res) => {
 
 		res.status(200).json({ success: true });
 	} catch (err) {
-		console.error(err);
 		res.status(400).json({
 			message: err.message,
 		});
@@ -276,13 +278,18 @@ const deleteProduct = async (req, res) => {
 };
 
 const getBranchDetails = async (req, res) => {
+	// checking if id is Integer
+	if (!parseInt(req.params.id))
+		return res.status(400).json({
+			message: "params must be Integer",
+		});
+
 	try {
 		const branch = await prisma.branches.findUnique({
 			where: { id: parseInt(req.params.id) },
 		});
 		res.status(200).json({ branch: branch });
 	} catch (err) {
-		console.error(err);
 		res.status(400).json({
 			message: err.message,
 		});
@@ -296,7 +303,6 @@ const getAllBranches = async (req, res) => {
 		});
 		res.status(200).json({ branches: branches });
 	} catch (err) {
-		console.error(err);
 		res.status(400).json({
 			message: err.message,
 		});
@@ -345,7 +351,6 @@ const editBranch = async (req, res) => {
 		});
 		res.status(200).json({ branch: branch });
 	} catch (err) {
-		console.error(err);
 		res.status(400).json({
 			message: err.message,
 		});
