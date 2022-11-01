@@ -275,6 +275,51 @@ const deleteProduct = async (req, res) => {
 	}
 };
 
+const editBranch = async (req, res) => {
+	const { ...body } = req.body;
+
+	try {
+		// get category
+		const category = await prisma.categories.findFirst({
+			where: { category: body.category.toLowerCase() },
+		});
+
+		const branch = await prisma.branches.update({
+			where: { branch_id: parseInt(req.params.id) },
+			data: {
+				name: body.name,
+				about: body.about,
+				phone: body.phone,
+				latitude: body.latitude,
+				longitude: body.longitude,
+				store_types: {
+					connectOrCreate: {
+						where: {
+							branch_id_category_id: {
+								branch_id: parseInt(req.params.id),
+								category_id: category["id"],
+							},
+						},
+						create: {
+							categories: {
+								create: {
+									category: body.category.toLowerCase(),
+								},
+							},
+						},
+					},
+				},
+			},
+		});
+		res.status(200).json({ branch: branch });
+	} catch (err) {
+		console.error(err);
+		res.status(400).json({
+			message: err.message,
+		});
+	}
+};
+
 module.exports = {
 	getAllProducts,
 	getProduct,
@@ -282,4 +327,5 @@ module.exports = {
 	addProduct,
 	editProduct,
 	deleteProduct,
+	editBranch,
 };
