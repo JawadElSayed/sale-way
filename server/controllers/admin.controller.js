@@ -174,7 +174,27 @@ const branchSearch = async (req, res) => {
 		});
 		res.status(200).json({ branches: branches });
 	} catch (err) {
-		console.error(err);
+		res.status(400).json({
+			message: err.message,
+		});
+	}
+};
+
+const filterBranchesByType = async (req, res) => {
+	try {
+		const branches = await prisma.branches.findMany({
+			where: {
+				store_types: {
+					every: {
+						categories: {
+							category: req.params.filter.toLowerCase(),
+						},
+					},
+				},
+			},
+		});
+		res.status(200).json({ branches: branches });
+	} catch (err) {
 		res.status(400).json({
 			message: err.message,
 		});
@@ -187,4 +207,5 @@ module.exports = {
 	getBranchesOfStore,
 	addBranch,
 	branchSearch,
+	filterBranchesByType,
 };
