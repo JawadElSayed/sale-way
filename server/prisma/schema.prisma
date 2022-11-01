@@ -80,7 +80,6 @@ model product_categories {
 
 model products {
   id                 Int                  @id @default(autoincrement())
-  branch_id          Int
   name               String?              @db.VarChar(255)
   description        String?              @db.VarChar(255)
   discount           String?              @db.VarChar(255)
