@@ -249,10 +249,37 @@ const editProduct = async (req, res) => {
 	}
 };
 
+const deleteProduct = async (req, res) => {
+	try {
+		// delete connection of images
+		await prisma.images.deleteMany({
+			where: { product_id: parseInt(req.params.id) },
+		});
+
+		//  delet connetction of categories
+		await prisma.product_categories.deleteMany({
+			where: { product_id: parseInt(req.params.id) },
+		});
+
+		// delete product
+		const product = await prisma.products.delete({
+			where: { id: parseInt(req.params.id) },
+		});
+
+		res.status(200).json({ success: true });
+	} catch (err) {
+		console.error(err);
+		res.status(400).json({
+			message: err.message,
+		});
+	}
+};
+
 module.exports = {
 	getAllProducts,
 	getProduct,
 	productSearch,
 	addProduct,
 	editProduct,
+	deleteProduct,
 };
