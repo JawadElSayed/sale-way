@@ -9,6 +9,7 @@ const {
 	branchSearch,
 	filterBranchesByType,
 	getAllUsers,
+	searchUsers,
 } = require("../controllers/admin.controller");
 
 router.post("/add_store", addStore);
@@ -19,5 +20,6 @@ router.delete("/delete_branch/:id", deletBranch);
 router.get("/branches/search/:search", branchSearch);
 router.get("/branches/filter/:filter", filterBranchesByType);
 router.get("/users", getAllUsers);
+router.get("/users/search/:search", searchUsers);
 
 module.exports = router;

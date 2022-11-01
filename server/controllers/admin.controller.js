@@ -252,6 +252,21 @@ const getAllUsers = async (req, res) => {
 	}
 };
 
+const searchUsers = async (req, res) => {
+	try {
+		const users = await prisma.users.findMany({
+			where: {
+				name: { contains: req.params.search },
+			},
+		});
+		res.status(200).json({ users: users });
+	} catch (err) {
+		res.status(400).json({
+			message: err.message,
+		});
+	}
+};
+
 module.exports = {
 	addStore,
 	getAllBranches,
@@ -261,4 +276,5 @@ module.exports = {
 	branchSearch,
 	filterBranchesByType,
 	getAllUsers,
+	searchUsers,
 };
