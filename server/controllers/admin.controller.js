@@ -178,7 +178,6 @@ const deletBranch = async (req, res) => {
 		});
 		res.status(200).json({ success: true });
 	} catch (err) {
-		console.error(err.message);
 		res.status(400).json({
 			message: err.message,
 		});
@@ -238,6 +237,21 @@ const filterBranchesByType = async (req, res) => {
 	}
 };
 
+const getAllUsers = async (req, res) => {
+	try {
+		const users = await prisma.users.findMany({
+			where: {
+				user_types: { user_type: "user" },
+			},
+		});
+		res.status(200).json({ users: users });
+	} catch (err) {
+		res.status(400).json({
+			message: err.message,
+		});
+	}
+};
+
 module.exports = {
 	addStore,
 	getAllBranches,
@@ -246,4 +260,5 @@ module.exports = {
 	deletBranch,
 	branchSearch,
 	filterBranchesByType,
+	getAllUsers,
 };
