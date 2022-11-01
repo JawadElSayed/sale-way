@@ -208,9 +208,51 @@ const addProduct = async (req, res) => {
 	}
 };
 
+const editProduct = async (req, res) => {
+	const { ...body } = req.body;
+	try {
+		// get category
+		const category = await prisma.categories.findFirst({
+			where: { category: body.category.toLowerCase() },
+		});
+
+		// update product
+		const product = await prisma.products.update({
+			where: {
+				id: body.id,
+			},
+			data: {
+				name: body.name,
+				description: body.description,
+				discount: body.discount,
+				product_categories: {
+					update: {
+						where: {
+							product_id_category_id: {
+								product_id: body.id,
+								category_id: category["id"],
+							},
+						},
+						data: {
+							categories: { connect: { id: category["id"] } },
+						},
+					},
+				},
+			},
+		});
+		res.status(200).json({ product: product });
+	} catch (err) {
+		console.error(err);
+		res.status(400).json({
+			message: err.message,
+		});
+	}
+};
+
 module.exports = {
 	getAllProducts,
 	getProduct,
 	productSearch,
 	addProduct,
+	editProduct,
 };
