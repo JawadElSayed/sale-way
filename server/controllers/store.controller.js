@@ -275,6 +275,21 @@ const deleteProduct = async (req, res) => {
 	}
 };
 
+const getBranchDetails = async (req, res) => {
+	try {
+		console.log(parseInt(req.params.id));
+		const branch = await prisma.branches.findUnique({
+			where: { id: parseInt(req.params.id) },
+		});
+		res.status(200).json({ branch: branch });
+	} catch (err) {
+		console.error(err);
+		res.status(400).json({
+			message: err.message,
+		});
+	}
+};
+
 const editBranch = async (req, res) => {
 	const { ...body } = req.body;
 
@@ -285,7 +300,7 @@ const editBranch = async (req, res) => {
 		});
 
 		const branch = await prisma.branches.update({
-			where: { branch_id: parseInt(req.params.id) },
+			where: { id: parseInt(req.body.id) },
 			data: {
 				name: body.name,
 				about: body.about,
@@ -296,14 +311,15 @@ const editBranch = async (req, res) => {
 					connectOrCreate: {
 						where: {
 							branch_id_category_id: {
-								branch_id: parseInt(req.params.id),
+								branch_id: parseInt(req.body.id),
 								category_id: category["id"],
 							},
 						},
 						create: {
 							categories: {
-								create: {
-									category: body.category.toLowerCase(),
+								connectOrCreate: {
+									where: { id: category["id"] },
+									create: { category: body.category },
 								},
 							},
 						},
@@ -327,5 +343,6 @@ module.exports = {
 	addProduct,
 	editProduct,
 	deleteProduct,
+	getBranchDetails,
 	editBranch,
 };
