@@ -41,7 +41,6 @@ const addStore = async (req, res) => {
 		});
 		res.status(200).json({ store: store });
 	} catch (err) {
-		console.error(err);
 		res.status(400).json({
 			message: err.message,
 		});
@@ -55,7 +54,6 @@ const getAllBranches = async (req, res) => {
 		});
 		res.status(200).json({ branches: branches });
 	} catch (err) {
-		console.error(err);
 		res.status(400).json({
 			message: err.message,
 		});
@@ -63,13 +61,18 @@ const getAllBranches = async (req, res) => {
 };
 
 const getBranchesOfStore = async (req, res) => {
+	// checking if id is Integer
+	if (!parseInt(req.params.id))
+		return res.status(400).json({
+			message: "params must be Integer",
+		});
+
 	try {
 		const branches = await prisma.branches.findMany({
 			where: { store_id: parseInt(req.params.id) },
 		});
 		res.status(200).json({ branches: branches });
 	} catch (err) {
-		console.error(err);
 		res.status(400).json({
 			message: err.message,
 		});
@@ -139,6 +142,38 @@ const addBranch = async (req, res) => {
 
 		res.status(200).json({ branch: branch });
 	} catch (err) {
+		res.status(400).json({
+			message: err.message,
+		});
+	}
+};
+
+const branchSearch = async (req, res) => {
+	try {
+		// get branches acourding to search
+		const branches = await prisma.branches.findMany({
+			where: {
+				OR: [
+					{ name: { contains: req.params.search } },
+					{ about: { contains: req.params.search } },
+					{
+						products: {
+							some: { discount: { gte: req.params.search } },
+						},
+					},
+					{
+						store_types: {
+							some: {
+								categories: { category: req.params.search },
+							},
+						},
+					},
+				],
+			},
+			orderBy: { name: "asc" },
+		});
+		res.status(200).json({ branches: branches });
+	} catch (err) {
 		console.error(err);
 		res.status(400).json({
 			message: err.message,
@@ -151,4 +186,5 @@ module.exports = {
 	getAllBranches,
 	getBranchesOfStore,
 	addBranch,
+	branchSearch,
 };
