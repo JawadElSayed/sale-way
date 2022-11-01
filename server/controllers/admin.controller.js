@@ -148,6 +148,43 @@ const addBranch = async (req, res) => {
 	}
 };
 
+const deletBranch = async (req, res) => {
+	// checking if id is Integer
+	if (!parseInt(req.params.id))
+		return res.status(400).json({
+			message: "params must be Integer",
+		});
+
+	try {
+		// delete connection of accesses
+		await prisma.accesses.deleteMany({
+			where: { branch_id: parseInt(req.params.id) },
+		});
+
+		// delete connection of store types
+		await prisma.store_types.deleteMany({
+			where: { branch_id: parseInt(req.params.id) },
+		});
+
+		// delete connection of products
+		await prisma.products.deleteMany({
+			where: {
+				branches: { every: { id: parseInt(req.params.id) } },
+			},
+		});
+
+		const branch = await prisma.branches.delete({
+			where: { id: parseInt(req.params.id) },
+		});
+		res.status(200).json({ success: true });
+	} catch (err) {
+		console.error(err.message);
+		res.status(400).json({
+			message: err.message,
+		});
+	}
+};
+
 const branchSearch = async (req, res) => {
 	try {
 		// get branches acourding to search
@@ -206,6 +243,7 @@ module.exports = {
 	getAllBranches,
 	getBranchesOfStore,
 	addBranch,
+	deletBranch,
 	branchSearch,
 	filterBranchesByType,
 };
