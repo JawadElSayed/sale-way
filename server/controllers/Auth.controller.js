@@ -44,7 +44,7 @@ const signup = async (req, res) => {
 				"i"
 			);
 		},
-		"week password"
+		"weak password"
 	);
 
 	try {
