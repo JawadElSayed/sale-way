@@ -167,6 +167,39 @@ const addProduct = async (req, res) => {
 			images_array.push({
 				image: `./public/images/products/default.png`,
 			});
+
+		// adding product for all branches
+		const product = await prisma.products.create({
+			data: {
+				name: body.name,
+				description: body.description,
+				discount: body.discount,
+				// connecting product to category of create it
+				product_categories: {
+					create: {
+						categories: {
+							connectOrCreate: {
+								where: {
+									id: category_id,
+								},
+								create: {
+									category: body.category.toLowerCase(),
+								},
+							},
+						},
+					},
+				},
+				// connect product to branch
+				branches: {
+					connect: branches_array,
+				},
+				images: {
+					createMany: { data: images_array },
+				},
+			},
+			include: { images: { select: { image: true } } },
+		});
+		res.status(200).json({ product: product });
 	} catch (err) {
 		console.error(err);
 		res.status(400).json({
