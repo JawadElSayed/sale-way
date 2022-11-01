@@ -216,6 +216,9 @@ const editProduct = async (req, res) => {
 			where: { category: body.category.toLowerCase() },
 		});
 
+		let category_id = 0;
+		if (category) category_id = category["id"];
+
 		// update product
 		const product = await prisma.products.update({
 			where: {
@@ -230,11 +233,11 @@ const editProduct = async (req, res) => {
 						where: {
 							product_id_category_id: {
 								product_id: body.id,
-								category_id: category["id"],
+								category_id: category_id,
 							},
 						},
 						data: {
-							categories: { connect: { id: category["id"] } },
+							categories: { connect: { id: category_id } },
 						},
 					},
 				},
@@ -312,6 +315,9 @@ const editBranch = async (req, res) => {
 			where: { category: body.category.toLowerCase() },
 		});
 
+		let category_id = 0;
+		if (category) category_id = category["id"];
+
 		const branch = await prisma.branches.update({
 			where: { id: parseInt(req.body.id) },
 			data: {
@@ -325,13 +331,13 @@ const editBranch = async (req, res) => {
 						where: {
 							branch_id_category_id: {
 								branch_id: parseInt(req.body.id),
-								category_id: category["id"],
+								category_id: category_id,
 							},
 						},
 						create: {
 							categories: {
 								connectOrCreate: {
-									where: { id: category["id"] },
+									where: { id: category_id },
 									create: { category: body.category },
 								},
 							},
