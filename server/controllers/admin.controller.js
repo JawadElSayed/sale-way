@@ -256,11 +256,42 @@ const searchUsers = async (req, res) => {
 	try {
 		const users = await prisma.users.findMany({
 			where: {
+				user_types: { user_type: "user" },
 				name: { contains: req.params.search },
 			},
 		});
 		res.status(200).json({ users: users });
 	} catch (err) {
+		res.status(400).json({
+			message: err.message,
+		});
+	}
+};
+
+const filterUsers = async (req, res) => {
+	const { ...body } = req.body;
+
+	try {
+		// getting the year of age
+		let year = new Date().getFullYear();
+		if (body.age) year -= body.age;
+		// formating the year of filter
+		const date = new Date(year, "12", "31");
+
+		// convert gender to undefined if NULL
+		if (body.gender == "") body.gender = undefined;
+
+		// filter the users
+		const users = await prisma.users.findMany({
+			where: {
+				user_types: { user_type: "user" },
+				gender: { equals: body.gender },
+				DOB: { lte: date },
+			},
+		});
+		res.status(200).json({ users: users });
+	} catch (err) {
+		console.error(err.message);
 		res.status(400).json({
 			message: err.message,
 		});
@@ -277,4 +308,5 @@ module.exports = {
 	filterBranchesByType,
 	getAllUsers,
 	searchUsers,
+	filterUsers,
 };
