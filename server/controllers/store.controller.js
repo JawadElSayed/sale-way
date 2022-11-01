@@ -105,8 +105,35 @@ const productSearch = async (req, res) => {
 	}
 };
 
+const addProduct = async (req, res) => {
+	const { ...body } = req.body;
+
+	try {
+		// getting all branches of user
+		const branches = await prisma.branches.findMany({
+			where: {
+				accesses: { some: { users: { email: req.email } } },
+			},
+			select: {
+				id: true,
+			},
+		});
+
+		branches_array = [];
+		for (let branch of branches) {
+			branches_array.push(branch);
+		}
+	} catch (err) {
+		console.error(err);
+		res.status(400).json({
+			message: err.message,
+		});
+	}
+};
+
 module.exports = {
 	getAllProducts,
 	getProduct,
 	productSearch,
+	addProduct,
 };
