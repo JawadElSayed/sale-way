@@ -62,7 +62,22 @@ const getAllBranches = async (req, res) => {
 	}
 };
 
+const getBranchesOfStore = async (req, res) => {
+	try {
+		const branches = await prisma.branches.findMany({
+			where: { store_id: parseInt(req.params.id) },
+		});
+		res.status(200).json({ branches: branches });
+	} catch (err) {
+		console.error(err);
+		res.status(400).json({
+			message: err.message,
+		});
+	}
+};
+
 module.exports = {
 	addStore,
 	getAllBranches,
+	getBranchesOfStore,
 };
