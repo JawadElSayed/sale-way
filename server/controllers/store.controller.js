@@ -277,11 +277,24 @@ const deleteProduct = async (req, res) => {
 
 const getBranchDetails = async (req, res) => {
 	try {
-		console.log(parseInt(req.params.id));
 		const branch = await prisma.branches.findUnique({
 			where: { id: parseInt(req.params.id) },
 		});
 		res.status(200).json({ branch: branch });
+	} catch (err) {
+		console.error(err);
+		res.status(400).json({
+			message: err.message,
+		});
+	}
+};
+
+const getAllBranches = async (req, res) => {
+	try {
+		const branches = await prisma.branches.findMany({
+			where: { accesses: { some: { users: { email: req.email } } } },
+		});
+		res.status(200).json({ branches: branches });
 	} catch (err) {
 		console.error(err);
 		res.status(400).json({
@@ -344,5 +357,6 @@ module.exports = {
 	editProduct,
 	deleteProduct,
 	getBranchDetails,
+	getAllBranches,
 	editBranch,
 };
