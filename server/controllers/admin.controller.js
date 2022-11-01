@@ -48,6 +48,21 @@ const addStore = async (req, res) => {
 	}
 };
 
+const getAllBranches = async (req, res) => {
+	try {
+		const branches = await prisma.branches.findMany({
+			orderBy: { name: "asc" },
+		});
+		res.status(200).json({ branches: branches });
+	} catch (err) {
+		console.error(err);
+		res.status(400).json({
+			message: err.message,
+		});
+	}
+};
+
 module.exports = {
 	addStore,
+	getAllBranches,
 };
