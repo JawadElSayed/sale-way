@@ -123,6 +123,14 @@ const addProduct = async (req, res) => {
 		for (let branch of branches) {
 			branches_array.push(branch);
 		}
+
+		// select category if exists
+		const category = await prisma.categories.findFirst({
+			where: { category: body.category.toLowerCase() },
+		});
+
+		let category_id = 0;
+		if (category) category_id = category["id"];
 	} catch (err) {
 		console.error(err);
 		res.status(400).json({
