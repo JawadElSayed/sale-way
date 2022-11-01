@@ -42,6 +42,7 @@ model branches {
   about         String?         @db.VarChar(255)
   longitude     String?         @db.VarChar(255)
   latitude      String?         @db.VarChar(255)
+  image         String?         @db.VarChar(255)
   stores        stores          @relation(fields: [store_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_branches_stores1")
   Notifications Notifications[]
   accesses      accesses[]
@@ -106,6 +107,7 @@ model stores {
   name     String?    @db.VarChar(255)
   about    String?    @db.VarChar(255)
   phone    String?    @db.VarChar(255)
+  image    String?    @db.VarChar(255)
   branches branches[]
 }
 
