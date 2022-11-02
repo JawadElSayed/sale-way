@@ -6,16 +6,25 @@ const authMiddleware = require("./middlewares/auth.middleware");
 app.use(express.json());
 
 const authRoutes = require("./routes/auth.routes");
-app.use("/", authRoutes);
+app.use("/auth", authRoutes);
 
-const adminRoutes = require("./routes/admin.routes");
-app.use("/admin", adminRoutes);
+const accessRoutes = require("./routes/access.routes");
+app.use("/access", accessRoutes);
 
-// const userRoutes = require("./routes/users.routes");
-// app.use("/users", userRoutes);
+const userRoutes = require("./routes/user.routes");
+app.use("/user", userRoutes);
 
 const storeRoutes = require("./routes/store.routes");
-app.use("/stores", authMiddleware, storeRoutes);
+app.use("/store", storeRoutes);
+
+const branchRoutes = require("./routes/branch.routes");
+app.use("/branch", branchRoutes);
+
+const productRoutes = require("./routes/product.routes");
+app.use("/product", authMiddleware, productRoutes);
+
+const notificationRoutes = require("./routes/notification.routes");
+app.use("/notification", notificationRoutes);
 
 app.listen(process.env.PORT, (err) => {
 	if (err) console.log(err);
