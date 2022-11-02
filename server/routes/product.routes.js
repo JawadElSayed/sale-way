@@ -7,10 +7,14 @@ const {
 	editProduct,
 	deleteProduct,
 	productSearch,
+	getProductsOfStore,
+	getProductsOfBranch,
 } = require("../controllers/product.controller");
 
 router.get("/", getAllProducts);
 router.get("/:id", getProduct);
+router.get("/store/:id", getProductsOfStore);
+router.get("/branch/:id", getProductsOfBranch);
 router.post("/", addProduct);
 router.put("/", editProduct);
 router.delete("/:id", deleteProduct);
