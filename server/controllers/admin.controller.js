@@ -4,15 +4,14 @@ const bcrypt = require("bcrypt");
 const prisma = new PrismaClient();
 
 const addStore = async (req, res) => {
-	const { ...body } = req.body;
+	const { image, ...body } = req.body;
 
 	try {
 		// saving image
 		// setting default case
 		let image_path;
-		if (!body.image) {
-			image_path = `./public/images/store/default.jpg`;
-		} else {
+		if (!image) image_path = `./public/images/store/default.jpg`;
+		else {
 			// spliting base64
 			const splited_image = body.image.split(";base64,");
 			const image_base64 = splited_image[1];
@@ -23,28 +22,17 @@ const addStore = async (req, res) => {
 
 			// saving image in folder
 			fs.writeFile(image_path, image_base64, "base64", (err) => {
-				if (err) {
-					return res.status(400).json({
-						message: err.message,
-					});
-				}
+				if (err) return res.status(400).json({ message: err.message });
 			});
 		}
 
 		// creating store
 		const store = await prisma.stores.create({
-			data: {
-				name: body.name,
-				about: body.about,
-				phone: body.phone,
-				image: image_path,
-			},
+			data: { ...body, image: image_path },
 		});
 		res.status(200).json({ store: store });
 	} catch (err) {
-		res.status(400).json({
-			message: err.message,
-		});
+		res.status(400).json({ message: err.message });
 	}
 };
 
@@ -55,18 +43,14 @@ const getAllBranches = async (req, res) => {
 		});
 		res.status(200).json({ branches: branches });
 	} catch (err) {
-		res.status(400).json({
-			message: err.message,
-		});
+		res.status(400).json({ message: err.message });
 	}
 };
 
 const getBranchesOfStore = async (req, res) => {
 	// checking if id is Integer
 	if (!parseInt(req.params.id))
-		return res.status(400).json({
-			message: "params must be Integer",
-		});
+		return res.status(400).json({ message: "params must be Integer" });
 
 	try {
 		const branches = await prisma.branches.findMany({
@@ -74,30 +58,26 @@ const getBranchesOfStore = async (req, res) => {
 		});
 		res.status(200).json({ branches: branches });
 	} catch (err) {
-		res.status(400).json({
-			message: err.message,
-		});
+		res.status(400).json({ message: err.message });
 	}
 };
 
 const addBranch = async (req, res) => {
-	const { ...body } = req.body;
+	const { category, image, ...body } = req.body;
 
 	try {
 		// get category
-		const category = await prisma.categories.findFirst({
-			where: { category: body.category.toLowerCase() },
+		const get_category = await prisma.categories.findFirst({
+			where: { category: category.toLowerCase() },
 		});
 
-		let category_id = 0;
-		if (category) category_id = category["id"];
+		const category_id = get_category?.id ?? 0;
 
 		// saving image
 		// setting default case
 		let image_path;
-		if (!body.image) {
-			image_path = `./public/images/store/default.jpg`;
-		} else {
+		if (!image) image_path = `./public/images/store/default.jpg`;
+		else {
 			// spliting base64
 			const splited_image = body.image.split(";base64,");
 			const image_base64 = splited_image[1];
@@ -108,23 +88,14 @@ const addBranch = async (req, res) => {
 
 			// saving image in folder
 			fs.writeFile(image_path, image_base64, "base64", (err) => {
-				if (err) {
-					return res.status(400).json({
-						message: err.message,
-					});
-				}
+				if (err) return res.status(400).json({ message: err.message });
 			});
 		}
 
 		// creating branch
 		const branch = await prisma.branches.create({
 			data: {
-				name: body.name,
-				about: body.about,
-				phone: body.phone,
-				store_id: body.id,
-				latitude: body.latitude,
-				longitude: body.longitude,
+				...body,
 				image: image_path,
 				store_types: {
 					create: {
@@ -143,18 +114,14 @@ const addBranch = async (req, res) => {
 
 		res.status(200).json({ branch: branch });
 	} catch (err) {
-		res.status(400).json({
-			message: err.message,
-		});
+		res.status(400).json({ message: err.message });
 	}
 };
 
 const deletBranch = async (req, res) => {
 	// checking if id is Integer
 	if (!parseInt(req.params.id))
-		return res.status(400).json({
-			message: "params must be Integer",
-		});
+		return res.status(400).json({ message: "params must be Integer" });
 
 	try {
 		// delete connection of accesses
@@ -169,19 +136,16 @@ const deletBranch = async (req, res) => {
 
 		// delete connection of products
 		await prisma.products.deleteMany({
-			where: {
-				branches: { every: { id: parseInt(req.params.id) } },
-			},
+			where: { branches: { every: { id: parseInt(req.params.id) } } },
 		});
 
+		// delete branch
 		const branch = await prisma.branches.delete({
 			where: { id: parseInt(req.params.id) },
 		});
 		res.status(200).json({ success: true });
 	} catch (err) {
-		res.status(400).json({
-			message: err.message,
-		});
+		res.status(400).json({ message: err.message });
 	}
 };
 
@@ -211,9 +175,7 @@ const branchSearch = async (req, res) => {
 		});
 		res.status(200).json({ branches: branches });
 	} catch (err) {
-		res.status(400).json({
-			message: err.message,
-		});
+		res.status(400).json({ message: err.message });
 	}
 };
 
@@ -232,9 +194,7 @@ const filterBranchesByType = async (req, res) => {
 		});
 		res.status(200).json({ branches: branches });
 	} catch (err) {
-		res.status(400).json({
-			message: err.message,
-		});
+		res.status(400).json({ message: err.message });
 	}
 };
 
@@ -242,15 +202,11 @@ const getAllUsers = async (req, res) => {
 	try {
 		// TODO: add motification clicks
 		const users = await prisma.users.findMany({
-			where: {
-				user_types: { user_type: "user" },
-			},
+			where: { user_types: { user_type: "user" } },
 		});
 		res.status(200).json({ users: users });
 	} catch (err) {
-		res.status(400).json({
-			message: err.message,
-		});
+		res.status(400).json({ message: err.message });
 	}
 };
 
@@ -267,66 +223,62 @@ const searchUsers = async (req, res) => {
 		});
 		res.status(200).json({ users: users });
 	} catch (err) {
-		res.status(400).json({
-			message: err.message,
-		});
+		res.status(400).json({ message: err.message });
 	}
 };
 
 const filterUsers = async (req, res) => {
-	const { ...body } = req.body;
+	let { age, gender, user_type } = req.body;
 	// TODO: add motification clicks
 	try {
 		// getting the year of age
 		let year = new Date().getFullYear();
-		if (body.age) year -= body.age;
+		if (age) year -= age;
 
 		// formating the year of filter
 		const date = new Date(year, "12", "31");
 
 		// convert gender to undefined if NULL
-		if (body.gender == "") body.gender = undefined;
+		if (gender == "") gender = undefined;
 
 		// convert user type to undefined if NULL
-		if (body.user_type == "") body.user_type = undefined;
+		if (user_type == "") user_type = undefined;
 
 		// filter the users
 		const users = await prisma.users.findMany({
 			where: {
-				user_types: { user_type: { equals: body.user_type } },
-				gender: { equals: body.gender },
+				user_types: { user_type: { equals: user_type } },
+				gender: { equals: gender },
 				DOB: { lte: date },
 			},
 		});
 		res.status(200).json({ users: users });
 	} catch (err) {
-		res.status(400).json({
-			message: err.message,
-		});
+		res.status(400).json({ message: err.message });
 	}
 };
 
 const addUser = async (req, res) => {
-	const { ...body } = req.body;
+	const { email, user_type, DOB, ...body } = req.body;
 
 	try {
 		// checking email if exists
-		const email = await prisma.users.findUnique({
-			where: { email: body.email },
+		const get_email = await prisma.users.findUnique({
+			where: { email: email },
 		});
 
-		if (email)
+		if (get_email)
 			return res.status(400).json({ message: "Email already exists" });
 
 		// checking user type
-		const user_type = await prisma.user_types.findFirst({
-			where: { user_type: body.user_type.toLowerCase() },
+		const get_user_type = await prisma.user_types.findFirst({
+			where: { user_type: user_type.toLowerCase() },
 		});
 
 		// handling user type not found
-		if (!user_type)
+		if (!get_user_type)
 			return res.status(400).json({ message: "user type not found" });
-		const user_type_id = user_type["id"];
+		const user_type_id = get_user_type.id;
 
 		// generate password
 		const chars =
@@ -338,15 +290,14 @@ const addUser = async (req, res) => {
 		}
 
 		// convert string date to date
-		const date = new Date(body.DOB);
+		const date = new Date(DOB);
 
 		// creating a new user
-		const user = await prisma.users.create({
+		await prisma.users.create({
 			data: {
-				name: body.name,
-				email: body.email,
+				...body,
+				email: email,
 				DOB: date,
-				gender: body.gender,
 				user_types: { connect: { id: user_type_id } },
 				password: await bcrypt.hash(password, 10),
 			},
@@ -360,9 +311,7 @@ const addUser = async (req, res) => {
 const getUser = async (req, res) => {
 	// checking if id is Integer
 	if (!parseInt(req.params.id))
-		return res.status(400).json({
-			message: "params must be Integer",
-		});
+		return res.status(400).json({ message: "params must be Integer" });
 
 	try {
 		const user = await prisma.users.findUnique({
@@ -379,29 +328,25 @@ const getUser = async (req, res) => {
 };
 
 const addStoreAccess = async (req, res) => {
-	const { ...body } = req.body;
+	const { store_id, user_id } = req.body;
 
 	try {
 		// getting branches of store
 		const branches = await prisma.branches.findMany({
-			where: { store_id: body.store_id },
+			where: { store_id: store_id },
 			select: { id: true },
 		});
 
 		// change key from id to branch id
 		const branches_array = [];
 		for (let branch of branches) {
-			branches_array.push({ branch_id: branch["id"] });
+			branches_array.push({ branch_id: branch.id });
 		}
 
 		// adding access
 		await prisma.users.update({
-			where: { id: body.id },
-			data: {
-				accesses: {
-					createMany: { data: branches_array },
-				},
-			},
+			where: { id: user_id },
+			data: { accesses: { createMany: { data: branches_array } } },
 		});
 		res.status(200).json({ success: true });
 	} catch (err) {
@@ -413,12 +358,7 @@ const addBranchAccess = async (req, res) => {
 	const { ...body } = req.body;
 
 	try {
-		await prisma.accesses.create({
-			data: {
-				user_id: body.id,
-				branch_id: body.branch_id,
-			},
-		});
+		await prisma.accesses.create({ data: { ...body } });
 
 		res.status(200).json({ success: true });
 	} catch (err) {

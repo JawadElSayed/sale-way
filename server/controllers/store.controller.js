@@ -19,48 +19,33 @@ const getAllProducts = async (req, res) => {
 					accesses: { some: { users: { email: req.email } } },
 				},
 			},
-			include: {
-				images: {
-					select: {
-						image: true,
-					},
-				},
-			},
+			include: { images: { select: { image: true } } },
 		});
 
 		res.status(200).json({ products: products });
 	} catch (err) {
-		res.status(400).json({
-			message: err.message,
-		});
+		res.status(400).json({ message: err.message });
 	}
 };
 
 const getProduct = async (req, res) => {
 	// checking if id is Integer
 	if (!parseInt(req.params.id))
-		return res.status(400).json({
-			message: "params must be Integer",
-		});
+		return res.status(400).json({ message: "params must be Integer" });
 
 	try {
 		// getting product by id
 		const product = await prisma.products.findUnique({
 			where: { id: parseInt(req.params.id) },
 			include: {
-				images: {
-					select: {
-						image: true,
-					},
-				},
+				images: { select: { image: true } },
+				branches: { select: { stores: true } },
 			},
 		});
 
 		res.status(200).json({ product: product });
 	} catch (err) {
-		res.status(400).json({
-			message: err.message,
-		});
+		res.status(400).json({ message: err.message });
 	}
 };
 
@@ -92,25 +77,17 @@ const productSearch = async (req, res) => {
 				],
 			},
 			// selecting images
-			include: {
-				images: {
-					select: {
-						image: true,
-					},
-				},
-			},
+			include: { images: { select: { image: true } } },
 		});
 
 		res.status(200).json({ products: products });
 	} catch (err) {
-		res.status(400).json({
-			message: err.message,
-		});
+		res.status(400).json({ message: err.message });
 	}
 };
 
 const addProduct = async (req, res) => {
-	const { ...body } = req.body;
+	const { category, ...body } = req.body;
 
 	try {
 		// getting all branches of user
@@ -118,23 +95,20 @@ const addProduct = async (req, res) => {
 			where: {
 				accesses: { some: { users: { email: req.email } } },
 			},
-			select: {
-				id: true,
-			},
+			select: { id: true },
 		});
 
-		branches_array = [];
+		const branches_array = [];
 		for (let branch of branches) {
 			branches_array.push(branch);
 		}
 
 		// select category if exists
-		const category = await prisma.categories.findFirst({
-			where: { category: body.category.toLowerCase() },
+		const get_category = await prisma.categories.findFirst({
+			where: { category: category.toLowerCase() },
 		});
 
-		let category_id = 0;
-		if (category) category_id = category["id"];
+		const category_id = get_category?.id ?? 0;
 
 		// saving images in folder
 		const images_array = [];
@@ -151,9 +125,7 @@ const addProduct = async (req, res) => {
 			// saving image in folder
 			fs.writeFile(image_path, image_base64, "base64", (err) => {
 				if (err) {
-					return res.status(400).json({
-						message: err.message,
-					});
+					return res.status(400).json({ message: err.message });
 				}
 			});
 			images_array.push({ image: image_path });
@@ -167,52 +139,41 @@ const addProduct = async (req, res) => {
 		// adding product for all branches
 		const product = await prisma.products.create({
 			data: {
-				name: body.name,
-				description: body.description,
-				discount: body.discount,
+				...body,
 				// connecting product to category of create it
 				product_categories: {
 					create: {
 						categories: {
 							connectOrCreate: {
-								where: {
-									id: category_id,
-								},
+								where: { id: category_id },
 								create: {
-									category: body.category.toLowerCase(),
+									category: category.toLowerCase(),
 								},
 							},
 						},
 					},
 				},
 				// connect product to branch
-				branches: {
-					connect: branches_array,
-				},
-				images: {
-					createMany: { data: images_array },
-				},
+				branches: { connect: branches_array },
+				images: { createMany: { data: images_array } },
 			},
 			include: { images: { select: { image: true } } },
 		});
 		res.status(200).json({ product: product });
 	} catch (err) {
-		res.status(400).json({
-			message: err.message,
-		});
+		res.status(400).json({ message: err.message });
 	}
 };
 
 const editProduct = async (req, res) => {
-	const { ...body } = req.body;
+	const { category, ...body } = req.body;
 	try {
 		// get category
-		const category = await prisma.categories.findFirst({
-			where: { category: body.category.toLowerCase() },
+		const get_category = await prisma.categories.findFirst({
+			where: { category: category.toLowerCase() },
 		});
 
-		let category_id = 0;
-		if (category) category_id = category["id"];
+		const category_id = get_category?.id ?? 0;
 
 		// update product
 		const product = await prisma.products.update({
@@ -220,19 +181,24 @@ const editProduct = async (req, res) => {
 				id: body.id,
 			},
 			data: {
-				name: body.name,
-				description: body.description,
-				discount: body.discount,
+				...body,
 				product_categories: {
-					update: {
+					connectOrCreate: {
 						where: {
 							product_id_category_id: {
 								product_id: body.id,
 								category_id: category_id,
 							},
 						},
-						data: {
-							categories: { connect: { id: category_id } },
+						create: {
+							categories: {
+								connectOrCreate: {
+									where: { id: category_id },
+									create: {
+										category: category.toLowerCase(),
+									},
+								},
+							},
 						},
 					},
 				},
@@ -240,18 +206,14 @@ const editProduct = async (req, res) => {
 		});
 		res.status(200).json({ product: product });
 	} catch (err) {
-		res.status(400).json({
-			message: err.message,
-		});
+		res.status(400).json({ message: err.message });
 	}
 };
 
 const deleteProduct = async (req, res) => {
 	// checking if id is Integer
 	if (!parseInt(req.params.id))
-		return res.status(400).json({
-			message: "params must be Integer",
-		});
+		return res.status(400).json({ message: "params must be Integer" });
 
 	try {
 		// delete connection of images
@@ -271,18 +233,14 @@ const deleteProduct = async (req, res) => {
 
 		res.status(200).json({ success: true });
 	} catch (err) {
-		res.status(400).json({
-			message: err.message,
-		});
+		res.status(400).json({ message: err.message });
 	}
 };
 
 const getBranchDetails = async (req, res) => {
 	// checking if id is Integer
 	if (!parseInt(req.params.id))
-		return res.status(400).json({
-			message: "params must be Integer",
-		});
+		return res.status(400).json({ message: "params must be Integer" });
 
 	try {
 		const branch = await prisma.branches.findUnique({
@@ -297,9 +255,7 @@ const getBranchDetails = async (req, res) => {
 		});
 		res.status(200).json({ branch: branch });
 	} catch (err) {
-		res.status(400).json({
-			message: err.message,
-		});
+		res.status(400).json({ message: err.message });
 	}
 };
 
@@ -310,32 +266,25 @@ const getAllBranches = async (req, res) => {
 		});
 		res.status(200).json({ branches: branches });
 	} catch (err) {
-		res.status(400).json({
-			message: err.message,
-		});
+		res.status(400).json({ message: err.message });
 	}
 };
 
 const editBranch = async (req, res) => {
-	const { ...body } = req.body;
+	const { category, ...body } = req.body;
 
 	try {
 		// get category
-		const category = await prisma.categories.findFirst({
-			where: { category: body.category.toLowerCase() },
+		const get_category = await prisma.categories.findFirst({
+			where: { category: category.toLowerCase() },
 		});
 
-		let category_id = 0;
-		if (category) category_id = category["id"];
+		const category_id = get_category?.id ?? 0;
 
 		const branch = await prisma.branches.update({
 			where: { id: parseInt(req.body.id) },
 			data: {
-				name: body.name,
-				about: body.about,
-				phone: body.phone,
-				latitude: body.latitude,
-				longitude: body.longitude,
+				...body,
 				store_types: {
 					connectOrCreate: {
 						where: {
@@ -348,7 +297,9 @@ const editBranch = async (req, res) => {
 							categories: {
 								connectOrCreate: {
 									where: { id: category_id },
-									create: { category: body.category },
+									create: {
+										category: category.toLowerCase(),
+									},
 								},
 							},
 						},
@@ -358,9 +309,7 @@ const editBranch = async (req, res) => {
 		});
 		res.status(200).json({ branch: branch });
 	} catch (err) {
-		res.status(400).json({
-			message: err.message,
-		});
+		res.status(400).json({ message: err.message });
 	}
 };
 

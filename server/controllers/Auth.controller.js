@@ -9,11 +9,7 @@ const login = async (req, res) => {
 	const { email, password } = req.body;
 
 	// getting user by email
-	const user = await prisma.users.findUnique({
-		where: {
-			email: email,
-		},
-	});
+	const user = await prisma.users.findUnique({ where: { email: email } });
 	if (!user) return res.status(404).json({ message: "Invalid Credentials" });
 
 	// checking password
@@ -25,9 +21,7 @@ const login = async (req, res) => {
 	const token = jwt.sign(
 		{ email: user.email, name: user.name, userType: user.user_type },
 		process.env.JWT_SECRET_KEY,
-		{
-			expiresIn: "1h",
-		}
+		{ expiresIn: "1h" }
 	);
 	res.status(200).json({ token: token });
 };
@@ -57,20 +51,15 @@ const signup = async (req, res) => {
 		// push error if thier invalid input
 		const validation = new Validator(req.body, rules);
 		if (validation.fails()) {
-			return res.status(400).json({
-				status: "error",
-				message: validation.errors.all(),
-			});
+			return res
+				.status(400)
+				.json({ status: "error", message: validation.errors.all() });
 		}
 
 		// getting user type id ftom user type input
 		const user_type_id = await prisma.user_types.findFirst({
-			where: {
-				user_type: user_type.toLowerCase(),
-			},
-			select: {
-				id: true,
-			},
+			where: { user_type: user_type.toLowerCase() },
+			select: { id: true },
 		});
 
 		// creating new user
@@ -79,23 +68,13 @@ const signup = async (req, res) => {
 				name: name,
 				email: email,
 				password: await bcrypt.hash(password, 10),
-				user_types: {
-					connect: {
-						id: user_type_id["id"],
-					},
-				},
+				user_types: { connect: { id: user_type_id["id"] } },
 			},
 		});
 
-		res.status(200).json({
-			status: "done",
-			user: user,
-		});
+		res.status(200).json({ status: "done", user: user });
 	} catch (err) {
-		console.error(err);
-		res.status(400).json({
-			message: err.message,
-		});
+		res.status(400).json({ message: err.message });
 	}
 };
 
