@@ -88,8 +88,6 @@ const getStore = async (req, res) => {
 };
 
 // TODO: edit store
-// TODO: get all store
-// TODO: get store
 
 module.exports = {
 	addStore,

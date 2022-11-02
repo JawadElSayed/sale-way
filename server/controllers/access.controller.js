@@ -13,15 +13,14 @@ const addStoreAccess = async (req, res) => {
 		});
 
 		// change key from id to branch id
-		const branches_array = [];
+		const data_array = [];
 		for (let branch of branches) {
-			branches_array.push({ branch_id: branch.id });
+			data_array.push({ user_id: user_id, branch_id: branch.id });
 		}
 
 		// adding access
-		await prisma.users.update({
-			where: { id: user_id },
-			data: { accesses: { createMany: { data: branches_array } } },
+		await prisma.accesses.createMany({
+			data: data_array,
 		});
 		res.status(200).json({ success: true });
 	} catch (err) {
@@ -34,17 +33,46 @@ const addBranchAccess = async (req, res) => {
 
 	try {
 		await prisma.accesses.create({ data: { ...body } });
-
 		res.status(200).json({ success: true });
 	} catch (err) {
 		res.status(400).json({ message: err.message });
 	}
 };
 
-// TODO: deleteBranchAccess
-// TODO: deleteStoreAccess
+const deleteBranchAccess = async (req, res) => {
+	try {
+		await prisma.accesses.delete({
+			where: {
+				user_id_branch_id: {
+					user_id: req.body.user_id,
+					branch_id: req.body.branch_id,
+				},
+			},
+		});
+		res.status(200).json({ success: true });
+	} catch (err) {
+		res.status(400).json({ message: err.message });
+	}
+};
+
+const deleteStoreAccess = async (req, res) => {
+	try {
+		await prisma.accesses.deleteMany({
+			where: {
+				user_id: req.body.user_id,
+				branches: { store_id: req.body.store_id },
+			},
+		});
+		res.status(200).json({ success: true });
+	} catch (err) {
+		console.error(err);
+		res.status(400).json({ message: err.message });
+	}
+};
 
 module.exports = {
 	addBranchAccess,
 	addStoreAccess,
+	deleteBranchAccess,
+	deleteStoreAccess,
 };
