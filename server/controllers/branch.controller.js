@@ -69,7 +69,7 @@ const addBranch = async (req, res) => {
 							connectOrCreate: {
 								where: { id: category_id },
 								create: {
-									category: body.category.toLowerCase(),
+									category: category.toLowerCase(),
 								},
 							},
 						},
@@ -84,7 +84,7 @@ const addBranch = async (req, res) => {
 	}
 };
 
-const deletBranch = async (req, res) => {
+const deleteBranch = async (req, res) => {
 	// checking if id is Integer
 	if (!parseInt(req.params.id))
 		return res.status(400).json({ message: "params must be Integer" });
@@ -247,7 +247,7 @@ module.exports = {
 	getBranch,
 	addBranch,
 	editBranch,
-	deletBranch,
+	deleteBranch,
 	branchSearch,
 	filterBranchesByType,
 };

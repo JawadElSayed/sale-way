@@ -1,4 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
+const { deleteBranch } = require("./branch.controller");
 
 const prisma = new PrismaClient();
 
@@ -35,11 +36,38 @@ const addStore = async (req, res) => {
 	}
 };
 
+const deleteStore = async (req, res) => {
+	// checking if id is Integer
+	if (!parseInt(req.params.id))
+		return res.status(400).json({ message: "params must be Integer" });
+
+	try {
+		// getting branches of store
+		const branches = await prisma.branches.findMany({
+			where: { stores: { id: parseInt(req.params.id) } },
+		});
+
+		// delete all branches of store
+		const res1 = {};
+		for (let branch of branches) {
+			const req = { params: { id: branch.id } };
+			await deleteBranch(req, res1);
+		}
+
+		// deleting store
+		await prisma.stores.delete({ where: { id: parseInt(req.params.id) } });
+
+		return res.status(202).json({ success: true });
+	} catch (err) {
+		res.status(400).json({ message: err.message });
+	}
+};
+
 // TODO: edit store
-// TODO: delete store
 // TODO: get all store
 // TODO: get store
 
 module.exports = {
 	addStore,
+	deleteStore,
 };
