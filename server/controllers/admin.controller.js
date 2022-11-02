@@ -382,17 +382,19 @@ const addStoreAccess = async (req, res) => {
 	const { ...body } = req.body;
 
 	try {
+		// getting branches of store
 		const branches = await prisma.branches.findMany({
 			where: { store_id: body.store_id },
 			select: { id: true },
 		});
 
+		// change key from id to branch id
 		const branches_array = [];
 		for (let branch of branches) {
 			branches_array.push({ branch_id: branch["id"] });
 		}
 
-		// return res.json({ branches_array: branches_array });
+		// adding access
 		await prisma.users.update({
 			where: { id: body.id },
 			data: {
@@ -403,7 +405,23 @@ const addStoreAccess = async (req, res) => {
 		});
 		res.status(200).json({ success: true });
 	} catch (err) {
-		console.error(err.message);
+		res.status(400).json({ message: err.message });
+	}
+};
+
+const addBranchAccess = async (req, res) => {
+	const { ...body } = req.body;
+
+	try {
+		await prisma.accesses.create({
+			data: {
+				user_id: body.id,
+				branch_id: body.branch_id,
+			},
+		});
+
+		res.status(200).json({ success: true });
+	} catch (err) {
 		res.status(400).json({ message: err.message });
 	}
 };
@@ -426,4 +444,5 @@ module.exports = {
 	addUser,
 	getUser,
 	addStoreAccess,
+	addBranchAccess,
 };

@@ -14,6 +14,7 @@ const {
 	addUser,
 	getUser,
 	addStoreAccess,
+	addBranchAccess,
 } = require("../controllers/admin.controller");
 
 router.post("/add_store", addStore);
@@ -29,5 +30,6 @@ router.post("/users/filter", filterUsers);
 router.post("/add_user", addUser);
 router.get("/user/:id", getUser);
 router.post("/add_store_access", addStoreAccess);
+router.post("/add_branch_access", addBranchAccess);
 
 module.exports = router;
