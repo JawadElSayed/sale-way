@@ -239,6 +239,7 @@ const filterBranchesByType = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
 	try {
+		// TODO: add motification clicks
 		const users = await prisma.users.findMany({
 			where: {
 				user_types: { user_type: "user" },
@@ -254,6 +255,7 @@ const getAllUsers = async (req, res) => {
 
 const searchUsers = async (req, res) => {
 	try {
+		// TODO: add motification clicks
 		const users = await prisma.users.findMany({
 			where: {
 				user_types: { user_type: "user" },
@@ -270,7 +272,7 @@ const searchUsers = async (req, res) => {
 
 const filterUsers = async (req, res) => {
 	const { ...body } = req.body;
-
+	// TODO: add motification clicks
 	try {
 		// getting the year of age
 		let year = new Date().getFullYear();
@@ -291,12 +293,15 @@ const filterUsers = async (req, res) => {
 		});
 		res.status(200).json({ users: users });
 	} catch (err) {
-		console.error(err.message);
 		res.status(400).json({
 			message: err.message,
 		});
 	}
 };
+
+// TODO: products of store
+// TODO: analytics of store
+// TODO: analytics of notification
 
 module.exports = {
 	addStore,
