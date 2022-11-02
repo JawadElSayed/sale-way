@@ -287,6 +287,13 @@ const getBranchDetails = async (req, res) => {
 	try {
 		const branch = await prisma.branches.findUnique({
 			where: { id: parseInt(req.params.id) },
+			include: {
+				products: {
+					orderBy: { discount: "desc" },
+					select: { discount: true },
+					take: 1,
+				},
+			},
 		});
 		res.status(200).json({ branch: branch });
 	} catch (err) {
