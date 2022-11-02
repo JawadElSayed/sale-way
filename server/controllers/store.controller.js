@@ -57,7 +57,31 @@ const deleteStore = async (req, res) => {
 		// deleting store
 		await prisma.stores.delete({ where: { id: parseInt(req.params.id) } });
 
-		return res.status(202).json({ success: true });
+		res.status(202).json({ success: true });
+	} catch (err) {
+		res.status(400).json({ message: err.message });
+	}
+};
+
+const getAllStores = async (req, res) => {
+	try {
+		res.status(200).json({ stores: await prisma.stores.findMany({}) });
+	} catch (err) {
+		res.status(400).json({ message: err.message });
+	}
+};
+
+const getStore = async (req, res) => {
+	// checking if id is Integer
+	if (!parseInt(req.params.id))
+		return res.status(400).json({ message: "params must be Integer" });
+
+	try {
+		const store = await prisma.stores.findUnique({
+			where: { id: parseInt(req.params.id) },
+		});
+
+		res.status(200).json({ store: store });
 	} catch (err) {
 		res.status(400).json({ message: err.message });
 	}
@@ -70,4 +94,6 @@ const deleteStore = async (req, res) => {
 module.exports = {
 	addStore,
 	deleteStore,
+	getAllStores,
+	getStore,
 };
