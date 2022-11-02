@@ -258,8 +258,10 @@ const searchUsers = async (req, res) => {
 		// TODO: add motification clicks
 		const users = await prisma.users.findMany({
 			where: {
-				user_types: { user_type: "user" },
-				name: { contains: req.params.search },
+				OR: [
+					{ name: { contains: req.params.search } },
+					{ email: { contains: req.params.search } },
+				],
 			},
 		});
 		res.status(200).json({ users: users });
@@ -277,16 +279,20 @@ const filterUsers = async (req, res) => {
 		// getting the year of age
 		let year = new Date().getFullYear();
 		if (body.age) year -= body.age;
+
 		// formating the year of filter
 		const date = new Date(year, "12", "31");
 
 		// convert gender to undefined if NULL
 		if (body.gender == "") body.gender = undefined;
 
+		// convert user type to undefined if NULL
+		if (body.user_type == "") body.user_type = undefined;
+
 		// filter the users
 		const users = await prisma.users.findMany({
 			where: {
-				user_types: { user_type: "user" },
+				user_types: { user_type: { equals: body.user_type } },
 				gender: { equals: body.gender },
 				DOB: { lte: date },
 			},
@@ -314,4 +320,5 @@ module.exports = {
 	getAllUsers,
 	searchUsers,
 	filterUsers,
+	addUser,
 };
