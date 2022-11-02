@@ -1,4 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
+const bcrypt = require("bcrypt");
 
 const prisma = new PrismaClient();
 
@@ -298,6 +299,61 @@ const filterUsers = async (req, res) => {
 			},
 		});
 		res.status(200).json({ users: users });
+	} catch (err) {
+		res.status(400).json({
+			message: err.message,
+		});
+	}
+};
+
+const addUser = async (req, res) => {
+	const { ...body } = req.body;
+
+	try {
+		// checking email if exists
+		const email = await prisma.users.findUnique({
+			where: { email: body.email },
+		});
+
+		if (email)
+			return res.status(400).json({ message: "Email already exists" });
+
+		// checking user type
+		const user_type = await prisma.user_types.findFirst({
+			where: { user_type: body.user_type.toLowerCase() },
+		});
+
+		// handling user type not found
+		if (!user_type)
+			return res.status(400).json({ message: "user type not found" });
+		const user_type_id = user_type["id"];
+
+		// generate password
+		const chars =
+			"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%^&*!?-_abcdefghijklmnopqrstuvwxyz";
+		var password = "";
+		for (let i = 0; i < 8; i++) {
+			let rnum = Math.floor(Math.random() * chars.length);
+			password += chars.substring(rnum, rnum + 1);
+		}
+
+		// convert string date to date
+		const date = new Date(body.DOB);
+
+		// creating a new user
+		const user = await prisma.users.create({
+			data: {
+				name: body.name,
+				email: body.email,
+				DOB: date,
+				gender: body.gender,
+				user_types: { connect: { id: user_type_id } },
+				password: await bcrypt.hash(password, 10),
+			},
+		});
+		res.status(200).json({
+			password: password,
+		});
 	} catch (err) {
 		res.status(400).json({
 			message: err.message,

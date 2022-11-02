@@ -11,6 +11,7 @@ const {
 	getAllUsers,
 	searchUsers,
 	filterUsers,
+	addUser,
 } = require("../controllers/admin.controller");
 
 router.post("/add_store", addStore);
@@ -23,5 +24,6 @@ router.get("/branches/filter/:filter", filterBranchesByType);
 router.get("/users", getAllUsers);
 router.get("/users/search/:search", searchUsers);
 router.post("/users/filter", filterUsers);
+router.post("/add_user", addUser);
 
 module.exports = router;
