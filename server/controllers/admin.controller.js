@@ -351,13 +351,30 @@ const addUser = async (req, res) => {
 				password: await bcrypt.hash(password, 10),
 			},
 		});
-		res.status(200).json({
-			password: password,
-		});
+		res.status(200).json({ password: password });
 	} catch (err) {
-		res.status(400).json({
-			message: err.message,
+		res.status(400).json({ message: err.message });
+	}
+};
+
+const getUser = async (req, res) => {
+	// checking if id is Integer
+	if (!parseInt(req.params.id))
+		return res.status(400).json({
+			message: "params must be Integer",
 		});
+
+	try {
+		const user = await prisma.users.findUnique({
+			where: { id: parseInt(req.params.id) },
+			include: {
+				user_types: { select: { user_type: true } },
+				accesses: { select: { branches: { select: { name: true } } } },
+			},
+		});
+		res.status(200).json({ user: user });
+	} catch (err) {
+		res.status(400).json({ message: err.message });
 	}
 };
 
@@ -377,4 +394,5 @@ module.exports = {
 	searchUsers,
 	filterUsers,
 	addUser,
+	getUser,
 };
