@@ -39,7 +39,7 @@ const getProduct = async (req, res) => {
 			where: { id: parseInt(req.params.id) },
 			include: {
 				images: { select: { image: true } },
-				branches: { select: { stores: true } },
+				branches: true,
 			},
 		});
 
