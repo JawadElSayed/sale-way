@@ -237,7 +237,25 @@ const deleteProduct = async (req, res) => {
 	}
 };
 
-// TODO: products of store
+const getProductsOfStore = async (req, res) => {
+	// checking if id is Integer
+	if (!parseInt(req.params.id))
+		return res.status(400).json({ message: "params must be Integer" });
+
+	try {
+		const products = await prisma.products.findMany({
+			where: {
+				branches: {
+					every: { stores: { id: parseInt(req.params.id) } },
+				},
+			},
+			include: { images: { select: { image: true } } },
+		});
+		res.status(200).json({ products: products });
+	} catch (err) {
+		res.status(400).json({ message: err.message });
+	}
+};
 
 module.exports = {
 	getAllProducts,
@@ -246,4 +264,5 @@ module.exports = {
 	editProduct,
 	deleteProduct,
 	productSearch,
+	getProductsOfStore,
 };
