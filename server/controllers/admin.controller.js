@@ -378,6 +378,36 @@ const getUser = async (req, res) => {
 	}
 };
 
+const addStoreAccess = async (req, res) => {
+	const { ...body } = req.body;
+
+	try {
+		const branches = await prisma.branches.findMany({
+			where: { store_id: body.store_id },
+			select: { id: true },
+		});
+
+		const branches_array = [];
+		for (let branch of branches) {
+			branches_array.push({ branch_id: branch["id"] });
+		}
+
+		// return res.json({ branches_array: branches_array });
+		await prisma.users.update({
+			where: { id: body.id },
+			data: {
+				accesses: {
+					createMany: { data: branches_array },
+				},
+			},
+		});
+		res.status(200).json({ success: true });
+	} catch (err) {
+		console.error(err.message);
+		res.status(400).json({ message: err.message });
+	}
+};
+
 // TODO: products of store
 // TODO: analytics of store
 // TODO: analytics of notification
@@ -395,4 +425,5 @@ module.exports = {
 	filterUsers,
 	addUser,
 	getUser,
+	addStoreAccess,
 };
