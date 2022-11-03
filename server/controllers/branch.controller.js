@@ -1,4 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
+const helpers = require("./helpers");
 
 const prisma = new PrismaClient();
 
@@ -49,7 +50,7 @@ const addBranch = async (req, res) => {
 			const image_base64 = splited_image[1];
 			const image_extension = splited_image[0].split("/")[1];
 
-			// generating unique name acourding it time
+			// generating unique name according to time
 			image_path = `./public/images/store/${Date.now()}.${image_extension}`;
 
 			// saving image in folder
@@ -88,27 +89,11 @@ const deleteBranch = async (req, res) => {
 	// checking if id is Integer
 	if (!parseInt(req.params.id))
 		return res.status(400).json({ message: "params must be Integer" });
-
 	try {
-		// delete connection of accesses
-		await prisma.accesses.deleteMany({
-			where: { branch_id: parseInt(req.params.id) },
-		});
+		// this function delete access, type and products connection
+		// then delete the branch
+		await helpers.deleteBranch(req);
 
-		// delete connection of store types
-		await prisma.store_types.deleteMany({
-			where: { branch_id: parseInt(req.params.id) },
-		});
-
-		// delete connection of products
-		await prisma.products.deleteMany({
-			where: { branches: { every: { id: parseInt(req.params.id) } } },
-		});
-
-		// delete branch
-		const branch = await prisma.branches.delete({
-			where: { id: parseInt(req.params.id) },
-		});
 		res.status(200).json({ success: true });
 	} catch (err) {
 		res.status(400).json({ message: err.message });
@@ -117,7 +102,7 @@ const deleteBranch = async (req, res) => {
 
 const branchSearch = async (req, res) => {
 	try {
-		// get branches acourding to search
+		// get branches according to search
 		const branches = await prisma.branches.findMany({
 			where: {
 				OR: [

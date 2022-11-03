@@ -118,7 +118,7 @@ const addProduct = async (req, res) => {
 			const splited_image = image.split(";base64,");
 			const image_base64 = splited_image[1];
 			const image_extension = splited_image[0].split("/")[1];
-			// generating unique name acourding it time
+			// generating unique name according to time
 			await sleep(1);
 			const image_path = `./public/images/products/${Date.now()}.${image_extension}`;
 
