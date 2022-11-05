@@ -1,4 +1,10 @@
-const TextInput = ({ shadow, lable, onChange, placeholder, type = "text" }) => {
+const TextInput = ({
+	lable,
+	onChange,
+	shadow = "primary",
+	placeholder = "",
+	type = "text",
+}) => {
 	return (
 		<div className="w-full text-left pt-8">
 			{lable && (
