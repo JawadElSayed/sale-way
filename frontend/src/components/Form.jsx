@@ -1,21 +1,42 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLogin } from "../Hooks/useLogin";
+import { useNavigate } from "react-router-dom";
 
 import logo from "../logo.png";
 import TextInput from "./TextInput";
 import Button from "./Button";
 
 const Form = () => {
+	const {
+		mutate,
+		error: loginError,
+		data: loginData,
+		isSuccess,
+	} = useLogin();
+
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState("");
+
+	const navigate = useNavigate();
 
 	const onSubmit = () => {
 		setError("");
 		if (validation(email, password))
 			return setError(validation(email, password));
+		console.log(email, password);
+		const data = { email: email, password: password };
+		mutate(data);
 
 		setPassword("");
 	};
+
+	useEffect(() => {
+		if (isSuccess) {
+			localStorage.setItem("token", loginData?.data?.token);
+			navigate("/users");
+		}
+	}, [isSuccess, loginData?.data.token, navigate]);
 
 	const validation = (email, password) => {
 		const regex = /^[\w-\\.]+@([\w-]+\.)+[\w-]{2,4}$/;
@@ -49,9 +70,16 @@ const Form = () => {
 					shadow="black"
 					name="password"
 				></TextInput>
-				{error && (
+				{error ? (
 					<p className="text-red-700 pt-2 text-left">{error}</p>
+				) : (
+					loginError?.response?.status === 400 && (
+						<p className="text-red-700 pt-2 text-left">
+							{loginError.response.data?.message}
+						</p>
+					)
 				)}
+
 				<Button
 					backgroundColor="secondary"
 					rounded="xl"
