@@ -4,20 +4,21 @@ const TextInput = ({
 	shadow = "primary",
 	placeholder = "",
 	type = "text",
+	value,
 }) => {
 	return (
 		<div className="w-full text-left pt-8">
 			{lable && (
 				<>
-					<lable className=" text-white font-normal text-xl">
+					<label className=" text-white font-normal text-xl">
 						{lable + ":"}
-					</lable>
+					</label>
 					<br />
 				</>
 			)}
 			<input
 				type={type}
-				value={null}
+				value={value}
 				placeholder={placeholder}
 				onChange={onChange}
 				className={

@@ -5,3 +5,7 @@
 .site-font {
 	font-family: "Roboto";
 }
+
+.center-modal {
+	transform: translate(-50%, -50%);
+}
