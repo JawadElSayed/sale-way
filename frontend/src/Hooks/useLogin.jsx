@@ -6,9 +6,5 @@ const login = async (data) => {
 };
 
 export const useLogin = () => {
-	return useMutation(login, {
-		onError: (error) => {
-			return error;
-		},
-	});
+	return useMutation(login);
 };

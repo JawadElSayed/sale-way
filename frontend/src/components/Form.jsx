@@ -24,7 +24,6 @@ const Form = () => {
 		setError("");
 		if (validation(email, password))
 			return setError(validation(email, password));
-		console.log(email, password);
 		const data = { email: email, password: password };
 		mutate(data);
 
