@@ -82,7 +82,7 @@ const Form = () => {
 				<Button
 					backgroundColor="secondary"
 					rounded="xl"
-					className="w-32 text-medium"
+					className="text-medium"
 					onClick={onSubmit}
 				>
 					Login

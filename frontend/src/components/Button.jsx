@@ -26,7 +26,8 @@ const Button = ({
 		<button
 			type={type}
 			className={`bg-${buttonColor} mt-8 p-2 text-white text-2xl 
-                        rounded-${rounded} ${shadow} ${className} `}
+						rounded-${rounded} ${shadow} ${className} `}
+			style={{ minWidth: "128px" }}
 			onClick={onClick}
 			onMouseEnter={() => {
 				setHover(true);
