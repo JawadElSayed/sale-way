@@ -4,10 +4,13 @@ const TextInput = ({
 	shadow = "primary",
 	placeholder = "",
 	type = "text",
+	rounded = "xl",
+	pt = 8,
+	indent = "2",
 	value,
 }) => {
 	return (
-		<div className="w-full text-left pt-8">
+		<div className={`w-full text-left pt-${pt}`}>
 			{lable && (
 				<>
 					<label className=" text-white font-normal text-xl">
@@ -21,9 +24,7 @@ const TextInput = ({
 				value={value}
 				placeholder={placeholder}
 				onChange={onChange}
-				className={
-					shadow + "-shadow w-full py-2.5 indent-2 rounded-xl text-lg"
-				}
+				className={`${shadow}-shadow w-full py-2.5 indent-${indent} rounded-${rounded} text-lg`}
 			/>
 		</div>
 	);
