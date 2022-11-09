@@ -19,8 +19,9 @@ const Header = ({
 						return (
 							<Button
 								key={button[0]}
+								onClick={button[1]}
 								backgroundColor="secondary"
-								className="mt-0 ml-10"
+								className="ml-10"
 							>
 								{button[0]}
 							</Button>
@@ -28,6 +29,7 @@ const Header = ({
 					})}
 				</div>
 			</div>
+
 			{showSearchBar && secondRowButtons && (
 				<div className="pt-8 flex items-center">
 					{showSearchBar && (
@@ -39,21 +41,27 @@ const Header = ({
 						{secondRowButtons?.map((button) => {
 							return (
 								<Button
-									key={button}
+									key={button[0]}
+									onClick={button[1]}
 									backgroundColor="secondary"
-									className="mt-0 ml-10"
+									className="ml-10"
 								>
-									{button}
+									{button[0]}
 								</Button>
 							);
 						})}
 					</div>
 				</div>
 			)}
+
 			{titles && (
-				<div className="pt-8 flex items-center justify-around">
+				<div className="pt-8 flex items-center gap-6 justify-between">
 					{titles?.map((title) => {
-						return <h2 key={title}>{title}</h2>;
+						return (
+							<h2 key={title} className="text-clip text-center">
+								{title}
+							</h2>
+						);
 					})}
 				</div>
 			)}
