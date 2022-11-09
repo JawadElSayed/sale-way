@@ -83,7 +83,7 @@ model products {
   id                 Int                  @id @default(autoincrement())
   name               String?              @db.VarChar(255)
   description        String?              @db.VarChar(255)
-  discount           String?              @db.VarChar(255)
+  discount           Int?
   created_at         DateTime             @default(now())
   updated_at         DateTime             @updatedAt
   branches           branches[]

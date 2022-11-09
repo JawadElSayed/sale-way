@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 const getAllUsers = async (req, res) => {
 	try {
-		// TODO: add motification clicks
+		// TODO: add notification clicks
 		const users = await prisma.users.findMany({});
 		res.status(200).json({ users: users });
 	} catch (err) {
@@ -34,7 +34,7 @@ const getUser = async (req, res) => {
 
 const searchUsers = async (req, res) => {
 	try {
-		// TODO: add motification clicks
+		// TODO: add notification clicks
 		const users = await prisma.users.findMany({
 			where: {
 				OR: [
@@ -51,7 +51,7 @@ const searchUsers = async (req, res) => {
 
 const filterUsers = async (req, res) => {
 	let { age, gender, user_type } = req.body;
-	// TODO: add motification clicks
+	// TODO: add notification clicks
 	try {
 		// getting the year of age
 		let year = new Date().getFullYear();
