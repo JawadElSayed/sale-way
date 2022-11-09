@@ -58,7 +58,6 @@ const Form = () => {
 					value={email}
 					onChange={(e) => setEmail(e.target.value)}
 					shadow="black"
-					name="email"
 				></TextInput>
 				<TextInput
 					type="password"
@@ -67,7 +66,6 @@ const Form = () => {
 					value={password}
 					onChange={(e) => setPassword(e.target.value)}
 					shadow="black"
-					name="password"
 				></TextInput>
 				{error ? (
 					<p className="text-red-700 pt-2 text-left">{error}</p>
