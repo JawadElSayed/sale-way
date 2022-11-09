@@ -2,6 +2,7 @@
 	--primary: #7084ee;
 	--secondary: #9ba9f3;
 	--main-hover: #bbc4f0;
+	--red: #ff3333;
 }
 
 .bg-primary {
@@ -14,6 +15,10 @@
 
 .bg-main-hover {
 	background-color: var(--main-hover);
+}
+
+.bg-red {
+	background-color: var(--red);
 }
 
 .black-shadow {
