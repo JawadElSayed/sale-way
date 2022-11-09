@@ -3,9 +3,10 @@ import { useState, useEffect } from "react";
 const Button = ({
 	children,
 	onClick,
-	backgroundColor,
+	backgroundColor = "secondary",
 	rounded = "full",
 	className = "",
+	style,
 	type = "button",
 }) => {
 	const [hover, setHover] = useState(false);
@@ -25,9 +26,9 @@ const Button = ({
 	return (
 		<button
 			type={type}
-			className={`bg-${buttonColor} mt-8 p-2 text-white text-2xl 
+			className={`bg-${buttonColor} p-2 text-white text-2xl 
 						rounded-${rounded} ${shadow} ${className} `}
-			style={{ minWidth: "128px" }}
+			style={style}
 			onClick={onClick}
 			onMouseEnter={() => {
 				setHover(true);
