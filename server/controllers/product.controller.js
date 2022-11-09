@@ -16,7 +16,9 @@ const getAllProducts = async (req, res) => {
 		const products = await prisma.products.findMany({
 			where: {
 				branches: {
-					accesses: { some: { users: { email: req.email } } },
+					every: {
+						accesses: { some: { users: { email: req.email } } },
+					},
 				},
 			},
 			include: { images: { select: { image: true } } },
