@@ -33,7 +33,7 @@ const Form = () => {
 	useEffect(() => {
 		if (isSuccess) {
 			localStorage.setItem("token", loginData?.data?.token);
-			navigate("/users");
+			navigate("/store/products");
 		}
 	}, [isSuccess, loginData?.data.token, navigate]);
 
@@ -82,7 +82,7 @@ const Form = () => {
 				<Button
 					backgroundColor="secondary"
 					rounded="xl"
-					className="text-medium"
+					className="text-medium mt-8 w-32"
 					onClick={onSubmit}
 				>
 					Login
