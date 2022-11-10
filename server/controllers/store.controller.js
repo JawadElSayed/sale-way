@@ -1,5 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
-const { deleteBranch } = require("./branch.controller");
+const helpers = require("./helpers");
 
 const prisma = new PrismaClient();
 
@@ -17,7 +17,7 @@ const addStore = async (req, res) => {
 			const image_base64 = splited_image[1];
 			const image_extension = splited_image[0].split("/")[1];
 
-			// generating unique name acourding it time
+			// generating unique name according to time
 			image_path = `./public/images/store/${Date.now()}.${image_extension}`;
 
 			// saving image in folder
@@ -48,10 +48,9 @@ const deleteStore = async (req, res) => {
 		});
 
 		// delete all branches of store
-		const res1 = {};
 		for (let branch of branches) {
-			const req = { params: { id: branch.id } };
-			await deleteBranch(req, res1);
+			const request = { params: { id: branch.id } };
+			await helpers.deleteBranch(request);
 		}
 
 		// deleting store
