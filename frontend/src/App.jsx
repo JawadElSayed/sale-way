@@ -5,6 +5,7 @@ import Layout from "./layouts/layout";
 import Products from "./Pages/products.page";
 import LandingPage from "./Pages/landing.page";
 import AddProduct from "./Pages/addProduct.page";
+import AdminStores from "./Pages/AdminStores.page";
 
 const queryClient = new QueryClient();
 
@@ -35,7 +36,7 @@ function App() {
 							path="/Admin"
 							element={<Layout buttons={AdminPages} />}
 						>
-							<Route path="stores" element={null} />
+							<Route path="stores" element={<AdminStores />} />
 							<Route path="users" element={null} />
 							<Route path="analytics" element={null} />
 							<Route path="map" element={null} />
