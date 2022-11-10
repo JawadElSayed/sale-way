@@ -9,6 +9,7 @@ import AddProduct from "./Pages/addProduct.page";
 const queryClient = new QueryClient();
 
 const storePages = ["Products", "Analytics", "Profile"];
+const AdminPages = ["Stores", "Users", "Analytics", "Map"];
 
 function App() {
 	return (
@@ -16,33 +17,36 @@ function App() {
 			<Router>
 				<div className="site-font">
 					<Routes>
-						<Route exact path="/" element={<LandingPage />}></Route>
+						<Route path="/" element={<LandingPage />}></Route>
 
 						<Route
 							path="/store"
 							element={<Layout buttons={storePages} />}
 						>
+							<Route path="products" element={<Products />} />
+							<Route path="analytics" element={<Products />} />
+							<Route path="profile" element={<Products />} />
 							<Route
-								exact
-								path="products"
-								element={<Products />}
-							/>
-							<Route
-								exact
-								path="analytics"
-								element={<Products />}
-							/>
-							<Route
-								exact
-								path="profile"
-								element={<Products />}
-							/>
-							<Route
-								exact
 								path="add-product"
 								element={<AddProduct />}
 							/>
 						</Route>
+						<Route
+							path="/Admin"
+							element={<Layout buttons={AdminPages} />}
+						>
+							<Route path="stores" element={null} />
+							<Route path="users" element={null} />
+							<Route path="analytics" element={null} />
+							<Route path="map" element={null} />
+							<Route path="stores/add-store" element={null} />
+							<Route
+								path="stores/edit-store/:id"
+								element={null}
+							/>
+							<Route path="stores/store/:id" element={null} />
+						</Route>
+						<Route path="*" element={null} />
 					</Routes>
 				</div>
 			</Router>
