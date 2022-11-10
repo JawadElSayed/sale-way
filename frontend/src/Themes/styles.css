@@ -45,6 +45,12 @@ input::-webkit-calendar-picker-indicator {
 	opacity: 0;
 }
 
+select {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
 h1 {
 	font-size: 2.5rem;
 }
