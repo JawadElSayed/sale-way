@@ -1,10 +1,12 @@
 import Button from "../components/Button";
 import SearchBar from "../components/SearchBar";
+import DropList from "../components/DropList";
 
 const Header = ({
 	title,
 	firstRowButtons,
 	secondRowButtons,
+	filters,
 	titles,
 	showSearchBar = true,
 }) => {
@@ -30,13 +32,26 @@ const Header = ({
 				</div>
 			</div>
 
-			{showSearchBar && secondRowButtons && (
+			{showSearchBar && (secondRowButtons || filters) && (
 				<div className="pt-8 flex items-center">
 					{showSearchBar && (
 						<div className="flex-grow">
 							<SearchBar></SearchBar>
 						</div>
 					)}
+					<div>
+						{filters?.map((filter) => {
+							return (
+								<DropList
+									key={filter[0][0]}
+									value={filter[1]}
+									onChange={filter[2]}
+									options={filter[0]}
+									className="ml-10"
+								/>
+							);
+						})}
+					</div>
 					<div>
 						{secondRowButtons?.map((button) => {
 							return (
