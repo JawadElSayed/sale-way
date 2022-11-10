@@ -34,7 +34,10 @@ const Products = () => {
 				{isLoading && <h2>Loading...</h2>}
 				{data?.data.products.map((product) => {
 					return (
-						<div className="flex items-center pb-4 gap-6">
+						<div
+							key={product.id}
+							className="flex items-center pb-4 gap-6"
+						>
 							<img
 								src={`../../../server/public/images/products/default.png`}
 								alt="product"

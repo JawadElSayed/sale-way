@@ -26,7 +26,7 @@ const Button = ({
 	return (
 		<button
 			type={type}
-			className={`bg-${buttonColor} p-2 text-white text-2xl 
+			className={`bg-${buttonColor} py-2 px-4 text-white text-2xl 
 						rounded-${rounded} ${shadow} ${className} `}
 			style={style}
 			onClick={onClick}

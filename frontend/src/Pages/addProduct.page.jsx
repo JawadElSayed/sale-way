@@ -79,7 +79,7 @@ const AddProduct = () => {
 					pt={12}
 					onChange={(e) => setPercentage(e.target.value)}
 					value={percentage}
-					className="w-1/2 "
+					width="1/2"
 				/>
 				{error && (
 					<p className="text-red-700 pt-2 text-left">{error}</p>
