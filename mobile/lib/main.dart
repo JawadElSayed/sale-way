@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './screens/tabs.screen.dart';
 import './screens/map.screen.dart';
 import './screens/notification.screen.dart';
 import './screens/product.screen.dart';
@@ -24,8 +25,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginScreen(),
+      initialRoute: "/",
       routes: {
+        "/": (ctx) => TabScreen(),
         "/signup": (ctx) => SignUpScreen(),
         "/login": (ctx) => LoginScreen(),
         "/stores": (ctx) => StoresScreen(),
