@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,12 @@ class TabScreen extends StatefulWidget {
 class _TabScreenState extends State<TabScreen> {
   String? mtoken = "";
 
+  final LocationSettings locationSettings = LocationSettings(
+    accuracy: LocationAccuracy.high,
+    distanceFilter: 100,
+  );
+
+  late StreamSubscription<Position> positionStream;
 
     late Position currentLocation;
 
@@ -42,6 +49,15 @@ class _TabScreenState extends State<TabScreen> {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
     }
+  }
+
+  void livePosition() async {
+    positionStream =
+        Geolocator.getPositionStream().listen((Position? position) {
+      print(position == null ? 'Unknown' : '${position}');
+      currentLocation = position!;
+      // calculatingDistance();
+    });
   }
 
   @override
