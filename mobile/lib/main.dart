@@ -11,7 +11,7 @@ import './screens/signup.screen.dart';
 import './screens/stores.screen.dart';
 import './screens/login.screen.dart';
 import './screens/store.screen.dart';
-import 'notificationservice/local_notification_service.dart';
+import 'helpers/notificationservice/local_notification_service.dart';
 
 Future<void> backgroundHandler(RemoteMessage message) async {
   LocalNotificationService.createanddisplaynotification(message);

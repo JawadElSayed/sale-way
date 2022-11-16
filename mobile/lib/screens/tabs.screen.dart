@@ -1,5 +1,8 @@
+import 'dart:async';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:mobile/helpers/notificationservice/push_notification.dart';
 import './map.screen.dart';
 import './notification.screen.dart';
@@ -17,11 +20,34 @@ class TabScreen extends StatefulWidget {
 class _TabScreenState extends State<TabScreen> {
   String? mtoken = "";
 
-  
+
+    late Position currentLocation;
+
+  Future locationPermission() async {
+    bool services;
+    LocationPermission permission;
+
+    services = await Geolocator.isLocationServiceEnabled();
+
+    if (!services) {
+      AwesomeDialog(
+          context: context,
+          title: "services",
+          body: Text("location turned off"))
+        ..show();
+    }
+
+    permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+  }
 
   @override
   void initState() {
     notificationPermission();
+    locationPermission();
     getToken();
     pushNotification.displayNotification();
     super.initState();
