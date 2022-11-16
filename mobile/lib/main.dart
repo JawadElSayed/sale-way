@@ -12,6 +12,7 @@ import './screens/stores.screen.dart';
 import './screens/login.screen.dart';
 import './screens/store.screen.dart';
 import 'helpers/notificationservice/local_notification_service.dart';
+import "./helpers/notificationservice/notification.dart" as notification;
 
 Future<void> backgroundHandler(RemoteMessage message) async {
   LocalNotificationService.createanddisplaynotification(message);
@@ -22,6 +23,7 @@ void main() async {
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
   LocalNotificationService.initialize();
+  notification.getToken();
   runApp(const MyApp());
 }
 
