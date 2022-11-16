@@ -1,4 +1,6 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/helpers/notificationservice/push_notification.dart';
 import './map.screen.dart';
 import './notification.screen.dart';
 import './products.screen.dart';
@@ -13,6 +15,47 @@ class TabScreen extends StatefulWidget {
 }
 
 class _TabScreenState extends State<TabScreen> {
+  String? mtoken = "";
+
+  
+
+  @override
+  void initState() {
+    notificationPermission();
+    getToken();
+    pushNotification.displayNotification();
+    super.initState();
+  }
+
+
+  void notificationPermission() async {
+    print("object");
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    print('User granted permission: ${settings.authorizationStatus}');
+  }
+
+  void getToken() async {
+    await FirebaseMessaging.instance.getToken().then((token) {
+      setState(() {
+        mtoken = token;
+        print("the token is: $mtoken");
+      });
+    });
+  }
+
+
+
   final List<Widget> _pages = [
     StoresScreen(),
     ProductsScreen(),

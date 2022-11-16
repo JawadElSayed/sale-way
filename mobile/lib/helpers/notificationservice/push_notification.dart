@@ -24,6 +24,7 @@ class pushNotification {
     FirebaseMessaging.onMessage.listen(
       (message) {
         print("FirebaseMessaging.onMessage.listen");
+        print(message.notification);
         if (message.notification != null) {
           print(message.notification!.title);
           print(message.notification!.body);
