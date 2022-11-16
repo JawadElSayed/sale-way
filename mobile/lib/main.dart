@@ -13,6 +13,7 @@ import './screens/login.screen.dart';
 import './screens/store.screen.dart';
 import 'helpers/notificationservice/local_notification_service.dart';
 import "./helpers/notificationservice/notification.dart" as notification;
+import "./helpers/locationService/location.dart" as location;
 
 Future<void> backgroundHandler(RemoteMessage message) async {
   LocalNotificationService.createanddisplaynotification(message);
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    location.livePosition();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(

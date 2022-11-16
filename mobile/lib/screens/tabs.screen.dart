@@ -1,14 +1,12 @@
-import 'dart:async';
-import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:mobile/helpers/notificationservice/push_notification.dart';
 import './map.screen.dart';
 import './notification.screen.dart';
 import './products.screen.dart';
 import './profile.screen.dart';
 import './stores.screen.dart';
+import '../helpers/locationService/location.dart' as location;
+import '../helpers/notificationservice/notification.dart' as notification;
 
 class TabScreen extends StatefulWidget {
   const TabScreen({super.key});
@@ -20,110 +18,12 @@ class TabScreen extends StatefulWidget {
 class _TabScreenState extends State<TabScreen> {
   String? mtoken = "";
 
-  final LocationSettings locationSettings = LocationSettings(
-    accuracy: LocationAccuracy.high,
-    distanceFilter: 100,
-  );
-
-  late StreamSubscription<Position> positionStream;
-  List<Map<String, Object>> stores = [
-    {
-      "id": 1,
-      "latitude": 33.8885,
-      "longitude": 35.5065,
-      "lastNotification": "2022-10-10"
-    },
-    {
-      "id": 2,
-      "latitude": 33.887,
-      "longitude": 35.505,
-      "lastNotification": "2022-10-10"
-    }
-  ];
-  late Position currentLocation;
-
-  Future locationPermission() async {
-    bool services;
-    LocationPermission permission;
-
-    services = await Geolocator.isLocationServiceEnabled();
-
-    if (!services) {
-      AwesomeDialog(
-          context: context,
-          title: "services",
-          body: Text("location turned off"))
-        ..show();
-    }
-
-    permission = await Geolocator.checkPermission();
-
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-    }
-  }
-
-  void livePosition() async {
-    positionStream =
-        Geolocator.getPositionStream().listen((Position? position) {
-      print(position == null ? 'Unknown' : '${position}');
-      currentLocation = position!;
-      calculatingDistance();
-    });
-  }
-
-  void calculatingDistance() {
-    var distance;
-
-    for (int i = 0; i < stores.length; i++) {
-      distance = Geolocator.distanceBetween(
-          currentLocation.latitude,
-          currentLocation.longitude,
-          stores[i]["latitude"] as double,
-          stores[i]["longitude"] as double);
-      if (distance < 50 &&
-          DateTime.now().subtract(Duration(hours: 1)).isAfter(
-              DateTime.parse(stores[i]["lastNotification"] as String))) {
-        print("hello");
-      }
-      print(distance);
-    }
-  }
-
   @override
   void initState() {
-    notificationPermission();
-    locationPermission();
-    getToken();
+    notification.permission();
+    location.locationPermission();
     pushNotification.displayNotification();
-    livePosition();
     super.initState();
-  }
-
-  void notificationPermission() async {
-    print("object");
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
-
-    NotificationSettings settings = await messaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
-
-    print('User granted permission: ${settings.authorizationStatus}');
-  }
-
-  void getToken() async {
-    await FirebaseMessaging.instance.getToken().then((token) {
-      setState(() {
-        mtoken = token;
-        print("the token is: $mtoken");
-      });
-    });
   }
 
   final List<Widget> _pages = [
