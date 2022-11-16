@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -27,8 +26,21 @@ class _TabScreenState extends State<TabScreen> {
   );
 
   late StreamSubscription<Position> positionStream;
-
-    late Position currentLocation;
+  List<Map<String, Object>> stores = [
+    {
+      "id": 1,
+      "latitude": 33.8885,
+      "longitude": 35.5065,
+      "lastNotification": "2022-10-10"
+    },
+    {
+      "id": 2,
+      "latitude": 33.887,
+      "longitude": 35.505,
+      "lastNotification": "2022-10-10"
+    }
+  ];
+  late Position currentLocation;
 
   Future locationPermission() async {
     bool services;
@@ -56,8 +68,26 @@ class _TabScreenState extends State<TabScreen> {
         Geolocator.getPositionStream().listen((Position? position) {
       print(position == null ? 'Unknown' : '${position}');
       currentLocation = position!;
-      // calculatingDistance();
+      calculatingDistance();
     });
+  }
+
+  void calculatingDistance() {
+    var distance;
+
+    for (int i = 0; i < stores.length; i++) {
+      distance = Geolocator.distanceBetween(
+          currentLocation.latitude,
+          currentLocation.longitude,
+          stores[i]["latitude"] as double,
+          stores[i]["longitude"] as double);
+      if (distance < 50 &&
+          DateTime.now().subtract(Duration(hours: 1)).isAfter(
+              DateTime.parse(stores[i]["lastNotification"] as String))) {
+        print("hello");
+      }
+      print(distance);
+    }
   }
 
   @override
@@ -66,9 +96,9 @@ class _TabScreenState extends State<TabScreen> {
     locationPermission();
     getToken();
     pushNotification.displayNotification();
+    livePosition();
     super.initState();
   }
-
 
   void notificationPermission() async {
     print("object");
@@ -95,8 +125,6 @@ class _TabScreenState extends State<TabScreen> {
       });
     });
   }
-
-
 
   final List<Widget> _pages = [
     StoresScreen(),
