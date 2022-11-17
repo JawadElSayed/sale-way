@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:geolocator/geolocator.dart';
-import 'package:intl/intl.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import '../http/http.dart' as http;
 
 final LocationSettings locationSettings = LocationSettings(
@@ -39,18 +39,17 @@ Future locationPermission() async {
   }
 }
 
-void livePosition() async {
-  positionStream = Geolocator.getPositionStream().listen((Position? position) {
-    print(position == null ? 'Unknown' : '${position}');
+void livePosition(branches) async {
+  positionStream =
+      Geolocator.getPositionStream().listen((Position? position) async {
+    // print(position == null ? 'Unknown' : '${position}');
     currentLocation = position!;
-    calculatingDistance();
+    await calculatingDistance();
   });
 }
 
-var t =
-    "eFrP8DXyRI-fgiqz6RFN3A:APA91bGY2OGRCdw0wKLQQCnlwBBycaw2UeXCBZllU_810tnqAzFwJvhLgawV7KIHg3i9H9Te0W-XwrpJodfb-z5_AM0XIq5J0pEBYNDZxXRU7oPB9ry5CJP7algmewIXlUR2GqHFbfaT";
 var count = 0;
-void calculatingDistance() async {
+Future calculatingDistance() async {
   var distance;
 
   for (int i = 0; i < stores.length; i++) {
@@ -64,17 +63,19 @@ void calculatingDistance() async {
             .subtract(Duration(hours: 1))
             .isAfter(DateTime.parse(stores[i]["lastNotification"] as String)) &&
         count < 1) {
+      String deviceToken = "";
+      await FirebaseMessaging.instance.getToken().then((token) {
+        deviceToken = token.toString();
+      });
       var body = jsonEncode({
-        "token": "$t",
+        "token": deviceToken,
         "title": "${stores[i]["id"]}",
         "body": "${stores[i]["id"]} has distance nearby chechout!!!"
       });
       var res = await http.post("/notification", body);
-      stores[i]["last"] = DateFormat().format(DateTime.now());
-      print(res.body);
+      // print(res.body);
       count++;
-      print("hello");
     }
-    print(distance);
+    // print(distance);
   }
 }
