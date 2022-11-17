@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/helpers/notificationservice/push_notification.dart';
+import 'package:mobile/providers/products.provider.dart';
+import 'package:provider/provider.dart';
+import '../providers/branches.provider.dart';
 import './map.screen.dart';
 import './notification.screen.dart';
 import './products.screen.dart';
@@ -16,14 +19,30 @@ class TabScreen extends StatefulWidget {
 }
 
 class _TabScreenState extends State<TabScreen> {
-  String? mtoken = "";
-
   @override
   void initState() {
     notification.permission();
     location.locationPermission();
     pushNotification.displayNotification();
     super.initState();
+  }
+
+  Future getData() async {
+    await Provider.of<Branches>(context).getBranches();
+    await Provider.of<Products>(context, listen: false).getProducts();
+  }
+
+  var init = true;
+  late List branches;
+  late List products;
+  @override
+  void didChangeDependencies() {
+    if (init) {
+      getData();
+    }
+    init = false;
+
+    super.didChangeDependencies();
   }
 
   final List<Widget> _pages = [
@@ -44,14 +63,15 @@ class _TabScreenState extends State<TabScreen> {
 
   @override
   Widget build(BuildContext context) {
+    branches = Provider.of<Branches>(context).branchesGetter;
+    // location.livePosition(branches);
     return Scaffold(
-      appBar: AppBar(title: Text("Title")),
       body: _pages[_selectedPageIndex],
       bottomNavigationBar: BottomNavigationBar(
           onTap: _selectPage,
-          backgroundColor: Colors.blue,
+          backgroundColor: Theme.of(context).primaryColor,
           unselectedItemColor: Colors.white,
-          selectedItemColor: Colors.blue.shade100,
+          selectedItemColor: Theme.of(context).accentColor,
           currentIndex: _selectedPageIndex,
           items: [
             BottomNavigationBarItem(
