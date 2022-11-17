@@ -1,4 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:mobile/helpers/http/http.dart';
 
 void permission() async {
   print("object");
@@ -17,10 +18,9 @@ void permission() async {
   print('User granted permission: ${settings.authorizationStatus}');
 }
 
-var deviceToken;
-
-void getToken() async {
+Future getToken() async {
   await FirebaseMessaging.instance.getToken().then((token) {
-    deviceToken = token;
+    // print("the token is: $token");
   });
+  return token;
 }
