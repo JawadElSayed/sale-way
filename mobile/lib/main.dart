@@ -24,7 +24,7 @@ void main() async {
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
   LocalNotificationService.initialize();
-  notification.getToken();
+
   runApp(const MyApp());
 }
 
@@ -35,6 +35,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     location.livePosition();
+    notification.getToken();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
