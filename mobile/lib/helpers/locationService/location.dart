@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:geolocator/geolocator.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:mobile/providers/branches.provider.dart';
 import '../http/http.dart' as http;
 
 final LocationSettings locationSettings = LocationSettings(
@@ -11,20 +10,6 @@ final LocationSettings locationSettings = LocationSettings(
 );
 
 late StreamSubscription<Position> positionStream;
-List<Map<String, Object>> stores = [
-  {
-    "id": 1,
-    "latitude": 33.8885,
-    "longitude": 35.5065,
-    "lastNotification": "2022-10-10"
-  },
-  {
-    "id": 2,
-    "latitude": 33.887,
-    "longitude": 35.505,
-    "lastNotification": "2022-10-10"
-  }
-];
 late Position currentLocation;
 
 Future locationPermission() async {
