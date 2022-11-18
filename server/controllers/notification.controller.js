@@ -12,6 +12,7 @@ const prisma = new PrismaClient();
 
 const sendNotification = async (req, res) => {
 	try {
+		// creating message
 		const message = {
 			token: req.body.token,
 			notification: {
@@ -30,14 +31,15 @@ const sendNotification = async (req, res) => {
 				},
 			},
 		};
-
+		// sending notification by firebase
 		fcm.send(message, async (err, response) => {
 			if (err) {
 				return res.status(400).json({ message: err });
 			}
 			res.status(200).json(response);
 			const firebase_id = response.split("messages/")[1];
-			
+
+			// saving notification in data
 			const save = await prisma.notifications.create({
 				data: {
 					firebase_id: firebase_id,
@@ -53,8 +55,23 @@ const sendNotification = async (req, res) => {
 	}
 };
 
+const getUserNotifications = async (req, res) => {
+	try {
+		const notifications = await prisma.notifications.findMany({
+			where: {
+				users: { email: req.email },
+				clicked: false,
+				created_at: { gt: req.body.last_delete },
+			},
+		});
+	} catch (err) {
+		res.status(400).json({ message: err.message });
+	}
+};
+
 module.exports = {
 	sendNotification,
+	getUserNotifications,
 };
 
 // TODO: get notification analytics
