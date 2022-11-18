@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:geolocator/geolocator.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:mobile/providers/branches.provider.dart';
 import '../http/http.dart' as http;
 
 final LocationSettings locationSettings = LocationSettings(
@@ -44,37 +45,35 @@ void livePosition(branches) async {
       Geolocator.getPositionStream().listen((Position? position) async {
     // print(position == null ? 'Unknown' : '${position}');
     currentLocation = position!;
-    await calculatingDistance();
+    await calculatingDistance(branches);
   });
 }
 
 var count = 0;
-Future calculatingDistance() async {
-  var distance;
+Future calculatingDistance(branches) async {
+  double distance;
 
-  for (int i = 0; i < stores.length; i++) {
+  for (var branch in branches) {
     distance = Geolocator.distanceBetween(
         currentLocation.latitude,
         currentLocation.longitude,
-        stores[i]["latitude"] as double,
-        stores[i]["longitude"] as double);
+        double.parse(branch.latitude),
+        double.parse(branch.longitude));
     if (distance < 50 &&
         DateTime.now()
-            .subtract(Duration(hours: 1))
-            .isAfter(DateTime.parse(stores[i]["lastNotification"] as String)) &&
-        count < 1) {
+            .subtract(const Duration(hours: 1))
+            .isAfter(DateTime.parse(branch.last_notification))) {
       String deviceToken = "";
       await FirebaseMessaging.instance.getToken().then((token) {
         deviceToken = token.toString();
       });
       var body = jsonEncode({
         "token": deviceToken,
-        "title": "${stores[i]["id"]}",
-        "body": "${stores[i]["id"]} has distance nearby chechout!!!"
+        "title": "${branch.name}",
+        "body": "${branch.name} has distance nearby chechout!!!"
       });
       var res = await http.post("/notification", body);
       // print(res.body);
-      count++;
     }
     // print(distance);
   }
