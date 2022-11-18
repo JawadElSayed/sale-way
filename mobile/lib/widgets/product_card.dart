@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../providers/product.provider.dart';
+import 'circle_image.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -23,12 +24,15 @@ class ProductCard extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                      padding: EdgeInsets.only(right: 20),
-                      child: Text("image")),
+                    child: const CircleImage(
+                        url:
+                            'http://192.168.0.103:3000/static/images/store/default.jpg'),
+                  ),
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                          padding: EdgeInsets.only(bottom: 10),
+                          padding: const EdgeInsets.only(bottom: 10),
                           child: Text(product.name)),
                       Text("category")
                     ],
@@ -36,9 +40,10 @@ class ProductCard extends StatelessWidget {
                 ],
               ),
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                      padding: EdgeInsets.only(bottom: 10),
+                      padding: const EdgeInsets.only(bottom: 10),
                       child: Text("discount")),
                   Text("distance")
                 ],
