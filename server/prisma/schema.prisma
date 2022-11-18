@@ -35,19 +35,20 @@ model accesses {
 }
 
 model branches {
-  id            Int             @id @default(autoincrement())
-  store_id      Int
-  name          String?         @db.VarChar(255)
-  phone         String?         @db.VarChar(255)
-  about         String?         @db.VarChar(255)
-  longitude     String?         @db.VarChar(255)
-  latitude      String?         @db.VarChar(255)
-  image         String?         @db.VarChar(255)
-  stores        stores          @relation(fields: [store_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_branches_stores1")
-  Notifications Notifications[]
-  accesses      accesses[]
-  products      products[]
-  store_types   store_types[]
+  id                Int             @id @default(autoincrement())
+  store_id          Int
+  name              String?         @db.VarChar(255)
+  phone             String?         @db.VarChar(255)
+  about             String?         @db.VarChar(255)
+  longitude         String?         @db.VarChar(255)
+  latitude          String?         @db.VarChar(255)
+  image             String?         @db.VarChar(255)
+  last_notification DateTime        @default(now())
+  stores            stores          @relation(fields: [store_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_branches_stores1")
+  Notifications     Notifications[]
+  accesses          accesses[]
+  products          products[]
+  store_types       store_types[]
 
   @@index([store_id], map: "fk_branches_stores1_idx")
 }
