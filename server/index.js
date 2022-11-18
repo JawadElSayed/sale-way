@@ -7,6 +7,9 @@ const authMiddleware = require("./middlewares/auth.middleware");
 app.use(express.json());
 app.use(cors());
 
+const path = require("path");
+app.use("/static", express.static(path.join(__dirname, "./public")));
+
 const authRoutes = require("./routes/auth.routes");
 app.use("/auth", authRoutes);
 
