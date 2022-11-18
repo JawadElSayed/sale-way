@@ -9,13 +9,32 @@ class BottomModal extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(50))),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Text("image"),
+              Container(
+                width: 60,
+                height: 60,
+                margin: EdgeInsets.only(right: 15),
+                decoration: BoxDecoration(
+                  color: const Color(0xff7c94b6),
+                  image: DecorationImage(
+                    image: NetworkImage(
+                        'http://192.168.0.103:3000/static/images/store/default.jpg'),
+                    fit: BoxFit.cover,
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                  border: Border.all(
+                    color: Theme.of(context).accentColor,
+                    width: 2.0,
+                  ),
+                ),
+              ),
               Text(data.name),
             ],
           ),
