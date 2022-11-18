@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/widgets/circle_image.dart';
 import '../providers/product.provider.dart';
 
 class ProductScreen extends StatelessWidget {
@@ -37,24 +38,9 @@ class ProductScreen extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: 20),
                   child: Row(
                     children: [
-                      Container(
-                        width: 60,
-                        height: 60,
-                        margin: EdgeInsets.only(right: 15),
-                        decoration: BoxDecoration(
-                          color: const Color(0xff7c94b6),
-                          image: DecorationImage(
-                            image: NetworkImage(
-                                'http://192.168.0.103:3000/static/images/store/default.jpg'),
-                            fit: BoxFit.cover,
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                          border: Border.all(
-                            color: Theme.of(context).accentColor,
-                            width: 2.0,
-                          ),
-                        ),
-                      ),
+                      const CircleImage(
+                          url:
+                              'http://192.168.0.103:3000/static/images/store/default.jpg'),
                       Text(product.name),
                     ],
                   ),

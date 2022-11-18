@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/providers/branch.provider.dart';
+import 'package:mobile/widgets/circle_image.dart';
 
 class BottomModal extends StatelessWidget {
   final Branch data;
@@ -17,24 +18,9 @@ class BottomModal extends StatelessWidget {
         children: [
           Row(
             children: [
-              Container(
-                width: 60,
-                height: 60,
-                margin: EdgeInsets.only(right: 15),
-                decoration: BoxDecoration(
-                  color: const Color(0xff7c94b6),
-                  image: DecorationImage(
-                    image: NetworkImage(
-                        'http://192.168.0.103:3000/static/images/store/default.jpg'),
-                    fit: BoxFit.cover,
-                  ),
-                  borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                  border: Border.all(
-                    color: Theme.of(context).accentColor,
-                    width: 2.0,
-                  ),
-                ),
-              ),
+              const CircleImage(
+                  url:
+                      'http://192.168.0.103:3000/static/images/store/default.jpg'),
               Text(data.name),
             ],
           ),
