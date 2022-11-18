@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
           "/stores": (ctx) => StoresScreen(),
           "/store": (ctx) => const StoreScreen(),
           "/products": (ctx) => const ProductsScreen(),
-          "/product": (ctx) => const ProductScreen(),
+          "/product": (ctx) => ProductScreen(),
           "/map": (ctx) => const MapScreen(),
           "/notification": (ctx) => const NotificationScreen(),
           "/profile": (ctx) => const ProfileScreen(),
