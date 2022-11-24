@@ -184,8 +184,17 @@ const getBranch = async (req, res) => {
 			include: {
 				products: {
 					orderBy: { discount: "desc" },
-					select: { discount: true },
-					take: 1,
+					include: {
+						images: { select: { image: true } },
+						product_categories: {
+							include: {
+								categories: { select: { category: true } },
+							},
+						},
+					},
+				},
+				store_types: {
+					select: { categories: { select: { category: true } } },
 				},
 			},
 		});
