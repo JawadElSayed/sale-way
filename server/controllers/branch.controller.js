@@ -105,9 +105,19 @@ const deleteBranch = async (req, res) => {
 		return res.status(400).json({ message: "params must be Integer" });
 	try {
 		// this function delete access, type and products connection
+		await prisma.accesses.deleteMany({
+			where: { branch_id: parseInt(req.params.id) },
+		});
+		await prisma.store_types.deleteMany({
+			where: { branch_id: parseInt(req.params.id) },
+		});
+		await prisma.products.deleteMany({
+			where: { branches: { some: { id: parseInt(req.params.id) } } },
+		});
 		// then delete the branch
-		await helpers.deleteBranch(req);
-
+		await prisma.branches.deleteMany({
+			where: { id: parseInt(req.params.id) },
+		});
 		res.status(200).json({ success: true });
 	} catch (err) {
 		res.status(400).json({ message: err.message });
