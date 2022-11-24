@@ -9,6 +9,7 @@ const {
 	getBestUser,
 	getBestBranch,
 	getClicksAnalytics,
+	getOwnerBranchAnalytics,
 } = require("../controllers/notification.controller");
 const router = Router();
 
@@ -19,6 +20,7 @@ router.get("/best-user", getBestUser);
 router.get("/best-branch", getBestBranch);
 router.get("/clicks", getClicksAnalytics);
 router.get("/", getAllNotificationAnalytics);
+router.get("/branch", getOwnerBranchAnalytics);
 router.get("/:id", getBranchAnalytics);
 router.delete("/:id", deleteNotification);
 
