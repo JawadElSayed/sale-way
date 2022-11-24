@@ -10,12 +10,17 @@ const login = async (req, res) => {
 
 	// getting user by email
 	const user = await prisma.users.findUnique({ where: { email: email } });
-	if (!user) return res.status(400).json({ message: "Invalid Credentials" });
+	if (!user)
+		return res
+			.status(400)
+			.json({ status: "error", message: "Invalid Credentials" });
 
 	// checking password
 	const isMatch = await bcrypt.compare(password, user.password);
 	if (!isMatch)
-		return res.status(400).json({ message: "Invalid Credentials" });
+		return res
+			.status(400)
+			.json({ status: "error", message: "Invalid Credentials" });
 
 	// generating jwt token
 	const token = jwt.sign(
@@ -23,7 +28,7 @@ const login = async (req, res) => {
 		process.env.JWT_SECRET_KEY,
 		{ expiresIn: "24h" }
 	);
-	res.status(200).json({ token: token });
+	res.status(200).json({ status: "success", token: token, user: user });
 };
 
 const signup = async (req, res) => {
