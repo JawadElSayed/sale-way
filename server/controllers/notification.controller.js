@@ -160,6 +160,23 @@ const getBranchAnalytics = async (req, res) => {
 		res.status(400).json({ message: err.message });
 	}
 };
+const getOwnerBranchAnalytics = async (req, res) => {
+	try {
+		const analytics = await prisma.notifications.findMany({
+			where: {
+				branches: {
+					accesses: { some: { users: { email: req.email } } },
+				},
+				clicked: true,
+			},
+		});
+
+		res.status(200).json({ status: "success", analytics: analytics });
+	} catch (err) {
+		console.error(err.message);
+		res.status(400).json({ message: err.message });
+	}
+};
 
 module.exports = {
 	sendNotification,
@@ -167,4 +184,5 @@ module.exports = {
 	clickNotification,
 	getAllNotificationAnalytics,
 	getBranchAnalytics,
+	getOwnerBranchAnalytics,
 };
