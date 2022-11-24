@@ -7,6 +7,15 @@ const getAllBranches = async (req, res) => {
 	try {
 		const branches = await prisma.branches.findMany({
 			orderBy: { name: "asc" },
+			include: {
+				store_types: { select: { categories: true } },
+				products: {
+					include: {
+						images: true,
+						product_categories: { select: { categories: true } },
+					},
+				},
+			},
 		});
 		res.status(200).json({ branches: branches });
 	} catch (err) {
