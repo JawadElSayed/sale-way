@@ -10,6 +10,14 @@ const fcm = new FCM(credential);
 
 const prisma = new PrismaClient();
 
+const date = new Date();
+let lastWeek = new Date();
+let lastMonth = new Date();
+let lastYear = new Date();
+lastWeek.setDate(date.getDate() - 6);
+lastMonth.setMonth(date.getMonth() - 1);
+lastYear.setFullYear(date.getFullYear() - 1);
+
 const sendNotification = async (req, res) => {
 	try {
 		// creating message
@@ -45,6 +53,7 @@ const sendNotification = async (req, res) => {
 					firebase_id: firebase_id,
 				},
 			});
+			console.log(oldNotification);
 			if (oldNotification) return;
 
 			// saving notification in data
@@ -67,15 +76,21 @@ const sendNotification = async (req, res) => {
 	}
 };
 
+// get every user his notifications
 const getUserNotifications = async (req, res) => {
 	try {
 		const notifications = await prisma.notifications.findMany({
 			where: {
 				users: { email: req.email },
 				clicked: false,
-				created_at: { gt: req.body.last_delete },
+				deleted: false,
 			},
+			include: {
+				branches: true,
+			},
+			orderBy: { created_at: "desc" },
 		});
+		res.status(200).json({ notifications: notifications });
 	} catch (err) {
 		res.status(400).json({ message: err.message });
 	}
