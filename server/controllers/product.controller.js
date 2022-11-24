@@ -38,7 +38,12 @@ const getAllProducts = async (req, res) => {
 					},
 				},
 			},
-			include: { images: { select: { image: true } } },
+			include: {
+				images: { select: { image: true } },
+				product_categories: {
+					select: { categories: { select: { category: true } } },
+				},
+			},
 		});
 
 		res.status(200).json({ products: products });
@@ -59,6 +64,7 @@ const getProduct = async (req, res) => {
 			include: {
 				images: { select: { image: true } },
 				branches: true,
+				product_categories: { select: { categories: true } },
 			},
 		});
 
