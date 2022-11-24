@@ -128,8 +128,25 @@ const clickNotification = async (req, res) => {
 	}
 };
 
+// get all clicked notifications
+const getAllNotificationAnalytics = async (req, res) => {
+	try {
+		const analytics = await prisma.notifications.findMany({
+			where: { clicked: true },
+			include: { branches: true, users: true },
+			orderBy: { created_at: "desc" },
+		});
+
+		res.status(200).json({ status: "success", analytics: analytics });
+	} catch (err) {
+		console.error(err.message);
+		res.status(400).json({ message: err.message });
+	}
+};
+
 module.exports = {
 	sendNotification,
 	getUserNotifications,
 	clickNotification,
+	getAllNotificationAnalytics,
 };
