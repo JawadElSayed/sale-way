@@ -256,6 +256,56 @@ const getBestUser = async (req, res) => {
 	}
 };
 
+const getBestBranch = async (req, res) => {
+	try {
+		// get best branch lastWeek
+		const branchLastWeek = await prisma.notifications.groupBy({
+			by: ["branch_id"],
+			where: { clicked: true, clicked_at: { gte: lastWeek } },
+			_count: { clicked: true },
+			orderBy: { _count: { clicked: "desc" } },
+			take: 1,
+		});
+		const nameLastWeek = await prisma.branches.findFirst({
+			where: { id: branchLastWeek[0].branch_id },
+		});
+		// get best branch lastMonth
+		const branchLastMonth = await prisma.notifications.groupBy({
+			by: ["branch_id"],
+			where: { clicked: true, clicked_at: { gte: lastMonth } },
+			_count: { clicked: true },
+			orderBy: { _count: { clicked: "desc" } },
+			take: 1,
+		});
+		const nameLastMonth = await prisma.branches.findFirst({
+			where: { id: branchLastMonth[0].branch_id },
+		});
+		// get best branch lastYear
+		const branchLastYear = await prisma.notifications.groupBy({
+			by: ["branch_id"],
+			where: { clicked: true, clicked_at: { gte: lastYear } },
+			_count: { clicked: true },
+			orderBy: { _count: { clicked: "desc" } },
+			take: 1,
+		});
+		const nameLastYear = await prisma.branches.findFirst({
+			where: { id: branchLastYear[0].branch_id },
+		});
+		res.status(200).json({
+			status: "success",
+			lastWeek: branchLastWeek,
+			lastMonth: branchLastMonth,
+			lastYear: branchLastYear,
+			nameLastWeek: nameLastWeek,
+			nameLastMonth: nameLastMonth,
+			nameLastYear: nameLastYear,
+		});
+	} catch (err) {
+		console.log(err.message);
+		res.status(400).json({ message: err.message });
+	}
+};
+
 module.exports = {
 	sendNotification,
 	getUserNotifications,
@@ -264,5 +314,6 @@ module.exports = {
 	getBranchAnalytics,
 	deleteNotification,
 	getBestUser,
+	getBestBranch,
 	getOwnerBranchAnalytics,
 };
