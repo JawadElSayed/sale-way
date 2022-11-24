@@ -5,8 +5,14 @@ const prisma = new PrismaClient();
 
 const getAllUsers = async (req, res) => {
 	try {
-		// TODO: add notification clicks
-		const users = await prisma.users.findMany({});
+		const users = await prisma.users.findMany({
+			include: {
+				Notifications: {
+					where: { clicked: true },
+					select: { firebase_id: true },
+				},
+			},
+		});
 		res.status(200).json({ users: users });
 	} catch (err) {
 		res.status(400).json({ message: err.message });
