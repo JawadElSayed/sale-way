@@ -258,6 +258,19 @@ const editBranch = async (req, res) => {
 	}
 };
 
+const getBranchesByProduct = async (req, res) => {
+	if (!parseInt(req.params.id))
+		return res.status(400).json({ message: "params must be Integer" });
+	try {
+		const branches = await prisma.branches.findMany({
+			where: { products: { some: { id: parseInt(req.params.id) } } },
+		});
+		res.status(200).json({ branches: branches });
+	} catch (err) {
+		res.status(400).json({ message: err.message });
+	}
+};
+
 module.exports = {
 	getAllBranches,
 	getBranchesOfUser,
@@ -268,4 +281,5 @@ module.exports = {
 	deleteBranch,
 	branchSearch,
 	filterBranchesByType,
+	getBranchesByProduct,
 };
