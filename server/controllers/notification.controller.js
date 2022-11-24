@@ -144,9 +144,27 @@ const getAllNotificationAnalytics = async (req, res) => {
 	}
 };
 
+const getBranchAnalytics = async (req, res) => {
+	try {
+		// checking if id is Integer
+		if (!parseInt(req.params.id))
+			return res.status(400).json({ message: "params must be Integer" });
+
+		const analytics = await prisma.notifications.findMany({
+			where: { branch_id: parseInt(req.params.id), clicked: true },
+		});
+
+		res.status(200).json({ status: "success", analytics: analytics });
+	} catch (err) {
+		console.error(err.message);
+		res.status(400).json({ message: err.message });
+	}
+};
+
 module.exports = {
 	sendNotification,
 	getUserNotifications,
 	clickNotification,
 	getAllNotificationAnalytics,
+	getBranchAnalytics,
 };
