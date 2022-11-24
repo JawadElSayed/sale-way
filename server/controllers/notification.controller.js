@@ -206,6 +206,56 @@ const deleteNotification = async (req, res) => {
 	}
 };
 
+const getBestUser = async (req, res) => {
+	try {
+		// get best user lastWeek
+		const userLastWeek = await prisma.notifications.groupBy({
+			by: ["user_id"],
+			where: { clicked: true, clicked_at: { gte: lastWeek } },
+			_count: { clicked: true },
+			orderBy: { _count: { clicked: "desc" } },
+			take: 1,
+		});
+		const nameLastWeek = await prisma.users.findFirst({
+			where: { id: userLastWeek[0].user_id },
+		});
+		// get best user lastMonth
+		const userLastMonth = await prisma.notifications.groupBy({
+			by: ["user_id"],
+			where: { clicked: true, clicked_at: { gte: lastMonth } },
+			_count: { clicked: true },
+			orderBy: { _count: { clicked: "desc" } },
+			take: 1,
+		});
+		const nameLastMonth = await prisma.users.findFirst({
+			where: { id: userLastMonth[0].user_id },
+		});
+		// get best user lastYear
+		const userLastYear = await prisma.notifications.groupBy({
+			by: ["user_id"],
+			where: { clicked: true, clicked_at: { gte: lastYear } },
+			_count: { clicked: true },
+			orderBy: { _count: { clicked: "desc" } },
+			take: 1,
+		});
+		const nameLastYear = await prisma.users.findFirst({
+			where: { id: userLastYear[0].user_id },
+		});
+		res.status(200).json({
+			status: "success",
+			lastWeek: userLastWeek,
+			lastMonth: userLastMonth,
+			lastYear: userLastYear,
+			nameLastWeek: nameLastWeek,
+			nameLastMonth: nameLastMonth,
+			nameLastYear: nameLastYear,
+		});
+	} catch (err) {
+		console.log(err.message);
+		res.status(400).json({ message: err.message });
+	}
+};
+
 module.exports = {
 	sendNotification,
 	getUserNotifications,
@@ -213,5 +263,6 @@ module.exports = {
 	getAllNotificationAnalytics,
 	getBranchAnalytics,
 	deleteNotification,
+	getBestUser,
 	getOwnerBranchAnalytics,
 };
