@@ -10,6 +10,23 @@ function sleep(ms) {
 	});
 }
 
+const getProducts = async (req, res) => {
+	try {
+		const products = await prisma.products.findMany({
+			include: {
+				images: true,
+				branches: {
+					include: { store_types: { select: { categories: true } } },
+				},
+				product_categories: { select: { categories: true } },
+			},
+		});
+		res.status(200).json({ products: products });
+	} catch (err) {
+		res.status(400).json({ message: err.message });
+	}
+};
+
 const getAllProducts = async (req, res) => {
 	try {
 		// getting products
@@ -284,4 +301,5 @@ module.exports = {
 	productSearch,
 	getProductsOfStore,
 	getProductsOfBranch,
+	getProducts,
 };
