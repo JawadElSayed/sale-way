@@ -178,11 +178,40 @@ const getOwnerBranchAnalytics = async (req, res) => {
 	}
 };
 
+const deleteNotification = async (req, res) => {
+	try {
+		// check if already deleted
+		const deleted = await prisma.notifications.findFirst({
+			where: { firebase_id: req.params.id, deleted: true },
+		});
+
+		if (deleted) {
+			return res
+				.status(400)
+				.json({ status: "error", message: "already deleted" });
+		}
+
+		// select notification as deleted
+		const notification = await prisma.notifications.update({
+			where: { firebase_id: req.params.id },
+			data: { deleted: true },
+		});
+
+		res.status(200).json({
+			status: "success",
+			firebase_id: notification.firebase_id,
+		});
+	} catch (err) {
+		res.status(400).json({ message: err.message });
+	}
+};
+
 module.exports = {
 	sendNotification,
 	getUserNotifications,
 	clickNotification,
 	getAllNotificationAnalytics,
 	getBranchAnalytics,
+	deleteNotification,
 	getOwnerBranchAnalytics,
 };
