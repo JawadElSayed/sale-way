@@ -27,7 +27,7 @@ const Button = ({
 		<button
 			type={type}
 			className={`bg-${buttonColor} py-2 px-4 text-white text-2xl 
-						rounded-${rounded} ${shadow} ${className} `}
+						rounded-${rounded} ${shadow} ${className} font-medium`}
 			style={style}
 			onClick={onClick}
 			onMouseEnter={() => {
