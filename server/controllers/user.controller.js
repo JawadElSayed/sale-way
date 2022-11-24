@@ -123,9 +123,11 @@ const addUser = async (req, res) => {
 		// creating a new user
 		await prisma.users.create({
 			data: {
-				...body,
+				name: body.name,
+				gender: body.gender,
 				email: email,
 				DOB: date,
+				profile: "/static/images/profile/default.jpeg",
 				user_types: { connect: { id: user_type_id } },
 				password: await bcrypt.hash(password, 10),
 			},
