@@ -306,6 +306,32 @@ const getBestBranch = async (req, res) => {
 	}
 };
 
+const getClicksAnalytics = async (req, res) => {
+	try {
+		// get clicks lastWeek
+		const clicksLastWeek = await prisma.notifications.count({
+			where: { clicked: true, clicked_at: { gte: lastWeek } },
+		});
+		// get clicks lastMonth
+		const clicksLastMonth = await prisma.notifications.count({
+			where: { clicked: true, clicked_at: { gte: lastMonth } },
+		});
+		// get clicks lastYear
+		const clicksLastYear = await prisma.notifications.count({
+			where: { clicked: true, clicked_at: { gte: lastYear } },
+		});
+		res.status(200).json({
+			status: "success",
+			lastWeek: clicksLastWeek,
+			lastMonth: clicksLastMonth,
+			lastYear: clicksLastYear,
+		});
+	} catch (err) {
+		console.log(err.message);
+		res.status(400).json({ message: err.message });
+	}
+};
+
 module.exports = {
 	sendNotification,
 	getUserNotifications,
@@ -315,5 +341,6 @@ module.exports = {
 	deleteNotification,
 	getBestUser,
 	getBestBranch,
+	getClicksAnalytics,
 	getOwnerBranchAnalytics,
 };
