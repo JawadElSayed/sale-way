@@ -52,7 +52,7 @@ const addBranch = async (req, res) => {
 		// saving image
 		// setting default case
 		let image_path;
-		if (!image) image_path = `./public/images/store/default.jpg`;
+		if (!image) image_path = `/static/images/store/default.jpg`;
 		else {
 			// spliting base64
 			const splited_image = body.image.split(";base64,");
@@ -71,7 +71,12 @@ const addBranch = async (req, res) => {
 		// creating branch
 		const branch = await prisma.branches.create({
 			data: {
-				...body,
+				name: body.name,
+				about: body.about,
+				latitude: body.latitude,
+				longitude: body.longitude,
+				phone: body.phone,
+				store_id: body.store_id,
 				image: image_path,
 				store_types: {
 					create: {
