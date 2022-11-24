@@ -31,13 +31,21 @@ const sendNotification = async (req, res) => {
 				},
 			},
 		};
+
 		// sending notification by firebase
 		fcm.send(message, async (err, response) => {
 			if (err) {
 				return res.status(400).json({ message: err });
 			}
-			res.status(200).json(response);
+
 			const firebase_id = response.split("messages/")[1];
+
+			const oldNotification = await prisma.notifications.findFirst({
+				where: {
+					firebase_id: firebase_id,
+				},
+			});
+			if (oldNotification) return;
 
 			// saving notification in data
 			const save = await prisma.notifications.create({
@@ -48,7 +56,11 @@ const sendNotification = async (req, res) => {
 					users: { connect: { email: req.email } },
 					branches: { connect: { id: req.body.branch_id } },
 				},
+				include: {
+					branches: true,
+				},
 			});
+			res.status(200).json({ notification: save });
 		});
 	} catch (err) {
 		res.status(400).json({ message: err.message });
@@ -73,7 +85,3 @@ module.exports = {
 	sendNotification,
 	getUserNotifications,
 };
-
-// TODO: get notification analytics
-// TODO: get store analytics
-// TODO: get branch analytics
