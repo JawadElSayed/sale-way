@@ -53,7 +53,6 @@ const sendNotification = async (req, res) => {
 					firebase_id: firebase_id,
 				},
 			});
-			console.log(oldNotification);
 			if (oldNotification) return;
 
 			// saving notification in data
@@ -96,7 +95,41 @@ const getUserNotifications = async (req, res) => {
 	}
 };
 
+const clickNotification = async (req, res) => {
+	try {
+		// check if already clicked
+		const clicked = await prisma.notifications.findFirst({
+			where: { firebase_id: req.body.firebase_id, clicked: true },
+		});
+
+		if (clicked) {
+			return res
+				.status(400)
+				.json({ status: "error", message: "already clicked" });
+		}
+
+		// change notification to clicked
+		const notification = await prisma.notifications.update({
+			where: {
+				firebase_id: req.body.firebase_id,
+			},
+			data: {
+				clicked: true,
+				clicked_at: new Date().toISOString(),
+			},
+		});
+		res.status(200).json({
+			status: "success",
+			firebase_id: notification.firebase_id,
+		});
+	} catch (err) {
+		console.error(err.message);
+		res.status(400).json({ message: err.message });
+	}
+};
+
 module.exports = {
 	sendNotification,
 	getUserNotifications,
+	clickNotification,
 };
