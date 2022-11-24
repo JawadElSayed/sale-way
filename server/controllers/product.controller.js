@@ -145,7 +145,7 @@ const addProduct = async (req, res) => {
 			const image_extension = splited_image[0].split("/")[1];
 			// generating unique name according to time
 			await sleep(1);
-			const image_path = `./public/images/products/${Date.now()}.${image_extension}`;
+			const image_path = `/static/images/products/${Date.now()}.${image_extension}`;
 
 			// saving image in folder
 			fs.writeFile(image_path, image_base64, "base64", (err) => {
@@ -158,7 +158,7 @@ const addProduct = async (req, res) => {
 		// setting default case
 		if (images_array.length == 0)
 			images_array.push({
-				image: `./public/images/products/default.png`,
+				image: `/static/images/products/default.png`,
 			});
 
 		// adding product for all branches
