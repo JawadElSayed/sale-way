@@ -12,6 +12,17 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
+  void deleteAllNotifications(notifications) async {
+    for (var notification in notifications) {
+      var data = notification.firebase_id;
+
+      await Provider.of<Notifications>(context, listen: false)
+          .deleteNotification(data);
+    }
+
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     List allNotifications =
@@ -44,7 +55,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     IconButton(
                       icon: Icon(Icons.delete),
                       color: Colors.red,
-                      onPressed: () {},
+                      onPressed: () => deleteAllNotifications(notifications),
                     ),
                   ],
                 )),
