@@ -1,16 +1,22 @@
+import LineGraph from "../components/LineGraph";
 import StatisticsCard from "../components/statisticCard";
 import Header from "../layouts/header";
 import DropList from "../components/DropList";
 import { useState } from "react";
 import {
+	useAllNotifications,
 	useNumberClicks,
 	useBestUsers,
 	useBestBranches,
 } from "../Hooks/useNotifications";
+import { useEffect } from "react";
 
 const AdminAnalytics = () => {
 	const filterList = ["Last Week", "Last Month", "Last Year"];
 	const [filter, setFilter] = useState("");
+
+	const { isLoading: notificationLoading, data: notificationData } =
+		useAllNotifications();
 	const { isLoading: clicksLoading, data: clicksData } = useNumberClicks();
 	const { isLoading: userLoading, data: usersData } = useBestUsers();
 	const { isLoading: branchLoading, data: branchData } = useBestBranches();
@@ -41,6 +47,62 @@ const AdminAnalytics = () => {
 			yearList.push(`${date.getMonth() - i + 12}`);
 		else yearList.push(`${date.getMonth() - i}`);
 	}
+
+	// console.log(labels);
+	let graphDataList = [];
+
+	useEffect(() => {
+		if (filter === "Last Week") setLabels(weekList);
+		if (filter === "Last Month") setLabels(monthList);
+		if (filter === "Last Year") setLabels(yearList);
+
+		setgraphData(graphDataList);
+	}, [filter]);
+
+	const [labels, setLabels] = useState(weekList);
+	const [graphData, setgraphData] = useState();
+
+	const analyticsData = notificationData?.data.analytics;
+	const day = 86400000;
+
+	const fillGraphData = () => {
+		let limit = 6;
+		if (filter === "Last Month") limit = 29;
+		if (filter === "Last Year") limit = 11;
+
+		if (filter === "Last Week" || filter === "Last Month") {
+			for (let i = limit; i >= 0; i--) {
+				graphDataList[limit - i] = 0;
+				for (var data of analyticsData) {
+					if (
+						new Date(data.clicked_at).getDate() ===
+							new Date(date - day * i).getDate() &&
+						new Date(data.clicked_at).getMonth() ===
+							new Date(date - day * i).getMonth() &&
+						new Date(data.clicked_at).getFullYear() ===
+							new Date(date - day * i).getFullYear()
+					) {
+						graphDataList[limit - i] += 1;
+					}
+				}
+			}
+		} else {
+			for (let i = limit; i >= 0; i--) {
+				graphDataList[limit - i] = 0;
+				for (var data of analyticsData) {
+					if (
+						new Date(data.clicked_at).getMonth() ===
+							new Date(date - day * i * 30).getMonth() &&
+						new Date(data.clicked_at).getFullYear() ===
+							new Date(date - day * i * 30).getFullYear()
+					) {
+						graphDataList[limit - i] += 1;
+					}
+				}
+			}
+		}
+	};
+	if (!notificationLoading) fillGraphData();
 
 	return (
 		<>
@@ -128,6 +190,10 @@ const AdminAnalytics = () => {
 							onChange={(e) => setFilter(e.target.value)}
 							className=" text-right"
 						/>
+					</div>
+
+					<div className="w-full my-12">
+						<LineGraph graphData={graphData} labels={labels} />
 					</div>
 				</div>
 			)}
