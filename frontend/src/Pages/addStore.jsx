@@ -139,6 +139,15 @@ const AddStoer = () => {
 			}
 		}
 	}, [mainStore]);
+	const storeValidation = (StoreName, about, phone) => {
+		if (!StoreName) return "Store Name fields is required";
+		if (!about) return "About fields is required";
+		if (!phone) return "phone fields is required";
+
+		if (!parseInt(phone)) return "phone fields must contain a number";
+
+		return "";
+	};
 
 	return (
 		<div className="flex flex-col h-screen">
