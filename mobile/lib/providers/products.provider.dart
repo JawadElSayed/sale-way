@@ -38,6 +38,27 @@ class Products with ChangeNotifier {
   }
 }
 
+List<Product> returnListProducts(products) {
+  try {
+    List<Product> addedProducts = [];
+    products.forEach((product) {
+      addedProducts.add(Product(
+        id: product["id"],
+        name: product["name"],
+        description: product["description"],
+        discount: product["discount"],
+        created_at: product["created_at"],
+        updated_at: product["updated_at"],
+        product_categories: product["product_categories"],
+        images: product["images"],
+      ));
+    });
+    return addedProducts;
+  } catch (e) {
+    throw (e);
+  }
+}
+
 Future<Product> getProduct(id) async {
   try {
     final res = await get("/product/$id");
