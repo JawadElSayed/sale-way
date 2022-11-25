@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mobile/providers/branch.provider.dart';
 import 'package:mobile/widgets/circle_image.dart';
 
+import '../helpers/config/config.dart';
+
 class BottomModal extends StatelessWidget {
   final Branch data;
   const BottomModal({super.key, required this.data});
@@ -18,15 +20,16 @@ class BottomModal extends StatelessWidget {
         children: [
           Row(
             children: [
-              const CircleImage(
-                  url:
-                      'http://192.168.0.103:3000/static/images/store/default.jpg'),
-              Text(data.name),
+              CircleImage(url: '${Config.staticUrl}${data.image}', radius: 30),
+              Text(
+                data.name,
+                style: Theme.of(context).textTheme.headline3,
+              ),
             ],
           ),
-          Text("Store Type: "),
-          Text("Distance: "),
-          Text("up to %"),
+          Text(data.store_type[0]["categories"]["category"]),
+          Text("Distance: 1Km"),
+          Text("up to ${data.products?[0].discount}%"),
           Container(
             alignment: Alignment.center,
             child: ElevatedButton(
@@ -41,7 +44,7 @@ class BottomModal extends StatelessWidget {
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: const [
-                        Icon(Icons.whatsapp, color: Colors.white),
+                        // Icon(Icons.whatsapp, color: Colors.white),
                         Text("WhatsApp",
                             style: TextStyle(
                               color: Colors.white,
