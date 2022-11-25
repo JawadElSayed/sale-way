@@ -1,5 +1,5 @@
 import Button from "../components/Button";
-import { useAllProducts } from "../Hooks/useProducts";
+import { useAllProducts, useDeleteProduct } from "../Hooks/useProducts";
 import Header from "../layouts/header";
 import { useNavigate } from "react-router-dom";
 import Table from "../components/Table";
@@ -28,6 +28,7 @@ const Products = () => {
 	];
 
 	const { isLoading, data, isError, error } = useAllProducts();
+	const { mutate } = useDeleteProduct();
 	let tableData = [];
 	if (!isLoading) {
 		data.data.products.map((product) => {
@@ -42,6 +43,10 @@ const Products = () => {
 			return tableData.push(newData);
 		});
 	}
+	const deleteProduct = (id) => {
+		mutate(parseInt(id));
+		window.location.reload();
+	};
 
 	return (
 		<div className="flex flex-col h-screen">
