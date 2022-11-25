@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../layouts/header";
-import { useAllBranches } from "../Hooks/useBranches";
+import { useAllBranches, useDeleteBranch } from "../Hooks/useBranches";
 import Table from "../components/Table";
 
 const AdminStores = () => {
@@ -24,7 +24,7 @@ const AdminStores = () => {
 	const tableTitles = ["Image", "Branch Name", "Type", "Location", "Actions"];
 
 	const { isLoading, data, isError, error } = useAllBranches();
-	
+	const { mutate: deleteMutate } = useDeleteBranch();
 	let tableData = [];
 	if (!isLoading) {
 		data?.data.branches.map((branch) => {
@@ -42,6 +42,16 @@ const AdminStores = () => {
 			return tableData.push(newData);
 		});
 	}
+
+	const deleteBranch = (id) => {
+		console.log(parseInt(id));
+		deleteMutate(parseInt(id));
+		window.location.reload();
+	};
+
+	const goToStore = (id) => navigate(`/admin/stores/store/${id}`);
+
+	const EditStore = (id) => navigate(`/admin/stores/edit-store/${id}`);
 
 	return (
 		<div className="flex flex-col h-screen">
