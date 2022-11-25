@@ -45,6 +45,27 @@ class Branches with ChangeNotifier {
   }
 }
 
+Branch returnBranch(branch) {
+  try {
+    Branch newBranch = Branch(
+      id: branch["id"],
+      store_id: branch["store_id"],
+      name: branch["name"],
+      about: branch["about"],
+      image: branch["image"],
+      latitude: branch["latitude"],
+      longitude: branch["longitude"],
+      phone: branch["phone"],
+      last_notification: branch["last_notification"],
+      store_type: branch["store_types"],
+    );
+
+    return newBranch;
+  } catch (e) {
+    throw (e);
+  }
+}
+
 Future<Branch> getBranch(id) async {
   try {
     final res = await get("/branch/$id");
