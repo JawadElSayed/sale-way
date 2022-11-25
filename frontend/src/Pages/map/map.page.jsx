@@ -3,6 +3,7 @@ import Map, { Marker } from "react-map-gl";
 import { MdLocationOn } from "react-icons/md";
 import { baseUrl } from "../../config/config";
 import { useAllBranches } from "../../Hooks/useBranches";
+import "./index.css";
 
 const MapPage = () => {
 	const [veiwPort, setViewPort] = useState({
@@ -20,7 +21,11 @@ const MapPage = () => {
 
 	return (
 		<>
-			<div>
+			<div
+				onClick={() => {
+					if (displayModel === "block") setDisplayModel("hidden");
+				}}
+			>
 				<Map
 					mapboxAccessToken="pk.eyJ1IjoiamF3YWQ5OTEiLCJhIjoiY2xhcGc3cmNkMTNzMzNwbWs5MWdhdWVmcyJ9.nW3u7Sc2-IK1cewxd7GukA"
 					initialViewState={{ ...veiwPort }}
