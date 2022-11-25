@@ -31,6 +31,18 @@ class _LoginScreenState extends State<LoginScreen> {
   var _selectedDate;
   var _isLoading = false;
 
+  void _switchMode() {
+    if (mode == Mode.login) {
+      setState(() {
+        mode = Mode.signup;
+      });
+    } else {
+      setState(() {
+        mode = Mode.login;
+      });
+    }
+  }
+
   void _presentDatePicker() {
     showDatePicker(
             context: context,
@@ -202,6 +214,20 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: Text(
                                   style: TextStyle(fontSize: 20),
                                   (mode == Mode.login ? 'LOGIN' : 'SIGN UP')))),
+                    TextButton(
+                      onPressed: _switchMode,
+                      style: TextButton.styleFrom(
+                          foregroundColor: Theme.of(context).primaryColor),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(
+                                    width: 2.0,
+                                    color: Theme.of(context).primaryColor))),
+                        child: Text(
+                            mode == Mode.login ? 'CREATE ACCOUNT?' : 'LOGIN'),
+                      ),
+                    )
                   ],
                 ),
               ),
