@@ -27,48 +27,67 @@ class _NotificationCardState extends State<NotificationCard> {
     });
   }
 
+  void deleteNotification() async {
+    var data = widget.notification.firebase_id;
+
+    await Provider.of<Notifications>(context, listen: false)
+        .deleteNotification(data);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => selectNotification(context),
-      child: Container(
-        child: Card(
-          margin: EdgeInsets.symmetric(vertical: 4),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          elevation: 2.5,
-          child: Container(
-            padding: const EdgeInsets.fromLTRB(20, 10, 0, 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                  child: CircleImage(
-                      url:
-                          '${Config.staticUrl}${widget.notification.branches["image"]}',
-                      radius: 30),
-                ),
-                Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                          padding: EdgeInsets.only(bottom: 10),
-                          child: Text(
-                            widget.notification.title,
-                            style: Theme.of(context).textTheme.headline3,
-                          )),
-                      Container(
-                        padding: EdgeInsets.only(right: 10),
-                        child: FractionallySizedBox(
-                            widthFactor: 1,
-                            alignment: Alignment.centerLeft,
-                            child: Text(widget.notification.message)),
-                      )
-                    ],
+    return Dismissible(
+      key: UniqueKey(),
+      direction: DismissDirection.endToStart,
+      onDismissed: (direction) => deleteNotification(),
+      background: Container(
+        padding: EdgeInsets.only(right: 20),
+        margin: EdgeInsets.symmetric(vertical: 4),
+        color: Theme.of(context).colorScheme.error,
+        child: Icon(Icons.delete, color: Colors.white, size: 40),
+        alignment: Alignment.centerRight,
+      ),
+      child: InkWell(
+        onTap: () => selectNotification(context),
+        child: Container(
+          child: Card(
+            margin: EdgeInsets.symmetric(vertical: 4),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            elevation: 2.5,
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(20, 10, 0, 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    child: CircleImage(
+                        url:
+                            '${Config.staticUrl}${widget.notification.branches["image"]}',
+                        radius: 30),
                   ),
-                ),
-              ],
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                            padding: EdgeInsets.only(bottom: 10),
+                            child: Text(
+                              widget.notification.title,
+                              style: Theme.of(context).textTheme.headline3,
+                            )),
+                        Container(
+                          padding: EdgeInsets.only(right: 10),
+                          child: FractionallySizedBox(
+                              widthFactor: 1,
+                              alignment: Alignment.centerLeft,
+                              child: Text(widget.notification.message)),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
