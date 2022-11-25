@@ -54,6 +54,28 @@ const Table = ({ titles, data, imageClick, edit, deleteClick, view }) => {
 										return <div key={i}>{i}</div>;
 									})}
 								</td>
+								<td>
+									<div className="flex justify-end pr-2 gap-4">
+										{edit ? (
+											<BiEdit
+												size={25}
+												onClick={() => edit(item?.[0])}
+											></BiEdit>
+										) : (
+											typeof item[5] === "string" &&
+											item[5]
+										)}
+										{deleteClick && (
+											<MdDelete
+												size={25}
+												color="red"
+												onClick={() =>
+													deleteClick(item?.[0])
+												}
+											></MdDelete>
+										)}
+									</div>
+								</td>
 							</tr>
 						);
 					})}
