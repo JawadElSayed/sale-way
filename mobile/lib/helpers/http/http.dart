@@ -1,14 +1,23 @@
 import 'package:http/http.dart' as http;
+import 'package:mobile/helpers/config/config.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imphd2FkMkB0ZXN0LmNvbSIsIm5hbWUiOiJqYXdhZCIsInVzZXJUeXBlIjoyLCJpYXQiOjE2Njg3MzQ4ODksImV4cCI6MTY2ODgyMTI4OX0.L-XFsSShCsc6nIns0YQKsGHZQLPRAck28m1ogJpeCh8";
+var token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imphd2FkMkB0ZXN0LmNvbSIsIm5hbWUiOiJraGFsZWQiLCJ1c2VyVHlwZSI6MiwiaWF0IjoxNjY5MzEzMjAyLCJleHAiOjE2NjkzOTk2MDJ9.iFZR4bjGa_RkrrMfJtYJd_zZEZox8TuOHR-z8RaEE6s";
+
+Future getToken() async {
+  final prefs = await SharedPreferences.getInstance();
+  final String? ttoken = prefs.getString('token');
+  token = ttoken as String;
+  return;
+}
 
 Map<String, String> headers = {
   'Content-Type': 'application/json',
   'authorization': 'Bearer $token'
 };
 
-const baseURL = "192.168.0.103:3000";
+const baseURL = Config.staticUrl;
 Future get(link) async {
   final url = Uri.http(baseURL, link);
 
