@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import './providers/notifications.provider.dart';
 import './providers/products.provider.dart';
 import './providers/branches.provider.dart';
 import './screens/tabs.screen.dart';
@@ -44,6 +45,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider.value(
           value: Products(),
+        ),
+        ChangeNotifierProvider.value(
+          value: Notifications(),
         ),
         ChangeNotifierProvider.value(
           value: Auth(),
