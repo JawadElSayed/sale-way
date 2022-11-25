@@ -12,6 +12,11 @@ const MapPage = () => {
 
 	const { isLoading, data, isError, error, isSuccess } = useAllBranches();
 
+	const [displayModel, setDisplayModel] = useState("hidden");
+	const [modelData, setModelData] = useState("");
+	const [storeType, setStoreType] = useState("");
+	const [storeDiscount, setStoreDiscount] = useState("");
+
 	return (
 		<>
 			<div>
@@ -29,7 +34,21 @@ const MapPage = () => {
 									longitude={branch.longitude}
 									latitude={branch.latitude}
 								>
-									<MdLocationOn size={40} />
+									<MdLocationOn
+										size={40}
+										onClick={() => {
+											setModelData(branch);
+											setStoreType(
+												branch.store_types[0].categories
+													.category
+											);
+											setStoreDiscount(
+												branch.products[0].discount
+											);
+											setDisplayModel("block");
+											console.log(modelData);
+										}}
+									/>
 								</Marker>
 							);
 						})}
