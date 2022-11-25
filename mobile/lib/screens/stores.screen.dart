@@ -17,7 +17,8 @@ class StoresScreen extends StatelessWidget {
         children: [
           Container(child: TopBar()),
           Container(
-            height: 500,
+            height: MediaQuery.of(context).size.height * 0.92 -160,
+            padding: EdgeInsets.symmetric(horizontal: 10),
             child: ListView(
               children: branches.map((branch) {
                 return StoreCard(branch: branch);
