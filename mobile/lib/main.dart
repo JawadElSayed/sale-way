@@ -47,21 +47,29 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
-          primaryColor: Color.fromARGB(255, 112, 133, 238),
-          accentColor: Color.fromARGB(255, 155, 170, 243),
-        ),
+            primaryColor: Color.fromARGB(255, 112, 133, 238),
+            accentColor: Color.fromARGB(255, 155, 170, 243),
+            textTheme: const TextTheme(
+                headline1: TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black),
+                headline3: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black))),
         initialRoute: "/",
         routes: {
-          "/": (ctx) => const TabScreen(),
+          "/": (context) => LoginScreen(),
           "/signup": (ctx) => const SignUpScreen(),
-          "/login": (ctx) => const LoginScreen(),
+          "/tab": (ctx) => const TabScreen(),
           "/stores": (ctx) => StoresScreen(),
-          "/store": (ctx) => const StoreScreen(),
+          "/store": (ctx) => StoreScreen(),
           "/products": (ctx) => const ProductsScreen(),
           "/product": (ctx) => ProductScreen(),
           "/map": (ctx) => const MapScreen(),
           "/notification": (ctx) => const NotificationScreen(),
-          "/profile": (ctx) => const ProfileScreen(),
+          "/profile": (ctx) => ProfileScreen(),
         },
       ),
     );
