@@ -25,7 +25,9 @@ const TextInput = ({
 				value={value}
 				placeholder={placeholder}
 				onChange={onChange}
-				className={`${shadow}-shadow w-full py-2.5 indent-${indent} rounded-${rounded} text-lg`}
+				className={`${shadow}-shadow w-full py-2.5 indent-${
+					indent ? indent : 2
+				} rounded-${rounded} text-lg`}
 			/>
 		</div>
 	);

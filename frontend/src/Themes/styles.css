@@ -3,6 +3,9 @@
 	--secondary: #9ba9f3;
 	--main-hover: #bbc4f0;
 	--red: #ff3333;
+	--cardRed: #bf4141;
+	--cardGreen: #69b85c;
+	--cardBlue: #5e71db;
 }
 
 .bg-primary {
@@ -21,6 +24,18 @@
 	background-color: var(--red);
 }
 
+.bg-card-red {
+	background-color: var(--cardRed);
+}
+
+.bg-card-green {
+	background-color: var(--cardGreen);
+}
+
+.bg-card-blue {
+	background-color: var(--cardBlue);
+}
+
 .black-shadow {
 	box-shadow: 0px 0px 10px 2px #00000040;
 }
@@ -30,7 +45,7 @@
 }
 
 .bg-image {
-	background-image: url("../../public/assets/images/backgroud.jpg");
+	background-image: url("../../public/assets/images/back1.jpg");
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: cover;
@@ -56,9 +71,22 @@ h1 {
 }
 
 h2 {
-	font-size: 1.75rem;
+	font-size: 1.5rem;
+	font-weight: 400;
 }
 
 h3 {
-	font-size: 1.5rem;
+	font-size: 1.25rem;
+}
+
+th {
+	position: sticky;
+}
+
+.border-secondary {
+	border: solid var(--secondary);
+}
+
+.border-color-secondary {
+	border-color: var(--secondary);
 }

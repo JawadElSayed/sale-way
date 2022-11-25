@@ -1,6 +1,7 @@
 import Button from "../components/Button";
 import SearchBar from "../components/SearchBar";
 import DropList from "../components/DropList";
+import { baseUrl } from "../config/config";
 
 const Header = ({
 	title,
@@ -9,21 +10,37 @@ const Header = ({
 	filters,
 	titles,
 	showSearchBar = true,
+	image,
 }) => {
 	//
 
 	return (
 		<div>
 			<div className="pt-10 flex items-center justify-between">
-				<h1>{title}</h1>
+				<div className="flex items-center">
+					{image && (
+						<img
+							src={`${baseUrl}${image}`}
+							alt="Store img"
+							className="w-28 h-28 mr-4 rounded-full border-secondary"
+						/>
+					)}
+					<h1>{title}</h1>
+				</div>
 				<div>
 					{firstRowButtons?.map((button) => {
 						return (
 							<Button
 								key={button[0]}
 								onClick={button[1]}
-								backgroundColor="secondary"
+								backgroundColor={
+									button[0] === "Delete" ? "red" : "secondary"
+								}
 								className="ml-10"
+								style={{
+									width: "8.75vw",
+									minWidth: "fit",
+								}}
 							>
 								{button[0]}
 							</Button>
@@ -58,7 +75,11 @@ const Header = ({
 								<Button
 									key={button[0]}
 									onClick={button[1]}
-									backgroundColor="secondary"
+									backgroundColor={
+										button[0] === "Delete"
+											? "red"
+											: "secondary"
+									}
 									className="ml-10"
 								>
 									{button[0]}

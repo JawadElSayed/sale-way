@@ -1,8 +1,12 @@
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import Button from "../components/Button";
-import logo from "../logo.png";
+import logo from "../logo_white.png";
 
-const Layout = ({ buttons }) => {
+const Layout = ({ buttons, map = false }) => {
+	const location = useLocation();
+	let padding = "px-12";
+	if (location.pathname === "/admin/map") padding = "";
+
 	return (
 		<>
 			<div
@@ -18,8 +22,9 @@ const Layout = ({ buttons }) => {
 								to={`${button.toLowerCase()}`}
 							>
 								<Button
-									className="w-full mb-2 py-3"
+									className="w-full mb-2 py-3 font-normal"
 									backgroundColor=""
+									rounded=""
 								>
 									{button}
 								</Button>
@@ -28,7 +33,7 @@ const Layout = ({ buttons }) => {
 					})}
 				</div>
 			</div>
-			<div style={{ marginLeft: "23vw" }} className="px-12">
+			<div style={{ marginLeft: "23vw" }} className={padding}>
 				<Outlet />
 			</div>
 		</>
