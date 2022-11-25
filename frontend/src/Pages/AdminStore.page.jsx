@@ -5,6 +5,7 @@ import Header from "../layouts/header";
 import DropList from "../components/DropList";
 import LineGraph from "../components/LineGraph";
 import Table from "../components/Table";
+import { useBranchAnalyticsBYID } from "../Hooks/useNotifications";
 
 const AdminStore = () => {
 	const params = useParams();
@@ -21,6 +22,8 @@ const AdminStore = () => {
 	const filterList = ["Last Week", "Last Month", "Last Year"];
 	const [filter, setFilter] = useState("Last Week");
 
+	const { isLoading: analyticsLoading, data: branchAnalyticsData } =
+		useBranchAnalyticsBYID(id);
 	const {
 		isLoading: branchLoading,
 		data: branchData,
@@ -88,6 +91,52 @@ const AdminStore = () => {
 	}, [filter]);
 
 	const [labels, setLabels] = useState(weekList);
+	const [graphData, setgraphData] = useState();
+
+	const analyticsData = branchAnalyticsData?.data.analytics;
+	const day = 86400000;
+
+	const fillGraphData = () => {
+		console.log(branchAnalyticsData);
+		let limit = 6;
+		if (filter === "Last Month") limit = 29;
+		if (filter === "Last Year") limit = 11;
+
+		if (filter === "Last Week" || filter === "Last Month") {
+			for (let i = limit; i >= 0; i--) {
+				graphDataList[limit - i] = 0;
+				for (var data of analyticsData) {
+					if (
+						new Date(data.clicked_at).getDate() ===
+							new Date(date - day * i).getDate() &&
+						new Date(data.clicked_at).getMonth() ===
+							new Date(date - day * i).getMonth() &&
+						new Date(data.clicked_at).getFullYear() ===
+							new Date(date - day * i).getFullYear()
+					) {
+						graphDataList[limit - i] += 1;
+					}
+				}
+			}
+		} else {
+			for (let i = limit; i >= 0; i--) {
+				graphDataList[limit - i] = 0;
+				for (var data of analyticsData) {
+					if (
+						new Date(data.clicked_at).getMonth() ===
+							new Date(date - day * i * 30).getMonth() &&
+						new Date(data.clicked_at).getFullYear() ===
+							new Date(date - day * i * 30).getFullYear()
+					) {
+						graphDataList[limit - i] += 1;
+					}
+				}
+			}
+		}
+	};
+	if (!analyticsLoading) fillGraphData();
+
+	return (
 		<div className="flex flex-col h-screen">
 			<Header
 				image={!branchLoading && branch?.image}
