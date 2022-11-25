@@ -7,6 +7,15 @@ const getAllBranches = async (req, res) => {
 	try {
 		const branches = await prisma.branches.findMany({
 			orderBy: { name: "asc" },
+			include: {
+				store_types: { select: { categories: true } },
+				products: {
+					include: {
+						images: true,
+						product_categories: { select: { categories: true } },
+					},
+				},
+			},
 		});
 		res.status(200).json({ branches: branches });
 	} catch (err) {
@@ -43,7 +52,7 @@ const addBranch = async (req, res) => {
 		// saving image
 		// setting default case
 		let image_path;
-		if (!image) image_path = `./public/images/store/default.jpg`;
+		if (!image) image_path = `/static/images/store/default.jpg`;
 		else {
 			// spliting base64
 			const splited_image = body.image.split(";base64,");
@@ -62,7 +71,12 @@ const addBranch = async (req, res) => {
 		// creating branch
 		const branch = await prisma.branches.create({
 			data: {
-				...body,
+				name: body.name,
+				about: body.about,
+				latitude: body.latitude,
+				longitude: body.longitude,
+				phone: body.phone,
+				store_id: body.store_id,
 				image: image_path,
 				store_types: {
 					create: {
@@ -91,9 +105,19 @@ const deleteBranch = async (req, res) => {
 		return res.status(400).json({ message: "params must be Integer" });
 	try {
 		// this function delete access, type and products connection
+		await prisma.accesses.deleteMany({
+			where: { branch_id: parseInt(req.params.id) },
+		});
+		await prisma.store_types.deleteMany({
+			where: { branch_id: parseInt(req.params.id) },
+		});
+		await prisma.products.deleteMany({
+			where: { branches: { some: { id: parseInt(req.params.id) } } },
+		});
 		// then delete the branch
-		await helpers.deleteBranch(req);
-
+		await prisma.branches.deleteMany({
+			where: { id: parseInt(req.params.id) },
+		});
 		res.status(200).json({ success: true });
 	} catch (err) {
 		res.status(400).json({ message: err.message });
@@ -160,8 +184,17 @@ const getBranch = async (req, res) => {
 			include: {
 				products: {
 					orderBy: { discount: "desc" },
-					select: { discount: true },
-					take: 1,
+					include: {
+						images: { select: { image: true } },
+						product_categories: {
+							include: {
+								categories: { select: { category: true } },
+							},
+						},
+					},
+				},
+				store_types: {
+					select: { categories: { select: { category: true } } },
 				},
 			},
 		});
@@ -225,6 +258,19 @@ const editBranch = async (req, res) => {
 	}
 };
 
+const getBranchesByProduct = async (req, res) => {
+	if (!parseInt(req.params.id))
+		return res.status(400).json({ message: "params must be Integer" });
+	try {
+		const branches = await prisma.branches.findMany({
+			where: { products: { some: { id: parseInt(req.params.id) } } },
+		});
+		res.status(200).json({ branches: branches });
+	} catch (err) {
+		res.status(400).json({ message: err.message });
+	}
+};
+
 module.exports = {
 	getAllBranches,
 	getBranchesOfUser,
@@ -235,4 +281,5 @@ module.exports = {
 	deleteBranch,
 	branchSearch,
 	filterBranchesByType,
+	getBranchesByProduct,
 };

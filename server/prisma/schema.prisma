@@ -8,19 +8,22 @@ datasource db {
 }
 
 model Notifications {
-  user_id    Int
-  branch_id  Int
-  title      String?   @db.VarChar(255)
-  message    String?   @db.VarChar(255)
-  created_at DateTime  @default(now())
-  clicked    Boolean   @default(false)
-  clicked_at DateTime? @db.DateTime(0)
-  branches   branches  @relation(fields: [branch_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_users_has_branches_branches2")
-  users      users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_users_has_branches_users2")
+  firebase_id String
+  user_id     Int
+  branch_id   Int
+  title       String?   @db.VarChar(255)
+  message     String?   @db.VarChar(255)
+  created_at  DateTime  @default(now())
+  clicked     Boolean   @default(false)
+  clicked_at  DateTime? @db.DateTime(0)
+  deleted     Boolean   @default(false)
+  branches    branches  @relation(fields: [branch_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_users_has_branches_branches2")
+  users       users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_users_has_branches_users2")
 
-  @@id([user_id, branch_id])
+  @@id([firebase_id])
   @@index([branch_id], map: "fk_users_has_branches_branches2_idx")
   @@index([user_id], map: "fk_users_has_branches_users2_idx")
+  @@index([firebase_id])
 }
 
 model accesses {
