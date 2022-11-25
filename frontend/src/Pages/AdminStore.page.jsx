@@ -5,6 +5,7 @@ import Header from "../layouts/header";
 import DropList from "../components/DropList";
 import LineGraph from "../components/LineGraph";
 import Table from "../components/Table";
+import ProductModal from "../components/Product/Product";
 import { useBranchAnalyticsBYID } from "../Hooks/useNotifications";
 
 const AdminStore = () => {
@@ -21,6 +22,8 @@ const AdminStore = () => {
 	];
 	const filterList = ["Last Week", "Last Month", "Last Year"];
 	const [filter, setFilter] = useState("Last Week");
+	const [displayModel, setDisplayModel] = useState("hidden");
+	const [modelData, setModelData] = useState("");
 
 	const { isLoading: analyticsLoading, data: branchAnalyticsData } =
 		useBranchAnalyticsBYID(id);
@@ -35,6 +38,11 @@ const AdminStore = () => {
 		["Edit", () => null],
 		["Delete", () => null],
 	];
+
+	const viewClick = (product) => {
+		setModelData(product);
+		setDisplayModel("block");
+	};
 
 	let tableData = [];
 	if (!branchLoading) {
@@ -137,7 +145,12 @@ const AdminStore = () => {
 	if (!analyticsLoading) fillGraphData();
 
 	return (
-		<div className="flex flex-col h-screen">
+		<div
+			className="flex flex-col h-screen"
+			onClick={() => {
+				if (displayModel === "block") setDisplayModel("hidden");
+			}}
+		>
 			<Header
 				image={!branchLoading && branch?.image}
 				title={!branchLoading && branch?.name}
@@ -165,6 +178,7 @@ const AdminStore = () => {
 						view={viewClick}
 					/>
 				</div>
+				<ProductModal display={displayModel} product={modelData} />
 			</div>
 		</div>
 	);
