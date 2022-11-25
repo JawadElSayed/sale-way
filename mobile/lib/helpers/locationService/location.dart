@@ -2,11 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:geolocator/geolocator.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import '../../providers/notification.provider.dart';
 import '../http/http.dart' as http;
 
 final LocationSettings locationSettings = LocationSettings(
   accuracy: LocationAccuracy.high,
-  distanceFilter: 100,
+  distanceFilter: 1,
 );
 
 late StreamSubscription<Position> positionStream;
@@ -25,12 +26,25 @@ Future locationPermission() async {
   }
 }
 
-void livePosition(branches) async {
-  positionStream =
-      Geolocator.getPositionStream().listen((Position? position) async {
-    // print(position == null ? 'Unknown' : '${position}');
-    currentLocation = position!;
-    await calculatingDistance(branches);
+void livePosition(branches, notifications) async {
+  List<Notification> notificationlist = notifications;
+
+  StreamSubscription<Position> positionStream =
+      Geolocator.getPositionStream(locationSettings: locationSettings)
+          .listen((Position? position) {});
+  positionStream.onData((data) {
+    currentLocation = data;
+  });
+  Timer.periodic(Duration(seconds: 5), (timer) async {
+    // print(notificationlist);
+
+    var newNotifications =
+        await calculatingDistance(branches, notificationlist, currentLocation);
+    if (newNotifications != null) {
+      for (var notification in newNotifications) {
+        notificationlist.add(notification);
+      }
+    }
   });
 }
 
