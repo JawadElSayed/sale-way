@@ -50,6 +50,9 @@ class LocalNotificationService {
         notificationDetails,
         payload: message.data['_id'],
       );
+
+      Future.delayed(Duration(seconds: 10),
+          () async => await _notificationsPlugin.cancel(id));
     } on Exception catch (e) {
       print(e);
     }
