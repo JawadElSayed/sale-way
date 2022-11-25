@@ -42,3 +42,17 @@ class Auth with ChangeNotifier {
       throw err;
     }
   }
+
+  Future<void> signup(data) async {
+    try {
+      final res = await post("/auth/signup", jsonEncode(data));
+      final response = jsonDecode(res.body);
+
+      if (response["status"] == "error") {
+        throw HttpException(response["message"]);
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
+}
