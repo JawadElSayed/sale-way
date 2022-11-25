@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'package:mobile/widgets/text_input.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../providers/auth.provider.dart';
+import '../helpers/http/http.dart' as http;
 
 enum Mode { signup, login }
 
@@ -30,6 +35,17 @@ class _LoginScreenState extends State<LoginScreen> {
   var _selectedGender;
   var _selectedDate;
   var _isLoading = false;
+
+  void login() async {
+    var res = await Provider.of<Auth>(context, listen: false).login(data);
+    if (res["status"] == "success") {
+      print(res["token"]);
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('token', res["token"]);
+      await http.getToken();
+      Navigator.of(context).pushReplacementNamed("/tab");
+    }
+  }
 
   void _switchMode() {
     if (mode == Mode.login) {
