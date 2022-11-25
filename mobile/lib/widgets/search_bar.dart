@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class SearchBar extends StatelessWidget {
   const SearchBar({super.key});
@@ -14,6 +12,7 @@ class SearchBar extends StatelessWidget {
           onChanged: null,
           cursorColor: Colors.grey,
           decoration: InputDecoration(
+            contentPadding: EdgeInsets.only(left: 10),
             fillColor: Colors.white,
             filled: true,
             border: OutlineInputBorder(
