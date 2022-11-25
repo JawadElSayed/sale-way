@@ -10,6 +10,7 @@ const fcm = new FCM(credential);
 
 const prisma = new PrismaClient();
 
+
 const date = new Date();
 let lastWeek = new Date();
 let lastMonth = new Date();
@@ -64,16 +65,19 @@ const sendNotification = async (req, res) => {
 					users: { connect: { email: req.email } },
 					branches: { connect: { id: req.body.branch_id } },
 				},
+
 				include: {
 					branches: true,
 				},
 			});
 			res.status(200).json({ notification: save });
+
 		});
 	} catch (err) {
 		res.status(400).json({ message: err.message });
 	}
 };
+
 
 // get every user his notifications
 const getUserNotifications = async (req, res) => {
@@ -82,6 +86,7 @@ const getUserNotifications = async (req, res) => {
 			where: {
 				users: { email: req.email },
 				clicked: false,
+
 				deleted: false,
 			},
 			include: {
