@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAddBranch } from "../Hooks/useBranches";
 
 import Button from "../components/Button";
@@ -7,6 +7,7 @@ import TextArea from "../components/TextArea";
 import TextInput from "../components/TextInput";
 import Header from "../layouts/header";
 import SearchDropDown from "../components/SearchDropDown";
+import { useAllStores } from "../Hooks/useStore";
 
 const AddStoer = () => {
 	const [addType, setAddType] = useState("Branch");
@@ -27,6 +28,27 @@ const AddStoer = () => {
 		isSuccess: branchIsSuccess,
 		isError: branchIsError,
 	} = useAddBranch();
+	const { data: storesData, isLoading: storesLoading } = useAllStores();
+
+	let storesList = [];
+	let storesNameList = [];
+	if (!storesLoading) {
+		for (var store of storesData.data.stores) {
+			storesList.push([store.id, store.name]);
+			storesNameList.push(store.name);
+		}
+	}
+
+	useEffect(() => {
+		let available = false;
+		for (store of storesList) {
+			if (mainStore === store[1]) {
+				available = true;
+				setMainStoreID(store[0]);
+				break;
+			}
+		}
+	}, [mainStore]);
 
 	return (
 		<div className="flex flex-col h-screen">
