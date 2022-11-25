@@ -51,6 +51,36 @@ class _LoginScreenState extends State<LoginScreen> {
 
   var _isLoading = false;
 
+  void _submit() async {
+    if (!_formKey.currentState!.validate()) {
+      // invalid
+      return;
+    }
+    _formKey.currentState!.save();
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      if (mode == Mode.login)
+        login();
+      else {
+        await Provider.of<Auth>(context, listen: false).signup(data);
+        login();
+      }
+    } catch (err) {
+      var errorMessage = "Authentication failed $err";
+      if (err.toString().contains("Invalid Credentials")) {
+        errorMessage = "Invalid Credentials";
+      }
+      _showError(errorMessage);
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
   void login() async {
     var res = await Provider.of<Auth>(context, listen: false).login(data);
     if (res["status"] == "success") {
@@ -235,7 +265,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10)),
                           ),
-                          onPressed: () {},
+                          onPressed: _submit,
                           child: Container(
                               padding: EdgeInsets.symmetric(
                                 vertical: 10,
