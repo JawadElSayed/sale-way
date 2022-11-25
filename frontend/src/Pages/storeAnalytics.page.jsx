@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Header from "../layouts/header";
 import DropList from "../components/DropList";
+import LineGraph from "../components/LineGraph";
 import { useBranchAnalytics } from "../Hooks/useNotifications";
 
 const StoreAnalytics = () => {
@@ -102,6 +103,10 @@ const StoreAnalytics = () => {
 						onChange={(e) => setFilter(e.target.value)}
 						className="mt-10 text-right"
 					/>
+				</div>
+
+				<div className="w-full my-12">
+					<LineGraph graphData={graphData} labels={labels} />
 				</div>
 			</div>
 		</>
