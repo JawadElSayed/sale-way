@@ -15,10 +15,13 @@ class ProductsScreen extends StatelessWidget {
         children: [
           Container(child: TopBar()),
           Container(
-            height: 500,
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            height: MediaQuery.of(context).size.height * 0.92 -160,
             child: ListView(
               children: products.map((product) {
-                return ProductCard(product: product);
+                return ProductCard(
+                  product: product,
+                );
               }).toList(),
             ),
           ),
