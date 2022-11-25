@@ -59,4 +59,22 @@ class Notifications with ChangeNotifier {
     }
   }
 
+  Future deleteNotification(data) async {
+    try {
+      final res = await delete("/notification/$data", null);
+      final extracData = jsonDecode(res.body) as Map;
+      print(extracData);
+      if (extracData["status"] == "error")
+        throw HttpException(extracData["message"]);
+
+      for (var i = 0; i < notifications.length; i++) {
+        if (notifications[i].firebase_id == extracData["firebase_id"]) {
+          notifications[i].deleted = true;
+        }
+      }
+      notifyListeners();
+    } catch (e) {
+      throw (e);
+    }
+  }
 }
