@@ -67,6 +67,50 @@ class _StoreScreenState extends State<StoreScreen> {
                     ],
                   )),
             ),
+      bottomNavigationBar: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).accentColor,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                  onPressed: () {
+                    // Navigator.of(context).pushNamed("/map");
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 13),
+                    height: 45,
+                    width: 100,
+                    alignment: Alignment.center,
+                    child: Text("Location",
+                        style: TextStyle(color: Colors.white, fontSize: 18)),
+                  )),
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromRGBO(36, 180, 59, 1),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                  onPressed: () {},
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    width: 100,
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: const [
+                          // Icon(Icons.whatsapp, color: Colors.white),
+                          Text("WhatsApp",
+                              style: TextStyle(
+                                color: Colors.white,
+                              )),
+                        ]),
+                  ))
+            ],
+          )),
     );
   }
 }
