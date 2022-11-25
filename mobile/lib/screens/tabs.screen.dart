@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mobile/helpers/notificationservice/push_notification.dart';
 import 'package:mobile/providers/products.provider.dart';
@@ -66,35 +67,40 @@ class _TabScreenState extends State<TabScreen> {
     branches = Provider.of<Branches>(context).branchesGetter;
     // location.livePosition(branches);
     return Scaffold(
-      body: _pages[_selectedPageIndex],
-      bottomNavigationBar: BottomNavigationBar(
-          onTap: _selectPage,
-          backgroundColor: Theme.of(context).primaryColor,
-          unselectedItemColor: Colors.white,
-          selectedItemColor: Theme.of(context).accentColor,
-          currentIndex: _selectedPageIndex,
-          items: [
-            BottomNavigationBarItem(
-                backgroundColor: Colors.blue,
-                icon: Icon(Icons.store),
-                label: ""),
-            BottomNavigationBarItem(
-                backgroundColor: Colors.blue,
-                icon: Icon(Icons.shopping_bag),
-                label: ""),
-            BottomNavigationBarItem(
-                backgroundColor: Colors.blue,
-                icon: Icon(Icons.location_on),
-                label: ""),
-            BottomNavigationBarItem(
-                backgroundColor: Colors.blue,
-                icon: Icon(Icons.notifications),
-                label: ""),
-            BottomNavigationBarItem(
-                backgroundColor: Colors.blue,
-                icon: Icon(Icons.person),
-                label: ""),
-          ]),
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(child: _pages[_selectedPageIndex]),
+      bottomNavigationBar: Container(
+        height: MediaQuery.of(context).size.height * 0.08,
+        child: BottomNavigationBar(
+            onTap: _selectPage,
+            backgroundColor: Theme.of(context).primaryColor,
+            unselectedItemColor: Colors.white,
+            selectedItemColor: Theme.of(context).accentColor,
+            currentIndex: _selectedPageIndex,
+            items: [
+              BottomNavigationBarItem(
+                  backgroundColor: Colors.blue,
+                  icon: Icon(Icons.store),
+                  label: ""),
+              BottomNavigationBarItem(
+                  backgroundColor: Colors.blue,
+                  icon: Icon(Icons.shopping_bag),
+                  label: ""),
+              BottomNavigationBarItem(
+                  backgroundColor: Colors.blue,
+                  icon: Icon(Icons.location_on),
+                  label: ""),
+              BottomNavigationBarItem(
+                  backgroundColor: Colors.blue,
+                  icon: Icon(Icons.notifications),
+                  label: ""),
+              BottomNavigationBarItem(
+                  backgroundColor: Colors.blue,
+                  icon: Icon(Icons.person),
+                  label: ""),
+            ]),
+      ),
     );
   }
 }
