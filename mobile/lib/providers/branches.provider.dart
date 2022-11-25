@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:mobile/helpers/http/http.dart';
+import 'package:mobile/providers/products.provider.dart';
+import '../models/http_exeption.dart' as exception;
 
 import 'branch.provider.dart';
 
@@ -16,6 +18,8 @@ class Branches with ChangeNotifier {
     try {
       final res = await get("/branch");
       final extracData = jsonDecode(res.body) as Map;
+      if (extracData["status"] == "error")
+        throw exception.HttpException(extracData["message"]);
       final data = extracData["branches"];
       List<Branch> loadedBranches = [];
       data.forEach((branch) {
@@ -28,6 +32,9 @@ class Branches with ChangeNotifier {
           latitude: branch["latitude"],
           longitude: branch["longitude"],
           phone: branch["phone"],
+          last_notification: branch["last_notification"],
+          store_type: branch["store_types"],
+          products: returnListProducts(branch["products"]),
         ));
       });
       branches = loadedBranches;
