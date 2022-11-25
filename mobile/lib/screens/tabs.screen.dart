@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mobile/helpers/notificationservice/push_notification.dart';
@@ -28,6 +27,7 @@ class TabScreen extends StatefulWidget {
 
 class _TabScreenState extends State<TabScreen> {
   List<Branch> branches = [];
+  List<n.Notification> notifications = [];
   bool _isLoading = true;
 
   @override
@@ -35,12 +35,17 @@ class _TabScreenState extends State<TabScreen> {
     notification.permission();
     location.locationPermission();
     pushNotification.displayNotification();
+    Future.delayed(Duration(seconds: 0), () {
+      getData();
+    });
     super.initState();
   }
 
   Future getData() async {
     await Provider.of<Branches>(context, listen: false).getBranches();
     await Provider.of<Products>(context, listen: false).getProducts();
+    await Provider.of<Notifications>(context, listen: false).getNotifications();
+    _isLoading = false;
   }
 
   var init = true;
@@ -74,7 +79,8 @@ class _TabScreenState extends State<TabScreen> {
   @override
   Widget build(BuildContext context) {
     branches = Provider.of<Branches>(context).branchesGetter;
-    // location.livePosition(branches);
+    notifications = Provider.of<Notifications>(context).notificationsGetter;
+
     return Scaffold(
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
