@@ -1,9 +1,15 @@
 import 'dart:async';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:mobile/helpers/notificationservice/push_notification.dart';
 import 'package:mobile/providers/products.provider.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../providers/branch.provider.dart';
 import '../providers/branches.provider.dart';
+import '../providers/notifications.provider.dart';
+import '../providers/notification.provider.dart' as n;
 import './map.screen.dart';
 import './notification.screen.dart';
 import './products.screen.dart';
@@ -11,6 +17,7 @@ import './profile.screen.dart';
 import './stores.screen.dart';
 import '../helpers/locationService/location.dart' as location;
 import '../helpers/notificationservice/notification.dart' as notification;
+import '../helpers//http/http.dart' as http;
 
 class TabScreen extends StatefulWidget {
   const TabScreen({super.key});
@@ -20,6 +27,9 @@ class TabScreen extends StatefulWidget {
 }
 
 class _TabScreenState extends State<TabScreen> {
+  List<Branch> branches = [];
+  bool _isLoading = true;
+
   @override
   void initState() {
     notification.permission();
@@ -29,13 +39,12 @@ class _TabScreenState extends State<TabScreen> {
   }
 
   Future getData() async {
-    await Provider.of<Branches>(context).getBranches();
+    await Provider.of<Branches>(context, listen: false).getBranches();
     await Provider.of<Products>(context, listen: false).getProducts();
   }
 
   var init = true;
-  late List branches;
-  late List products;
+
   @override
   void didChangeDependencies() {
     if (init) {
