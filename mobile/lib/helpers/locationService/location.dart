@@ -36,7 +36,6 @@ void livePosition(branches, notifications) async {
     currentLocation = data;
   });
   Timer.periodic(Duration(seconds: 5), (timer) async {
-    // print(notificationlist);
 
     var newNotifications =
         await calculatingDistance(branches, notificationlist, currentLocation);
@@ -79,4 +78,10 @@ Future calculatingDistance(branches, notifications, ccurrentLocation) async {
     }
   }
   return newNotifications;
+}
+
+void deviceToken() async {
+  await FirebaseMessaging.instance.getToken().then((token) {
+    print("device token: $token");
+  });
 }
