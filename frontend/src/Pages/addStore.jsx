@@ -51,19 +51,8 @@ const AddStoer = () => {
 
 	const saveBranch = () => {
 		setError("");
-
-		if (
-			branchValidation(
-				StoreName,
-				about,
-				phone,
-				type,
-				latitude,
-				longitude,
-				mainStore
-			)
-		)
-			return setError(
+		if (addType === "Branch") {
+			if (
 				branchValidation(
 					StoreName,
 					about,
@@ -73,26 +62,50 @@ const AddStoer = () => {
 					longitude,
 					mainStore
 				)
-			);
-		const data = {
-			name: StoreName,
-			category: type,
-			about: about,
-			latitude: parseFloat(latitude).toString(),
-			longitude: parseFloat(longitude).toString(),
-			phone: parseInt(phone).toString(),
-			images: [],
-			store_id: mainStoreId,
-		};
-		console.log(`mutate ${mainStoreId}`);
-		branchMutate(data);
+			)
+				return setError(
+					branchValidation(
+						StoreName,
+						about,
+						phone,
+						type,
+						latitude,
+						longitude,
+						mainStore
+					)
+				);
+			const data = {
+				name: StoreName,
+				category: type,
+				about: about,
+				latitude: parseFloat(latitude).toString(),
+				longitude: parseFloat(longitude).toString(),
+				phone: parseInt(phone).toString(),
+				images: [],
+				store_id: mainStoreId,
+			};
+			console.log(`mutate ${mainStoreId}`);
+			branchMutate(data);
+		} else {
+			if (storeValidation(StoreName, about, phone))
+				return setError(storeValidation(StoreName, about, phone));
+			const data = {
+				name: StoreName,
+				about: about,
+				phone: parseInt(phone).toString(),
+				images: [],
+			};
+			storeMutate(data);
+		}
 
-		if (branchIsError) alert("Something went wrong");
+		if (storeIsError || branchIsError)
+			alert("Something went wrong");
 	};
 
 	useEffect(() => {
-		if (branchIsSuccess) navigate("/admin/stores");
-	}, [branchIsSuccess, navigate]);
+		if (storeIsSuccess || branchIsSuccess)
+			navigate("/admin/stores");
+	}, [branchIsSuccess, navigate, storeIsSuccess]);
 
 	const branchValidation = (
 		StoreName,
