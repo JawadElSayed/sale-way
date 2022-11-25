@@ -44,3 +44,27 @@ class Branches with ChangeNotifier {
     }
   }
 }
+
+Future<Branch> getBranch(id) async {
+  try {
+    final res = await get("/branch/$id");
+    final extracData = jsonDecode(res.body) as Map;
+    final data = extracData["branch"];
+    // print(data);
+    Branch branch = Branch(
+        id: data["id"],
+        name: data["name"],
+        about: data["about"],
+        image: data["image"],
+        last_notification: data["last_notification"],
+        latitude: data["latitude"],
+        longitude: data["longitude"],
+        phone: data["phone"],
+        store_id: data["store_id"],
+        store_type: data["store_types"],
+        products: returnListProducts(data["products"]));
+    return branch;
+  } catch (e) {
+    throw (e);
+  }
+}
