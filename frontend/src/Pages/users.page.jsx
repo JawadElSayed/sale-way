@@ -29,9 +29,35 @@ const AdminUsers = () => {
 		["Add User", () => navigate("/admin/users/add-user")],
 	];
 
+	const { isLoading, data, isError, error } = useAllUsers();
+
+	let tableData = [];
+	if (!isLoading) {
+		data.data.users.map((user) => {
+			const newData = [
+				user.id,
+				user.profile,
+				user.name,
+				user.gender,
+				[
+					((Date.now() - Date.parse(user.DOB)) / 31556952000).toFixed(
+						0
+					),
+				],
+				user.Notifications.length.toString(),
+			];
+
+			return tableData.push(newData);
+		});
+	}
+
 	return (
 		<div className="flex flex-col h-screen">
 			<Header title="Users" secondRowButtons={secondRowButtons} />
+			<div className="overflow-y-scroll hide-scroll-bar pt-2">
+				{isLoading && <h2>Loading...</h2>}
+				<Table titles={tableTitles} data={tableData} />
+			</div>
 		</div>
 	);
 };
