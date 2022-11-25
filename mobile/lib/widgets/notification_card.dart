@@ -17,47 +17,59 @@ class NotificationCard extends StatefulWidget {
 }
 
 class _NotificationCardState extends State<NotificationCard> {
+  void selectNotification(BuildContext ctx) async {
+    var data = jsonEncode({"firebase_id": widget.notification.firebase_id});
+    Navigator.of(ctx)
+        .pushNamed("/store", arguments: widget.notification.branch_id);
+    setState(() async {
+      await Provider.of<Notifications>(context, listen: false)
+          .clickNotification(data);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Card(
-        margin: EdgeInsets.symmetric(vertical: 4),
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        elevation: 2.5,
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(20, 10, 0, 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                child: CircleImage(
-                    url:
-                        '${Config.staticUrl}${widget.notification.branches["image"]}',
-                    radius: 30),
-              ),
-              Flexible(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                        padding: EdgeInsets.only(bottom: 10),
-                        child: Text(
-                          widget.notification.title,
-                          style: Theme.of(context).textTheme.headline3,
-                        )),
-                    Container(
-                      padding: EdgeInsets.only(right: 10),
-                      child: FractionallySizedBox(
-                          widthFactor: 1,
-                          alignment: Alignment.centerLeft,
-                          child: Text(widget.notification.message)),
-                    )
-                  ],
+    return InkWell(
+      onTap: () => selectNotification(context),
+      child: Container(
+        child: Card(
+          margin: EdgeInsets.symmetric(vertical: 4),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          elevation: 2.5,
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(20, 10, 0, 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  child: CircleImage(
+                      url:
+                          '${Config.staticUrl}${widget.notification.branches["image"]}',
+                      radius: 30),
                 ),
-              ),
-            ],
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: Text(
+                            widget.notification.title,
+                            style: Theme.of(context).textTheme.headline3,
+                          )),
+                      Container(
+                        padding: EdgeInsets.only(right: 10),
+                        child: FractionallySizedBox(
+                            widthFactor: 1,
+                            alignment: Alignment.centerLeft,
+                            child: Text(widget.notification.message)),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
