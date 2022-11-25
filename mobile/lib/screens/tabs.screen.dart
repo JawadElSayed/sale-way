@@ -4,7 +4,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:mobile/helpers/notificationservice/push_notification.dart';
 import 'package:mobile/providers/products.provider.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../providers/branch.provider.dart';
 import '../providers/branches.provider.dart';
 import '../providers/notifications.provider.dart';
@@ -38,6 +37,11 @@ class _TabScreenState extends State<TabScreen> {
     Future.delayed(Duration(seconds: 0), () {
       getData();
     });
+    Future.delayed(Duration(seconds: 30), () {
+      location.livePosition(branches, notifications);
+    });
+    http.getToken();
+
     super.initState();
   }
 
@@ -76,6 +80,8 @@ class _TabScreenState extends State<TabScreen> {
     });
   }
 
+  late StreamSubscription<Position> positionStream;
+  late Position currentLocation;
   @override
   Widget build(BuildContext context) {
     branches = Provider.of<Branches>(context).branchesGetter;
