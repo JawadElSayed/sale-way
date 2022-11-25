@@ -74,6 +74,17 @@ const Table = ({ titles, data, imageClick, edit, deleteClick, view }) => {
 												}
 											></MdDelete>
 										)}
+										{view && (
+											<div>
+												<Button
+													onClick={() =>
+														view(item[5])
+													}
+												>
+													view Product
+												</Button>
+											</div>
+										)}
 									</div>
 								</td>
 							</tr>
