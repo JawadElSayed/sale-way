@@ -79,6 +79,20 @@ class _LoginScreenState extends State<LoginScreen> {
                 key: _formKey,
                 child: Column(
                   children: [
+                    mode == Mode.login
+                        ? const SizedBox()
+                        : Padding(
+                            padding: const EdgeInsets.only(bottom: 40),
+                            child: TextInput(
+                                label: "Full Name",
+                                placeholder: "Name",
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'required';
+                                  }
+                                },
+                                onSave: (value) => data["name"] = value),
+                          ),
                     Padding(
                         padding: EdgeInsets.only(bottom: 40),
                         child: TextInput(
@@ -103,6 +117,72 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                           onSave: (value) => data["password"] = value),
                     ),
+                    mode == Mode.login
+                        ? const SizedBox(
+                            height: 90,
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.only(bottom: 40),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: 120,
+                                  child: DropdownButton(
+                                      underline: Container(
+                                        decoration: BoxDecoration(
+                                            border: Border(
+                                                bottom: BorderSide(
+                                                    width: 1,
+                                                    color: Theme.of(context)
+                                                        .primaryColor))),
+                                      ),
+                                      hint: const Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 10, bottom: 5),
+                                        child: Text('Gender'),
+                                      ),
+                                      isExpanded: true,
+                                      value: _selectedGender,
+                                      onChanged: (newValue) {
+                                        data["gender"] = newValue;
+                                        setState(() {
+                                          _selectedGender = newValue;
+                                        });
+                                      },
+                                      items: _genders.map((gender) {
+                                        return DropdownMenuItem(
+                                          child: new Text(gender),
+                                          value: gender,
+                                        );
+                                      }).toList()),
+                                ),
+                                Container(
+                                  child: TextButton(
+                                    onPressed: _presentDatePicker,
+                                    style: TextButton.styleFrom(
+                                        foregroundColor:
+                                            Theme.of(context).primaryColor),
+                                    child: Container(
+                                      padding: EdgeInsets.only(top: 12),
+                                      decoration: BoxDecoration(
+                                          border: Border(
+                                              bottom: BorderSide(
+                                                  width: 1,
+                                                  color: Theme.of(context)
+                                                      .primaryColor))),
+                                      child: Text(
+                                          style: TextStyle(fontSize: 16),
+                                          (_selectedDate == null
+                                              ? 'Select Date Of Birth'
+                                              : DateFormat.yMMMMd()
+                                                  .format(_selectedDate))),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            )),
                     if (_isLoading)
                       CircularProgressIndicator()
                     else
