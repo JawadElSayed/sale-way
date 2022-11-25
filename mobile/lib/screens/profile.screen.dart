@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mobile/providers/user.provider.dart';
 import 'package:mobile/widgets/circle_image.dart';
 import 'package:mobile/widgets/text_input.dart';
@@ -15,10 +16,26 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final nameCntroller = TextEditingController();
+  var _selectedDate = DateTime.now().subtract(Duration(days: 365 * 23));
+
+  void _presentDatePicker() {
+    showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(1900),
+            lastDate: DateTime.now())
+        .then((value) {
+      if (value == null) return;
+      setState(() {
+        _selectedDate = value;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     User user = Provider.of<Auth>(context).userGetter;
+    _selectedDate = DateTime.parse(user.DOB);
     // _selectedGender = user.gender;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 30),
@@ -43,6 +60,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   label: "Email",
                   placeholder: "Example@Example.com",
                   initialValue: user.email,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                      border: Border(
+                          bottom: BorderSide(
+                              width: 1,
+                              color: Theme.of(context).primaryColor))),
+                  child: TextButton(
+                    onPressed: _presentDatePicker,
+                    style: TextButton.styleFrom(
+                        foregroundColor: Theme.of(context).primaryColor),
+                    child: Container(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400),
+                          (_selectedDate == null
+                              ? 'Select Date Of Birth'
+                              : DateFormat.yMMMMd().format(_selectedDate))),
+                    ),
+                  ),
                 ),
               ],
             ),
