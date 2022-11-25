@@ -33,7 +33,7 @@ const Form = () => {
 	useEffect(() => {
 		if (isSuccess) {
 			localStorage.setItem("token", loginData?.data?.token);
-			navigate("/store/products");
+			navigate("/admin/stores");
 		}
 	}, [isSuccess, loginData?.data.token, navigate]);
 

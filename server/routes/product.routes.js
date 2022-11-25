@@ -9,9 +9,11 @@ const {
 	productSearch,
 	getProductsOfStore,
 	getProductsOfBranch,
+	getProducts,
 } = require("../controllers/product.controller");
 
 router.get("/", getAllProducts);
+router.get("/user", getProducts);
 router.get("/:id", getProduct);
 router.get("/store/:id", getProductsOfStore);
 router.get("/branch/:id", getProductsOfBranch);

@@ -4,7 +4,7 @@ const DropList = ({ options, value, onChange, className }) => {
 			<select
 				id="mylist"
 				className="bg-secondary p-2 text-white text-2xl text-center 
-                            cursor-pointer rounded-full w-40"
+                            cursor-pointer rounded-full w-40 font-medium"
 				value={value}
 				onChange={onChange}
 			>

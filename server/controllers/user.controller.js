@@ -5,8 +5,14 @@ const prisma = new PrismaClient();
 
 const getAllUsers = async (req, res) => {
 	try {
-		// TODO: add notification clicks
-		const users = await prisma.users.findMany({});
+		const users = await prisma.users.findMany({
+			include: {
+				Notifications: {
+					where: { clicked: true },
+					select: { firebase_id: true },
+				},
+			},
+		});
 		res.status(200).json({ users: users });
 	} catch (err) {
 		res.status(400).json({ message: err.message });
@@ -117,9 +123,11 @@ const addUser = async (req, res) => {
 		// creating a new user
 		await prisma.users.create({
 			data: {
-				...body,
+				name: body.name,
+				gender: body.gender,
 				email: email,
 				DOB: date,
+				profile: "/static/images/profile/default.jpeg",
 				user_types: { connect: { id: user_type_id } },
 				password: await bcrypt.hash(password, 10),
 			},

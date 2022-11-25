@@ -10,6 +10,23 @@ function sleep(ms) {
 	});
 }
 
+const getProducts = async (req, res) => {
+	try {
+		const products = await prisma.products.findMany({
+			include: {
+				images: true,
+				branches: {
+					include: { store_types: { select: { categories: true } } },
+				},
+				product_categories: { select: { categories: true } },
+			},
+		});
+		res.status(200).json({ products: products });
+	} catch (err) {
+		res.status(400).json({ message: err.message });
+	}
+};
+
 const getAllProducts = async (req, res) => {
 	try {
 		// getting products
@@ -21,7 +38,12 @@ const getAllProducts = async (req, res) => {
 					},
 				},
 			},
-			include: { images: { select: { image: true } } },
+			include: {
+				images: { select: { image: true } },
+				product_categories: {
+					select: { categories: { select: { category: true } } },
+				},
+			},
 		});
 
 		res.status(200).json({ products: products });
@@ -42,6 +64,7 @@ const getProduct = async (req, res) => {
 			include: {
 				images: { select: { image: true } },
 				branches: true,
+				product_categories: { select: { categories: true } },
 			},
 		});
 
@@ -122,7 +145,7 @@ const addProduct = async (req, res) => {
 			const image_extension = splited_image[0].split("/")[1];
 			// generating unique name according to time
 			await sleep(1);
-			const image_path = `./public/images/products/${Date.now()}.${image_extension}`;
+			const image_path = `/static/images/products/${Date.now()}.${image_extension}`;
 
 			// saving image in folder
 			fs.writeFile(image_path, image_base64, "base64", (err) => {
@@ -135,7 +158,7 @@ const addProduct = async (req, res) => {
 		// setting default case
 		if (images_array.length == 0)
 			images_array.push({
-				image: `./public/images/products/default.png`,
+				image: `/static/images/products/default.png`,
 			});
 
 		// adding product for all branches
@@ -284,4 +307,5 @@ module.exports = {
 	productSearch,
 	getProductsOfStore,
 	getProductsOfBranch,
+	getProducts,
 };

@@ -10,7 +10,7 @@ const addStore = async (req, res) => {
 		// saving image
 		// setting default case
 		let image_path;
-		if (!image) image_path = `./public/images/store/default.jpg`;
+		if (!image) image_path = `/static/images/store/default.jpg`;
 		else {
 			// spliting base64
 			const splited_image = body.image.split(";base64,");
@@ -18,7 +18,7 @@ const addStore = async (req, res) => {
 			const image_extension = splited_image[0].split("/")[1];
 
 			// generating unique name according to time
-			image_path = `./public/images/store/${Date.now()}.${image_extension}`;
+			image_path = `/static/images/store/${Date.now()}.${image_extension}`;
 
 			// saving image in folder
 			fs.writeFile(image_path, image_base64, "base64", (err) => {
@@ -28,7 +28,12 @@ const addStore = async (req, res) => {
 
 		// creating store
 		const store = await prisma.stores.create({
-			data: { ...body, image: image_path },
+			data: {
+				name: body.name,
+				phone: body.phone,
+				about: body.about,
+				image: image_path,
+			},
 		});
 		res.status(200).json({ store: store });
 	} catch (err) {
@@ -85,8 +90,6 @@ const getStore = async (req, res) => {
 		res.status(400).json({ message: err.message });
 	}
 };
-
-// TODO: edit store
 
 module.exports = {
 	addStore,
