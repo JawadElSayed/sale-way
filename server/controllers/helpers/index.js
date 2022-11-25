@@ -24,7 +24,6 @@ const deleteBranch = async (req) => {
 			where: { id: parseInt(req.params.id) },
 		});
 	} catch (err) {
-		console.log(err);
 		res.status(400).json({ message: err.message });
 	}
 };

@@ -251,7 +251,6 @@ const getBestUser = async (req, res) => {
 			nameLastYear: nameLastYear,
 		});
 	} catch (err) {
-		console.log(err.message);
 		res.status(400).json({ message: err.message });
 	}
 };
@@ -301,7 +300,6 @@ const getBestBranch = async (req, res) => {
 			nameLastYear: nameLastYear,
 		});
 	} catch (err) {
-		console.log(err.message);
 		res.status(400).json({ message: err.message });
 	}
 };
@@ -327,7 +325,6 @@ const getClicksAnalytics = async (req, res) => {
 			lastYear: clicksLastYear,
 		});
 	} catch (err) {
-		console.log(err.message);
 		res.status(400).json({ message: err.message });
 	}
 };
