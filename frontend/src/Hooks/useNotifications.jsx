@@ -5,9 +5,19 @@ export const ALL_NOTIFICATIONS_KEY = ["ALL_NOTIFICATIONS_KEY"];
 export const NUMBERS_CLICKS_KEY = ["NUMBERS_CLICKS_KEY"];
 export const BEST_USERS_KEY = ["BEST_USERS_KEY"];
 export const BEST_BRANCHS_KEY = ["BEST_BRANCHS_KEY"];
+export const BRANCH_ANALYTICS_KEY = ["BRANCH_ANALYTICS_KEY"];
+export const buildBranchAnalyticsById = (id) => ["BRANCH_ANALYTICS_BY_ID", id];
 
 const getAllNotifications = async () => {
 	return await sale_way.getAPI(`/notification`);
+};
+
+const getBranchAnalyticsBYID = async (id) => {
+	return await sale_way.getAPI(`/notification/${id}`);
+};
+
+const getBranchAnalytics = async () => {
+	return await sale_way.getAPI(`/notification/branch`);
 };
 
 const getNmberClicks = async () => {
@@ -36,4 +46,15 @@ export const useBestUsers = () => {
 
 export const useBestBranches = () => {
 	return useQuery(BEST_BRANCHS_KEY, getBestBranches);
+};
+
+export const useBranchAnalytics = () => {
+	return useQuery(BRANCH_ANALYTICS_KEY, getBranchAnalytics);
+};
+
+export const useBranchAnalyticsBYID = (id) => {
+	return useQuery({
+		queryKey: buildBranchAnalyticsById(id),
+		queryFn: () => getBranchAnalyticsBYID(id),
+	});
 };
