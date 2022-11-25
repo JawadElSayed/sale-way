@@ -29,6 +29,35 @@ const Table = ({ titles, data, imageClick, edit, deleteClick, view }) => {
 						})}
 					</tr>
 				</thead>
+				<tbody>
+					{data?.map((item) => {
+						return (
+							<tr
+								key={item?.[0]}
+								className="text-left border-b-2 "
+							>
+								<td>
+									<img
+										src={`${baseUrl}${item?.[1]}`}
+										alt="product"
+										className="w-16 h-16 rounded-full my-2 border-secondary"
+										onClick={() =>
+											imageClick != null &&
+											imageClick(item?.[5])
+										}
+									/>
+								</td>
+								<td>{item?.[2]}</td>
+								<td>{item?.[3]}</td>
+								<td className="text-center">
+									{item?.[4]?.map((i) => {
+										return <div key={i}>{i}</div>;
+									})}
+								</td>
+							</tr>
+						);
+					})}
+				</tbody>
 			</table>
 		</>
 	);
