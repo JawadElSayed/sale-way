@@ -1,6 +1,7 @@
 import StatisticsCard from "../components/statisticCard";
 import Header from "../layouts/header";
-
+import DropList from "../components/DropList";
+import { useState } from "react";
 import {
 	useNumberClicks,
 	useBestUsers,
@@ -8,9 +9,39 @@ import {
 } from "../Hooks/useNotifications";
 
 const AdminAnalytics = () => {
+	const filterList = ["Last Week", "Last Month", "Last Year"];
+	const [filter, setFilter] = useState("");
 	const { isLoading: clicksLoading, data: clicksData } = useNumberClicks();
 	const { isLoading: userLoading, data: usersData } = useBestUsers();
 	const { isLoading: branchLoading, data: branchData } = useBestBranches();
+
+	let date = new Date();
+
+	const weekList = [
+		`${date.getDate() - 6}`,
+		`${date.getDate() - 5}`,
+		`${date.getDate() - 4}`,
+		`${date.getDate() - 3}`,
+		`${date.getDate() - 2}`,
+		`${date.getDate() - 1}`,
+		`${date.getDate()}`,
+	];
+	let monthList = [];
+	for (let i = 29; i >= 0; i--) {
+		if (date.getDate() - i === 0) monthList.push(`30`);
+		else if (date.getDate() - i < 0)
+			monthList.push(`${date.getDate() - i + 30}`);
+		else monthList.push(`${date.getDate() - i}`);
+	}
+
+	let yearList = [];
+	for (let i = 11; i >= 0; i--) {
+		if (date.getMonth() - i === 0) yearList.push(`12`);
+		else if (date.getMonth() - i < 0)
+			yearList.push(`${date.getMonth() - i + 12}`);
+		else yearList.push(`${date.getMonth() - i}`);
+	}
+
 	return (
 		<>
 			<Header title="Analytics"></Header>
@@ -88,6 +119,15 @@ const AdminAnalytics = () => {
 								}
 							/>
 						</div>
+					</div>
+					<div className="flex justify-between items-center pt-10">
+						<h1>Statistics</h1>
+						<DropList
+							value={filter}
+							options={filterList}
+							onChange={(e) => setFilter(e.target.value)}
+							className=" text-right"
+						/>
 					</div>
 				</div>
 			)}
