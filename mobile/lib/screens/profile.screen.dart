@@ -17,6 +17,8 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final nameCntroller = TextEditingController();
   var _selectedDate = DateTime.now().subtract(Duration(days: 365 * 23));
+  final List<String> _genders = ['Male', 'Female'];
+  String? _selectedGender = "Male";
 
   void _presentDatePicker() {
     showDatePicker(
@@ -84,6 +86,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               : DateFormat.yMMMMd().format(_selectedDate))),
                     ),
                   ),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: DropdownButton(
+                      underline: Container(
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(
+                                    width: 1,
+                                    color: Theme.of(context).primaryColor))),
+                      ),
+                      isExpanded: true,
+                      value: _selectedGender,
+                      onChanged: (newValue) {
+                        setState(() {
+                          _selectedGender = newValue;
+                        });
+                      },
+                      items: _genders.map((gender) {
+                        return DropdownMenuItem(
+                          value: gender,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Text(
+                              gender,
+                              style: const TextStyle(fontSize: 20),
+                            ),
+                          ),
+                        );
+                      }).toList()),
                 ),
               ],
             ),
