@@ -3,6 +3,9 @@
 	--secondary: #9ba9f3;
 	--main-hover: #bbc4f0;
 	--red: #ff3333;
+	--cardRed: #bf4141;
+	--cardGreen: #69b85c;
+	--cardBlue: #5e71db;
 }
 
 .bg-primary {
@@ -19,6 +22,18 @@
 
 .bg-red {
 	background-color: var(--red);
+}
+
+.bg-card-red {
+	background-color: var(--cardRed);
+}
+
+.bg-card-green {
+	background-color: var(--cardGreen);
+}
+
+.bg-card-blue {
+	background-color: var(--cardBlue);
 }
 
 .black-shadow {
