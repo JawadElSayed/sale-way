@@ -48,32 +48,35 @@ void livePosition(branches, notifications) async {
   });
 }
 
-var count = 0;
-Future calculatingDistance(branches) async {
+Future calculatingDistance(branches, notifications, ccurrentLocation) async {
   double distance;
-
+  List<Notification> newNotifications = [];
+  if (branches == null) return;
   for (var branch in branches) {
     distance = Geolocator.distanceBetween(
-        currentLocation.latitude,
-        currentLocation.longitude,
+        ccurrentLocation.latitude,
+        ccurrentLocation.longitude,
         double.parse(branch.latitude),
         double.parse(branch.longitude));
-    if (distance < 50 &&
-        DateTime.now()
-            .subtract(const Duration(hours: 1))
-            .isAfter(DateTime.parse(branch.last_notification))) {
-      String deviceToken = "";
-      await FirebaseMessaging.instance.getToken().then((token) {
-        deviceToken = token.toString();
-      });
-      var body = jsonEncode({
-        "token": deviceToken,
-        "title": "${branch.name}",
-        "body": "${branch.name} has distance nearby chechout!!!"
-      });
-      var res = await http.post("/notification", body);
-      // print(res.body);
+
+    bool passed = false;
+    if (distance < 300) {
+      for (var notification in notifications) {
+        if (branch.id == notification.branch_id) {
+          if ((DateTime.now()
+              .subtract(Duration(hours: 12))
+              .isBefore(DateTime.parse(notification.created_at)))) {
+            passed = true;
+            break;
+          }
+        }
+      }
+
+      if (!passed) {
+        print("Send notification");
+        continue;
+      }
     }
-    // print(distance);
   }
+  return newNotifications;
 }
