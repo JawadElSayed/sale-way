@@ -72,12 +72,44 @@ Future calculatingDistance(branches, notifications, ccurrentLocation) async {
       }
 
       if (!passed) {
-        print("Send notification");
+        newNotifications.add(await sendNotification(branch));
         continue;
       }
     }
   }
   return newNotifications;
+}
+
+Future<Notification> sendNotification(branch) async {
+  Notification newNotification;
+  String deviceToken = "";
+  await FirebaseMessaging.instance.getToken().then((token) {
+    print("device token: $token");
+    deviceToken = token.toString();
+  });
+  var body = jsonEncode({
+    "token": deviceToken,
+    "title": "${branch.name}",
+    "body": "${branch.name} has discount nearby check out!",
+    "branch_id": branch.id,
+  });
+  final res = await http.post("/notification", body);
+  final extracData = jsonDecode(res.body) as Map;
+  print("data: $extracData");
+  final notification = extracData["notification"];
+
+  newNotification = Notification(
+      user_id: notification["user_id"],
+      branch_id: notification["branch_id"],
+      title: notification["title"],
+      message: notification["message"],
+      created_at: DateTime.now().toString(),
+      clicked: notification["clicked"],
+      deleted: notification["deleted"],
+      cliked_at: notification["clicked_at"],
+      firebase_id: notification["firebase_id"],
+      branches: notification["branches"]);
+  return newNotification;
 }
 
 void deviceToken() async {
