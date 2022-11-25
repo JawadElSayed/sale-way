@@ -31,6 +31,23 @@ class _LoginScreenState extends State<LoginScreen> {
   var _selectedDate;
   var _isLoading = false;
 
+  void _presentDatePicker() {
+    showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(1900),
+            lastDate: DateTime.now())
+        .then((value) {
+      if (value == null) return;
+      data["DOB"] = value.toString();
+      // DateFormat.yMMMMd().format(_selectedDate);
+      print(value);
+      setState(() {
+        _selectedDate = value;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
