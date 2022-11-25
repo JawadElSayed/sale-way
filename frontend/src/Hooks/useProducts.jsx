@@ -11,10 +11,20 @@ const saveProduct = async (data) => {
 	return await sale_way.postAPI("/product", data);
 };
 
+const deleteProduct = async (id) => {
+	return await sale_way.deleteAPI(`/product/${id}`);
+};
+
 export const useAllProducts = () => {
 	return useQuery(ALL_PRODUCTS_KEY, getAllProducts);
 };
 
 export const useAddProduct = () => {
 	return useMutation(saveProduct);
+};
+
+export const useDeleteProduct = (id) => {
+	return useMutation((id) => {
+		deleteProduct(id);
+	});
 };
