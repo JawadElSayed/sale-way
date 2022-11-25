@@ -73,6 +73,20 @@ const StoreAnalytics = () => {
 					}
 				}
 			}
+		} else {
+			for (let i = limit; i >= 0; i--) {
+				graphDataList[limit - i] = 0;
+				for (var data of analyticsData) {
+					if (
+						new Date(data.clicked_at).getMonth() ===
+							new Date(date - day * i * 30).getMonth() &&
+						new Date(data.clicked_at).getFullYear() ===
+							new Date(date - day * i * 30).getFullYear()
+					) {
+						graphDataList[limit - i] += 1;
+					}
+				}
+			}
 		}
 	};
 	if (!isLoading) fillGraphData();
