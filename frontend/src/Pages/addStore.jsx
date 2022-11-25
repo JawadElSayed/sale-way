@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { useAddBranch } from "../Hooks/useBranches";
-import { useNavigate } from "react-router-dom";
+import { useAddBranch, useBranchByID } from "../Hooks/useBranches";
+import { useNavigate, useParams } from "react-router-dom";
 
 import Button from "../components/Button";
 import ProductImagesInput from "../components/ProductImagesInput";
@@ -14,6 +14,9 @@ import { useAllStores } from "../Hooks/useStore";
 
 const AddStoer = () => {
 	const navigate = useNavigate();
+
+	const params = useParams();
+	const id = params.id;
 
 	const [addType, setAddType] = useState("Branch");
 
@@ -40,6 +43,8 @@ const AddStoer = () => {
 	} = useAddStore();
 	const { data: storesData, isLoading: storesLoading } = useAllStores();
 
+	const { data, isLoading } = useBranchByID(id);
+
 	let storesList = [];
 	let storesNameList = [];
 	if (!storesLoading) {
@@ -48,6 +53,26 @@ const AddStoer = () => {
 			storesNameList.push(store.name);
 		}
 	}
+
+	useEffect(() => {
+		if (!isLoading) {
+			if (id) {
+				setStoreName(data.data.branch.name);
+				setPhone(data.data.branch.phone);
+				setAbout(data.data.branch.about);
+				setLatitude(data.data.branch.latitude);
+				setLongitude(data.data.branch.longitude);
+			}
+		}
+	}, [
+		isLoading,
+		id,
+		data?.data.branch.name,
+		data?.data.branch.phone,
+		data?.data.branch.about,
+		data?.data.branch.latitude,
+		data?.data.branch.longitude,
+	]);
 
 	const saveBranch = () => {
 		setError("");
@@ -165,14 +190,14 @@ const AddStoer = () => {
 	return (
 		<div className="flex flex-col h-screen">
 			<Header title="Add Store"></Header>
-
-			<DropList
-				value={addType}
-				onChange={(e) => setAddType(e.target.value)}
-				options={["Store", "Branch"]}
-				className="mr-10 text-right"
-			/>
-
+			{!id && (
+				<DropList
+					value={addType}
+					onChange={(e) => setAddType(e.target.value)}
+					options={["Store", "Branch"]}
+					className="mr-10 text-right"
+				/>
+			)}
 			<div className="overflow-y-scroll hide-scroll-bar px-2.5 pb-8 pt-8">
 				{addType === "Branch" ? (
 					<>
