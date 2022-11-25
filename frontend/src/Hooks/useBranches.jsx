@@ -20,6 +20,10 @@ const editBranch = async (data) => {
 	return await sale_way.putAPI(`/branch`);
 };
 
+const deleteBranch = async (id) => {
+	return await sale_way.deleteAPI(`/branch/${id}`);
+};
+
 export const useAllBranches = () => {
 	return useQuery(ALL_STORES_KEY, getAllBranches);
 };
@@ -37,4 +41,11 @@ export const useBranchByID = (id) => {
 
 export const useEditBranch = () => {
 	return useMutation(editBranch);
+};
+
+export const useDeleteBranch = (id) => {
+	return useMutation((id) => {
+		console.log(id);
+		deleteBranch(id);
+	});
 };
