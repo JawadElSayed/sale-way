@@ -1,5 +1,7 @@
 import { useState } from "react";
-import Map from "react-map-gl";
+import Map, { Marker } from "react-map-gl";
+import { MdLocationOn } from "react-icons/md";
+import { useAllBranches } from "../../Hooks/useBranches";
 
 const MapPage = () => {
 	const [veiwPort, setViewPort] = useState({
@@ -7,6 +9,8 @@ const MapPage = () => {
 		latitude: 33.875,
 		zoom: 12.5,
 	});
+
+	const { isLoading, data, isError, error, isSuccess } = useAllBranches();
 
 	return (
 		<>
@@ -16,7 +20,20 @@ const MapPage = () => {
 					initialViewState={{ ...veiwPort }}
 					style={{ width: " 100%", height: "100vh" }}
 					mapStyle="mapbox://styles/mapbox/streets-v9"
-				></Map>
+				>
+					{isSuccess &&
+						data?.data.branches.map((branch) => {
+							return (
+								<Marker
+									key={branch.id}
+									longitude={branch.longitude}
+									latitude={branch.latitude}
+								>
+									<MdLocationOn size={40} />
+								</Marker>
+							);
+						})}
+				</Map>
 			</div>
 		</>
 	);
