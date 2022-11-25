@@ -13,7 +13,7 @@ class Products with ChangeNotifier {
 
   Future getProducts() async {
     try {
-      final res = await get("/product");
+      final res = await get("/product/user");
       final extracData = jsonDecode(res.body) as Map;
       final data = extracData["products"];
       List<Product> loadedProducts = [];
@@ -25,6 +25,9 @@ class Products with ChangeNotifier {
           discount: product["discount"],
           created_at: product["created_at"],
           updated_at: product["updated_at"],
+          product_categories: product["product_categories"],
+          images: product["images"],
+          branches: product["branches"],
         ));
       });
       products = loadedProducts;
