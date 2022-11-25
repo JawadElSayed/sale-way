@@ -34,6 +34,21 @@ class _LoginScreenState extends State<LoginScreen> {
   final List<String> _genders = ['Male', 'Female'];
   var _selectedGender;
   var _selectedDate;
+
+  void _showError(String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text("An Error Occurred!"),
+        content: Text(message),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.of(ctx).pop(), child: Text("Okay"))
+        ],
+      ),
+    );
+  }
+
   var _isLoading = false;
 
   void login() async {
