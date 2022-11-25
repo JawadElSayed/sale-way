@@ -39,4 +39,24 @@ class Notifications with ChangeNotifier {
       throw (e);
     }
   }
+
+  Future clickNotification(data) async {
+    try {
+      final res = await post("/notification/click", data);
+      final extracData = jsonDecode(res.body) as Map;
+
+      if (extracData["status"] == "error")
+        throw HttpException(extracData["message"]);
+
+      for (var i = 0; i < notifications.length; i++) {
+        if (notifications[i].firebase_id == extracData["firebase_id"]) {
+          notifications[i].clicked = true;
+        }
+      }
+      notifyListeners();
+    } catch (e) {
+      throw (e);
+    }
+  }
+
 }
