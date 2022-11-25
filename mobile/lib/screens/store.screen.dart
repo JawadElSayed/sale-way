@@ -44,7 +44,29 @@ class _StoreScreenState extends State<StoreScreen> {
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
-          : Container()
+          : SingleChildScrollView(
+              child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: Column(
+                    children: [
+                      Container(
+                          padding: EdgeInsets.symmetric(vertical: 15),
+                          child: Text(
+                            branch.name,
+                            style: Theme.of(context).textTheme.headline1,
+                          )),
+                      Container(
+                          padding: EdgeInsets.only(bottom: 20),
+                          child: Text("${branch.about}",
+                              textAlign: TextAlign.left)),
+                      Column(
+                        children: branch.products!.map<Widget>((product) {
+                          return ProductCard(product: product);
+                        }).toList(),
+                      ),
+                    ],
+                  )),
+            ),
     );
   }
 }
