@@ -120,6 +120,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
           )),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).accentColor,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+                onPressed: () {},
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 10,
+                  ),
+                  alignment: Alignment.center,
+                  width: 100,
+                  child: Text(
+                    "Save",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                )),
+          )
         ]),
       ),
     );
