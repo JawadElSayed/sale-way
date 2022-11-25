@@ -2,6 +2,8 @@ import Button from "../components/Button";
 import { useAllProducts, useDeleteProduct } from "../Hooks/useProducts";
 import Header from "../layouts/header";
 import { useNavigate } from "react-router-dom";
+import ProductModal from "../components/Product/Product";
+import { useState } from "react";
 import Table from "../components/Table";
 
 const Products = () => {
@@ -14,6 +16,8 @@ const Products = () => {
 	];
 
 	const navigate = useNavigate();
+	const [displayModel, setDisplayModel] = useState("hidden");
+	const [modelData, setModelData] = useState("");
 
 	const tableTitles = [
 		"Image",
@@ -43,13 +47,24 @@ const Products = () => {
 			return tableData.push(newData);
 		});
 	}
+
+	const imageClick = (product) => {
+		setModelData(product);
+		setDisplayModel("block");
+	};
+
 	const deleteProduct = (id) => {
 		mutate(parseInt(id));
 		window.location.reload();
 	};
 
 	return (
-		<div className="flex flex-col h-screen">
+		<div
+			className="flex flex-col h-screen"
+			onClick={() => {
+				if (displayModel === "block") setDisplayModel("hidden");
+			}}
+		>
 			<Header
 				title="Products"
 				secondRowButtons={secondRowButtons}
@@ -65,6 +80,7 @@ const Products = () => {
 					deleteClick={deleteProduct}
 				/>
 			</div>
+			<ProductModal display={displayModel} product={modelData} />
 		</div>
 	);
 };
