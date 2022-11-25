@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useAddBranch, useBranchByID } from "../Hooks/useBranches";
+import { useAddBranch, useBranchByID, useEditBranch } from "../Hooks/useBranches";
 import { useNavigate, useParams } from "react-router-dom";
 
 import Button from "../components/Button";
@@ -41,6 +41,7 @@ const AddStoer = () => {
 		isSuccess: storeIsSuccess,
 		isError: storeIsError,
 	} = useAddStore();
+	const { mutate: branchEdit, isSuccess, isError } = useEditBranch();
 	const { data: storesData, isLoading: storesLoading } = useAllStores();
 
 	const { data, isLoading } = useBranchByID(id);
@@ -110,7 +111,7 @@ const AddStoer = () => {
 				store_id: mainStoreId,
 			};
 			console.log(`mutate ${mainStoreId}`);
-			branchMutate(data);
+			id ? branchEdit(data) : branchMutate(data);
 		} else {
 			if (storeValidation(StoreName, about, phone))
 				return setError(storeValidation(StoreName, about, phone));
@@ -123,14 +124,14 @@ const AddStoer = () => {
 			storeMutate(data);
 		}
 
-		if (storeIsError || branchIsError)
+		if (storeIsError || branchIsError || isError)
 			alert("Something went wrong");
 	};
 
 	useEffect(() => {
-		if (storeIsSuccess || branchIsSuccess)
+		if (storeIsSuccess || branchIsSuccess || isSuccess)
 			navigate("/admin/stores");
-	}, [branchIsSuccess, navigate, storeIsSuccess]);
+	}, [branchIsSuccess, isSuccess, navigate, storeIsSuccess]);
 
 	const branchValidation = (
 		StoreName,
