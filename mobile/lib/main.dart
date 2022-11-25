@@ -16,6 +16,8 @@ import './screens/store.screen.dart';
 import 'helpers/notificationservice/local_notification_service.dart';
 import 'package:provider/provider.dart';
 
+import 'providers/auth.provider.dart';
+
 Future<void> backgroundHandler(RemoteMessage message) async {
   LocalNotificationService.createanddisplaynotification(message);
 }
@@ -42,6 +44,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider.value(
           value: Products(),
+        ),
+        ChangeNotifierProvider.value(
+          value: Auth(),
         )
       ],
       child: MaterialApp(
