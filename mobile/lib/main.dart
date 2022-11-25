@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/helpers/notificationservice/push_notification.dart';
 import './providers/notifications.provider.dart';
 import './providers/products.provider.dart';
 import './providers/branches.provider.dart';
@@ -20,7 +21,7 @@ import 'package:provider/provider.dart';
 import 'providers/auth.provider.dart';
 
 Future<void> backgroundHandler(RemoteMessage message) async {
-  LocalNotificationService.createanddisplaynotification(message);
+  pushNotification.displayNotification();
 }
 
 void main() async {
