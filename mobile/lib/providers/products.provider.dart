@@ -37,3 +37,25 @@ class Products with ChangeNotifier {
     }
   }
 }
+
+Future<Product> getProduct(id) async {
+  try {
+    final res = await get("/product/$id");
+    final extracData = jsonDecode(res.body) as Map;
+    final data = extracData["product"];
+    Product product = Product(
+      id: data["id"],
+      name: data["name"],
+      description: data["description"],
+      discount: data["discount"],
+      created_at: data["created_at"],
+      updated_at: data["updated_at"],
+      product_categories: data["product_categories"],
+      images: data["images"],
+      branches: data["branches"],
+    );
+    return product;
+  } catch (e) {
+    throw (e);
+  }
+}
