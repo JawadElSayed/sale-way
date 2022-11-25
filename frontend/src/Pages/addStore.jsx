@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAddBranch } from "../Hooks/useBranches";
+import { useNavigate } from "react-router-dom";
 
 import Button from "../components/Button";
 import ProductImagesInput from "../components/ProductImagesInput";
@@ -10,6 +11,8 @@ import SearchDropDown from "../components/SearchDropDown";
 import { useAllStores } from "../Hooks/useStore";
 
 const AddStoer = () => {
+	const navigate = useNavigate();
+
 	const [addType, setAddType] = useState("Branch");
 
 	const [StoreName, setStoreName] = useState("");
@@ -38,6 +41,51 @@ const AddStoer = () => {
 			storesNameList.push(store.name);
 		}
 	}
+
+	const saveBranch = () => {
+		setError("");
+
+		if (
+			branchValidation(
+				StoreName,
+				about,
+				phone,
+				type,
+				latitude,
+				longitude,
+				mainStore
+			)
+		)
+			return setError(
+				branchValidation(
+					StoreName,
+					about,
+					phone,
+					type,
+					latitude,
+					longitude,
+					mainStore
+				)
+			);
+		const data = {
+			name: StoreName,
+			category: type,
+			about: about,
+			latitude: parseFloat(latitude).toString(),
+			longitude: parseFloat(longitude).toString(),
+			phone: parseInt(phone).toString(),
+			images: [],
+			store_id: mainStoreId,
+		};
+		console.log(`mutate ${mainStoreId}`);
+		branchMutate(data);
+
+		if (branchIsError) alert("Something went wrong");
+	};
+
+	useEffect(() => {
+		if (branchIsSuccess) navigate("/admin/stores");
+	}, [branchIsSuccess, navigate]);
 
 	const branchValidation = (
 		StoreName,
