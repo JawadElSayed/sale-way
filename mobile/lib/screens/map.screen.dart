@@ -43,21 +43,24 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     List branches = Provider.of<Branches>(context).branchesGetter;
-    return FlutterMap(
-      options: MapOptions(
-        center: LatLng(33.88647, 35.50559),
-        zoom: 13,
-      ),
-      children: [
-        TileLayer(
-          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          userAgentPackageName: 'com.example.app',
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.92,
+      child: FlutterMap(
+        options: MapOptions(
+          center: LatLng(33.88647, 35.50559),
+          zoom: 13,
         ),
-        MarkerLayer(
-            markers: branches.map((branch) {
-          return marker(branch);
-        }).toList())
-      ],
+        children: [
+          TileLayer(
+            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+            userAgentPackageName: 'com.example.app',
+          ),
+          MarkerLayer(
+              markers: branches.map((branch) {
+            return marker(branch);
+          }).toList())
+        ],
+      ),
     );
   }
 }
