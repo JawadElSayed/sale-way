@@ -14,6 +14,10 @@ class _ProductScreenState extends State<ProductScreen> {
   bool isLoading = true;
   var product;
 
+  void selectStore(BuildContext ctx) {
+    Navigator.of(ctx).pushNamed("/store", arguments: product.branches[0]["id"]);
+  }
+
   @override
   Widget build(BuildContext context) {
     var product_id = ModalRoute.of(context)?.settings.arguments;
@@ -67,14 +71,20 @@ class _ProductScreenState extends State<ProductScreen> {
                               padding: const EdgeInsets.only(bottom: 20),
                               child: Row(
                                 children: [
-                                  CircleImage(
-                                      url:
-                                          '${Config.staticUrl}${product.branches[0]["image"]}',
-                                      radius: 30),
-                                  Text(
-                                    product.branches[0]["name"],
-                                    style:
-                                        Theme.of(context).textTheme.headline3,
+                                  InkWell(
+                                    onTap: () => selectStore(context),
+                                    child: CircleImage(
+                                        url:
+                                            '${Config.staticUrl}${product.branches[0]["image"]}',
+                                        radius: 30),
+                                  ),
+                                  InkWell(
+                                    onTap: () => selectStore(context),
+                                    child: Text(
+                                      product.branches[0]["name"],
+                                      style:
+                                          Theme.of(context).textTheme.headline3,
+                                    ),
                                   )
                                 ],
                               ),
