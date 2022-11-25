@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
-import { useAddBranch, useBranchByID, useEditBranch } from "../Hooks/useBranches";
+import {
+	useAddBranch,
+	useBranchByID,
+	useEditBranch,
+} from "../Hooks/useBranches";
 import { useNavigate, useParams } from "react-router-dom";
 
 import Button from "../components/Button";
@@ -110,7 +114,7 @@ const AddStoer = () => {
 				images: [],
 				store_id: mainStoreId,
 			};
-			console.log(`mutate ${mainStoreId}`);
+
 			id ? branchEdit(data) : branchMutate(data);
 		} else {
 			if (storeValidation(StoreName, about, phone))

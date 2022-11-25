@@ -45,7 +45,6 @@ export const useEditBranch = () => {
 
 export const useDeleteBranch = (id) => {
 	return useMutation((id) => {
-		console.log(id);
 		deleteBranch(id);
 	});
 };

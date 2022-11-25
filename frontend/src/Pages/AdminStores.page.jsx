@@ -44,7 +44,6 @@ const AdminStores = () => {
 	}
 
 	const deleteBranch = (id) => {
-		console.log(parseInt(id));
 		deleteMutate(parseInt(id));
 		window.location.reload();
 	};

@@ -48,7 +48,6 @@ const AdminAnalytics = () => {
 		else yearList.push(`${date.getMonth() - i}`);
 	}
 
-	// console.log(labels);
 	let graphDataList = [];
 
 	useEffect(() => {

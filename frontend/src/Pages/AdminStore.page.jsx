@@ -87,7 +87,6 @@ const AdminStore = () => {
 		else yearList.push(`${date.getMonth() - i}`);
 	}
 
-	// console.log(labels);
 	let graphDataList = [];
 
 	useEffect(() => {
@@ -105,7 +104,6 @@ const AdminStore = () => {
 	const day = 86400000;
 
 	const fillGraphData = () => {
-		console.log(branchAnalyticsData);
 		let limit = 6;
 		if (filter === "Last Month") limit = 29;
 		if (filter === "Last Year") limit = 11;

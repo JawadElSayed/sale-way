@@ -52,7 +52,6 @@ const MapPage = () => {
 												branch.products[0].discount
 											);
 											setDisplayModel("block");
-											console.log(modelData);
 										}}
 									/>
 								</Marker>
