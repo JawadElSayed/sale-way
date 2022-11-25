@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/widgets/notification_card.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/notifications.provider.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -10,6 +14,16 @@ class NotificationScreen extends StatefulWidget {
 class _NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
+    List allNotifications =
+        Provider.of<Notifications>(context).notificationsGetter;
+    List notifications = [];
+    for (var i = 0; i < allNotifications.length; i++) {
+      if (allNotifications[i].clicked == false &&
+          allNotifications[i].deleted == false) {
+        notifications.add(allNotifications[i]);
+      }
+    }
+
     return Container(
       child: Column(
         children: [
@@ -34,6 +48,17 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     ),
                   ],
                 )),
+          ),
+          Container(
+            height: MediaQuery.of(context).size.height * 0.92 - 160,
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: notifications == []
+                ? SizedBox()
+                : ListView(
+                    children: notifications.map((notification) {
+                      return NotificationCard(notification: notification);
+                    }).toList(),
+                  ),
           ),
         ],
       ),
