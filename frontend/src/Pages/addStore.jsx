@@ -39,6 +39,41 @@ const AddStoer = () => {
 		}
 	}
 
+	const branchValidation = (
+		StoreName,
+		about,
+		phone,
+		type,
+		latitude,
+		longitude,
+		mainStore
+	) => {
+		if (!StoreName) return "Store Name fields is required";
+		if (!about) return "About fields is required";
+		if (!phone) return "phone fields is required";
+		if (!type) return "Store type fields is required";
+		if (!latitude) return "Latitude fields is required";
+		if (!longitude) return "Longitude fields is required";
+		if (!mainStore) return "MainStore fields is required";
+
+		if (phone.toString().length < 7) return "Phone Number is too short";
+		if (phone.toString().length > 8) return "Phone Number is too long";
+		if (!parseFloat(latitude))
+			return "latitude fields must contain a number";
+		if (!parseFloat(longitude))
+			return "longitude fields must contain a number";
+		let available = false;
+		for (store of storesList) {
+			if (mainStore === store[1]) {
+				available = true;
+				break;
+			}
+		}
+		if (!available) return "Main Store is not available";
+
+		return "";
+	};
+
 	useEffect(() => {
 		let available = false;
 		for (store of storesList) {
