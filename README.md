@@ -126,29 +126,24 @@ _Below is an example of how you can instruct your audience on installing and set
 
 3. Navigate to server / generate prisma
     ````sh
-        cd server
-        npx prisma generate
-        ```
+    cd server
+    npx prisma generate
     ````
 4. start the server
     ````sh
-        nodemon
-        ```
+    nodemon
     ````
 5. Navigate to frontend / start web
     ````sh
-        cd frontend
-        npm start
-        ```
+    cd frontend
+    npm start
     ````
 6. Navigate to mobile / install packages
     ````sh
-        cd mobile
-        flutter pub get
-        ```
+    cd mobile
+    flutter pub get
     ````
 7. Run flutter_app
     ````sh
-        flutter run
-        ```
+    flutter run
     ````
