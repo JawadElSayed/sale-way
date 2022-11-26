@@ -86,3 +86,65 @@ Here's a brief high-level overview of the tech stack the Well app uses:
 | Map page                                  | profile                                            |
 | ------------                              | ------------------                                 |
 | ![Map page](./readme/user-map.gif)        | ![Notification page](./readme/profile.png)         |
+
+<br><br>
+<img src="./readme/title6.svg"/>
+
+> This is an example of how you may give instructions on setting up your project locally.
+> To get a local copy up and running follow these simple example steps.
+
+### Prerequisites
+
+This is an example of how to list things you need to use the software and how to install them.
+
+1.  npm
+    ```sh
+    npm install npm@latest -g
+    ```
+2.  Install [XAMPP](https://www.apachefriends.org/download.html)
+3.  Install Flutter [SDK](https://docs.flutter.dev/get-started/install?gclid=Cj0KCQiAveebBhD_ARIsAFaAvrEXbca0gKEuW9ROxwC86eiEtJUUO5tm-AIIzds41AXpzsjkbESCw2EaAsTwEALw_wcB&gclsrc=aw.ds)
+
+### Installation
+
+_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
+
+1. Clone the repo in htdocs in XAMPP folder
+
+    ```sh
+    git clone https://github.com/JawadElSayed/sale-way.git
+    ```
+
+2. Install NPM packages
+
+    ```sh
+    npm install
+    ```
+
+3. Navigate to server / generate prisma
+    ````sh
+        cd server
+        npx prisma generate
+        ```
+    ````
+4. start the server
+    ````sh
+        nodemon
+        ```
+    ````
+5. Navigate to frontend / start web
+    ````sh
+        cd frontend
+        npm start
+        ```
+    ````
+6. Navigate to mobile / install packages
+    ````sh
+        cd mobile
+        flutter pub get
+        ```
+    ````
+7. Run flutter_app
+    ````sh
+        flutter run
+        ```
+    ````
