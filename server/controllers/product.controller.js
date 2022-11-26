@@ -10,16 +10,40 @@ function sleep(ms) {
 	});
 }
 
+const getProducts = async (req, res) => {
+	try {
+		const products = await prisma.products.findMany({
+			include: {
+				images: true,
+				branches: {
+					include: { store_types: { select: { categories: true } } },
+				},
+				product_categories: { select: { categories: true } },
+			},
+		});
+		res.status(200).json({ products: products });
+	} catch (err) {
+		res.status(400).json({ message: err.message });
+	}
+};
+
 const getAllProducts = async (req, res) => {
 	try {
 		// getting products
 		const products = await prisma.products.findMany({
 			where: {
 				branches: {
-					accesses: { some: { users: { email: req.email } } },
+					every: {
+						accesses: { some: { users: { email: req.email } } },
+					},
 				},
 			},
-			include: { images: { select: { image: true } } },
+			include: {
+				images: { select: { image: true } },
+				product_categories: {
+					select: { categories: { select: { category: true } } },
+				},
+			},
 		});
 
 		res.status(200).json({ products: products });
@@ -40,6 +64,7 @@ const getProduct = async (req, res) => {
 			include: {
 				images: { select: { image: true } },
 				branches: true,
+				product_categories: { select: { categories: true } },
 			},
 		});
 
@@ -118,9 +143,9 @@ const addProduct = async (req, res) => {
 			const splited_image = image.split(";base64,");
 			const image_base64 = splited_image[1];
 			const image_extension = splited_image[0].split("/")[1];
-			// generating unique name acourding it time
+			// generating unique name according to time
 			await sleep(1);
-			const image_path = `./public/images/products/${Date.now()}.${image_extension}`;
+			const image_path = `/static/images/products/${Date.now()}.${image_extension}`;
 
 			// saving image in folder
 			fs.writeFile(image_path, image_base64, "base64", (err) => {
@@ -133,7 +158,7 @@ const addProduct = async (req, res) => {
 		// setting default case
 		if (images_array.length == 0)
 			images_array.push({
-				image: `./public/images/products/default.png`,
+				image: `/static/images/products/default.png`,
 			});
 
 		// adding product for all branches
@@ -282,4 +307,5 @@ module.exports = {
 	productSearch,
 	getProductsOfStore,
 	getProductsOfBranch,
+	getProducts,
 };

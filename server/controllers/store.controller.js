@@ -1,5 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
-const { deleteBranch } = require("./branch.controller");
+const helpers = require("./helpers");
 
 const prisma = new PrismaClient();
 
@@ -10,15 +10,15 @@ const addStore = async (req, res) => {
 		// saving image
 		// setting default case
 		let image_path;
-		if (!image) image_path = `./public/images/store/default.jpg`;
+		if (!image) image_path = `/static/images/store/default.jpg`;
 		else {
 			// spliting base64
 			const splited_image = body.image.split(";base64,");
 			const image_base64 = splited_image[1];
 			const image_extension = splited_image[0].split("/")[1];
 
-			// generating unique name acourding it time
-			image_path = `./public/images/store/${Date.now()}.${image_extension}`;
+			// generating unique name according to time
+			image_path = `/static/images/store/${Date.now()}.${image_extension}`;
 
 			// saving image in folder
 			fs.writeFile(image_path, image_base64, "base64", (err) => {
@@ -28,7 +28,12 @@ const addStore = async (req, res) => {
 
 		// creating store
 		const store = await prisma.stores.create({
-			data: { ...body, image: image_path },
+			data: {
+				name: body.name,
+				phone: body.phone,
+				about: body.about,
+				image: image_path,
+			},
 		});
 		res.status(200).json({ store: store });
 	} catch (err) {
@@ -48,10 +53,9 @@ const deleteStore = async (req, res) => {
 		});
 
 		// delete all branches of store
-		const res1 = {};
 		for (let branch of branches) {
-			const req = { params: { id: branch.id } };
-			await deleteBranch(req, res1);
+			const request = { params: { id: branch.id } };
+			await helpers.deleteBranch(request);
 		}
 
 		// deleting store
@@ -86,8 +90,6 @@ const getStore = async (req, res) => {
 		res.status(400).json({ message: err.message });
 	}
 };
-
-// TODO: edit store
 
 module.exports = {
 	addStore,

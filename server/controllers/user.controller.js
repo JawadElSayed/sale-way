@@ -5,8 +5,14 @@ const prisma = new PrismaClient();
 
 const getAllUsers = async (req, res) => {
 	try {
-		// TODO: add motification clicks
-		const users = await prisma.users.findMany({});
+		const users = await prisma.users.findMany({
+			include: {
+				Notifications: {
+					where: { clicked: true },
+					select: { firebase_id: true },
+				},
+			},
+		});
 		res.status(200).json({ users: users });
 	} catch (err) {
 		res.status(400).json({ message: err.message });
@@ -34,7 +40,7 @@ const getUser = async (req, res) => {
 
 const searchUsers = async (req, res) => {
 	try {
-		// TODO: add motification clicks
+		// TODO: add notification clicks
 		const users = await prisma.users.findMany({
 			where: {
 				OR: [
@@ -51,7 +57,7 @@ const searchUsers = async (req, res) => {
 
 const filterUsers = async (req, res) => {
 	let { age, gender, user_type } = req.body;
-	// TODO: add motification clicks
+	// TODO: add notification clicks
 	try {
 		// getting the year of age
 		let year = new Date().getFullYear();
@@ -117,9 +123,11 @@ const addUser = async (req, res) => {
 		// creating a new user
 		await prisma.users.create({
 			data: {
-				...body,
+				name: body.name,
+				gender: body.gender,
 				email: email,
 				DOB: date,
+				profile: "/static/images/profile/default.jpeg",
 				user_types: { connect: { id: user_type_id } },
 				password: await bcrypt.hash(password, 10),
 			},

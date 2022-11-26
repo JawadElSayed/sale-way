@@ -1,29 +1,32 @@
 {
-  "name": "sale-way",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/JawadElSayed/sale-way.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/JawadElSayed/sale-way/issues"
-  },
-  "homepage": "https://github.com/JawadElSayed/sale-way#readme",
-  "dependencies": {
-    "@prisma/client": "^4.5.0",
-    "bcrypt": "^5.1.0",
-    "dotenv": "^16.0.3",
-    "express": "^4.18.2",
-    "jsonwebtoken": "^8.5.1",
-    "mysql2": "^2.3.3",
-    "validatorjs": "^3.22.1"
-  }
+	"name": "sale-way",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/JawadElSayed/sale-way.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/JawadElSayed/sale-way/issues"
+	},
+	"homepage": "https://github.com/JawadElSayed/sale-way#readme",
+	"dependencies": {
+		"@prisma/client": "^4.5.0",
+		"bcrypt": "^5.1.0",
+		"cors": "^2.8.5",
+		"dotenv": "^16.0.3",
+		"express": "^4.18.2",
+		"fcm-notification": "^2.0.0",
+		"firebase-admin": "^11.3.0",
+		"jsonwebtoken": "^8.5.1",
+		"mysql2": "^2.3.3",
+		"validatorjs": "^3.22.1"
+	}
 }
