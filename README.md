@@ -71,40 +71,18 @@ Here's a brief high-level overview of the tech stack the Well app uses:
 
 > Uing the above mentioned tecch stacks and the wireframes build with figma from the user sotries we have, the implementation of the app is shown as below, these are screenshots from the real app
 
-| Landing      | Products Page      |
-| ------------ | ------------------ |
-| ![Landing]() | ![Products Page]() |
-
-<br><br>
-<img src="./readme/title6.svg"/>
-
-> This is an example of how you may give instructions on setting up your project locally.
-> To get a local copy up and running follow these simple example steps.
-
-<!--
-### Prerequisites
-
-This is an example of how to list things you need to use the software and how to install them.
-
--   npm
-    ```sh
-    npm install npm@latest -g
-    ```
-
-### Installation
-
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
-
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-    ```sh
-    git clone https://github.com/your_username_/Project-Name.git
-    ```
-3. Install NPM packages
-    ```sh
-    npm install
-    ```
-4. Enter your API in `config.js`
-    ```js
-    const API_KEY = "ENTER YOUR API";
-    ``` -->
+| Landing                                   | Products Page                                      |
+| ----------------------------------------- | -------------------------------------------------- | --------------------------------------------------- | ------------------------------------------------ |
+| ![Landing](./readme/landing-page.png)     | ![Products Page](./readme/product.gif)             |
+| Store page                                | Add/Edit Store                                     |
+| ------------                              | ------------------                                 |
+| ![Store page](./readme/store.gif)         | ![Add/Edit Store](./readme/add-store.gif)          |
+| Analytics page                            | Map Page                                           |
+| ------------                              | ------------------                                 |
+| ![Analytics page](./readme/analytics.gif) | ![Map Page](./readme/admin-map.gif)                |
+| User Login/Signup                         | User Stores Page                                   | User Map page                                       | Notification page                                |
+| --------------------------------------    | -------------------------------------------------- | --------------------------------------------------- | ----------------------------------               |
+| ![User Login/Signup](./readme/login.gif)  | ![User Stores Page](./readme/user-stores.gif)      | ![Products Page ](./readme/user-product.gif)        | ![ Notification page](./readme/notification.gif) |
+| Map page                                  | profile                                            |
+| ------------                              | ------------------                                 |
+| ![Map page](./readme/user-map.gif)        | ![Notification page](./readme/profile.png)         |
