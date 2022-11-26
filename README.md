@@ -71,25 +71,25 @@ Here's a brief high-level overview of the tech stack the Well app uses:
 
 > Uing the above mentioned tecch stacks and the wireframes build with figma from the user sotries we have, the implementation of the app is shown as below, these are screenshots from the real app
 
-| Landing                               | Products Page                          |
-| ------------------------------------- | -------------------------------------- |
-| ![Landing](./readme/landing.gif) | ![Products Page](./readme/product.gif) |
+| Landing                                   | Products Page                                      |
+| ----------------------------------------- | -------------------------------------------------- |
+| <img src="./readme/landing-page.png" width=600/>| ![Products Page](./readme/product.gif)             |
 
-| Store page                        | Add/Edit Store                            |
-| --------------------------------- | ----------------------------------------- |
-| ![Store page](./readme/store.gif) | ![Add/Edit Store](./readme/add-store.gif) |
+| Store page                                | Add/Edit Store                                     |
+| ------------                              | ------------------                                 |
+| ![Store page](./readme/store.gif)         | ![Add/Edit Store](./readme/add-store.gif)          |
 
-| Analytics page                            | Map Page                            |
-| ----------------------------------------- | ----------------------------------- |
-| ![Analytics page](./readme/analytics.gif) | ![Map Page](./readme/admin-map.gif) |
+| Analytics page                            | Map Page                                           |
+| ------------                              | ------------------                                 |
+| ![Analytics page](./readme/analytics.gif) | ![Map Page](./readme/admin-map.gif)                |
 
-| User Login/Signup                        | User Stores Page                              | User Map page                                | Notification page                                |
-| ---------------------------------------- | --------------------------------------------- | -------------------------------------------- | ------------------------------------------------ |
-| ![User Login/Signup](./readme/login.gif) | ![User Stores Page](./readme/user-stores.gif) | ![Products Page ](./readme/user-product.gif) | ![ Notification page](./readme/notification.gif) |
+| User Login/Signup                         | User Stores Page                                   | User Map page                                       | Notification page                                |
+| --------------------------------------    | -------------------------------------------------- | --------------------------------------------------- | ----------------------------------               |
+| ![User Login/Signup](./readme/login.gif)  | ![User Stores Page](./readme/user-stores.gif)      | ![Products Page ](./readme/user-product.gif)        | ![ Notification page](./readme/notification.gif) |
 
-| Map page                           | profile                                    |
-| ---------------------------------- | ------------------------------------------ |
-| ![Map page](./readme/user-map.gif) | ![Notification page](./readme/profile.gif) |
+| Map page                                  | profile                                            |
+| ------------                              | ------------------                                 |
+| ![Map page](./readme/user-map.gif)        | <img src="./readme/profile.png" width=300 height=600>         |
 
 <br><br>
 <img src="./readme/title6.svg"/>
@@ -126,29 +126,24 @@ _Below is an example of how you can instruct your audience on installing and set
 
 3. Navigate to server / generate prisma
     ````sh
-        cd server
-        npx prisma generate
-        ```
+    cd server
+    npx prisma generate
     ````
 4. start the server
     ````sh
-        nodemon
-        ```
+    nodemon
     ````
 5. Navigate to frontend / start web
     ````sh
-        cd frontend
-        npm start
-        ```
+    cd frontend
+    npm start
     ````
 6. Navigate to mobile / install packages
     ````sh
-        cd mobile
-        flutter pub get
-        ```
+    cd mobile
+    flutter pub get
     ````
 7. Run flutter_app
     ````sh
-        flutter run
-        ```
+    flutter run
     ````

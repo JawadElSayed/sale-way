@@ -10,24 +10,29 @@ const login = async (req, res) => {
 
 	// getting user by email
 	const user = await prisma.users.findUnique({ where: { email: email } });
-	if (!user) return res.status(400).json({ message: "Invalid Credentials" });
+	if (!user)
+		return res
+			.status(400)
+			.json({ status: "error", message: "Invalid Credentials" });
 
 	// checking password
 	const isMatch = await bcrypt.compare(password, user.password);
 	if (!isMatch)
-		return res.status(400).json({ message: "Invalid Credentials" });
+		return res
+			.status(400)
+			.json({ status: "error", message: "Invalid Credentials" });
 
 	// generating jwt token
 	const token = jwt.sign(
 		{ email: user.email, name: user.name, userType: user.user_type },
 		process.env.JWT_SECRET_KEY,
-		{ expiresIn: "1h" }
+		{ expiresIn: "24h" }
 	);
-	res.status(200).json({ token: token });
+	res.status(200).json({ status: "success", token: token, user: user });
 };
 
 const signup = async (req, res) => {
-	const { name, email, password, user_type } = req.body;
+	const { name, email, password, user_type, DOB } = req.body;
 
 	// adding check for strong password to validatorjs
 	Validator.register(
@@ -56,12 +61,13 @@ const signup = async (req, res) => {
 				.json({ status: "error", message: validation.errors.all() });
 		}
 
-		// getting user type id ftom user type input
+		// getting user type id from user type input
 		const user_type_id = await prisma.user_types.findFirst({
 			where: { user_type: user_type.toLowerCase() },
 			select: { id: true },
 		});
 
+		const date = new Date(DOB);
 		// creating new user
 		const user = await prisma.users.create({
 			data: {
@@ -69,12 +75,21 @@ const signup = async (req, res) => {
 				email: email,
 				password: await bcrypt.hash(password, 10),
 				user_types: { connect: { id: user_type_id["id"] } },
+				profile: "/static/images/profile/default.jpeg",
+				DOB: date,
 			},
 		});
 
-		res.status(200).json({ status: "done", user: user });
+		// generating jwt token
+		const token = jwt.sign(
+			{ email: user.email, name: user.name, userType: user.user_type },
+			process.env.JWT_SECRET_KEY,
+			{ expiresIn: "24h" }
+		);
+
+		res.status(200).json({ status: "success", user: user, token: token });
 	} catch (err) {
-		res.status(400).json({ message: err.message });
+		res.status(400).json({ status: "error", message: err.message });
 	}
 };
 
