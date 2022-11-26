@@ -72,20 +72,24 @@ Here's a brief high-level overview of the tech stack the Well app uses:
 > Uing the above mentioned tecch stacks and the wireframes build with figma from the user sotries we have, the implementation of the app is shown as below, these are screenshots from the real app
 
 | Landing                                   | Products Page                                      |
-| ----------------------------------------- | -------------------------------------------------- | --------------------------------------------------- | ------------------------------------------------ |
-| ![Landing](./readme/landing-page.png)     | ![Products Page](./readme/product.gif)             |
+| ----------------------------------------- | -------------------------------------------------- |
+| <img src="./readme/landing-page.png" width=600/>| ![Products Page](./readme/product.gif)             |
+
 | Store page                                | Add/Edit Store                                     |
 | ------------                              | ------------------                                 |
 | ![Store page](./readme/store.gif)         | ![Add/Edit Store](./readme/add-store.gif)          |
+
 | Analytics page                            | Map Page                                           |
 | ------------                              | ------------------                                 |
 | ![Analytics page](./readme/analytics.gif) | ![Map Page](./readme/admin-map.gif)                |
+
 | User Login/Signup                         | User Stores Page                                   | User Map page                                       | Notification page                                |
 | --------------------------------------    | -------------------------------------------------- | --------------------------------------------------- | ----------------------------------               |
 | ![User Login/Signup](./readme/login.gif)  | ![User Stores Page](./readme/user-stores.gif)      | ![Products Page ](./readme/user-product.gif)        | ![ Notification page](./readme/notification.gif) |
+
 | Map page                                  | profile                                            |
 | ------------                              | ------------------                                 |
-| ![Map page](./readme/user-map.gif)        | ![Notification page](./readme/profile.png)         |
+| ![Map page](./readme/user-map.gif)        | <img src="./readme/profile.png" width=300 height=600>         |
 
 <br><br>
 <img src="./readme/title6.svg"/>
