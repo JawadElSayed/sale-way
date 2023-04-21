@@ -51,12 +51,12 @@
 <col span="1" style="width: 50%;">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Add/Edit Store</th>
+<tr>
+<th>Add/Edit Stores</th>
 <th>Admin Analytics</th>
 </tr>
 <tbody>
-<tr class="odd">
+<tr>
 <td><img src="./readme/Admin-Add%3AEdit-Stores.svg"/></td>
 <td><img src="./readme/Admin-Analytics.png"/></td>
 </tr>
