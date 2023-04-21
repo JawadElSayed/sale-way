@@ -47,11 +47,11 @@
 
 | Add/Edit Store                                          | Admin Analytics                                  |
 | ------------------------------------------------------- | ------------------------------------------------ |
-| ![Add/Edit Store](./readme/Admin-Add%3AEdit-Stores.svg) | ![Admin Analytics](./readme/Admin-Analytics.svg) |
+| ![Add/Edit Store](./readme/Admin-Add%3AEdit-Stores.svg) | ![Admin Analytics](./readme/Admin-Analytics.png) |
 
 | User Login                             | User Stores Page                                   | Single Product                                      | Map page                           |
 | -------------------------------------- | -------------------------------------------------- | --------------------------------------------------- | ---------------------------------- |
-| ![User Login](./readme/user-login.svg) | ![User Stores Page](./readme/user-stores-page.svg) | ![Single Product](./readme/user-single-product.svg) | ![Map page](./readme/user-map.svg) |
+| ![User Login](./readme/user-login.svg) | ![User Stores Page](./readme/user-stores-page.png) | ![Single Product](./readme/user-single-product.svg) | ![Map page](./readme/user-map.svg) |
 
 <br><br>
 
