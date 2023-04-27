@@ -134,7 +134,7 @@ const AdminAnalytics = () => {
 								title="Best Store"
 								name={branchData?.data.nameLastWeek.name}
 								value={
-									branchData?.data.lastWeek[0]._count.clicked
+									branchData?.data.lastWeek[0]?._count.clicked
 								}
 							/>
 							<StatisticsCard
@@ -142,7 +142,8 @@ const AdminAnalytics = () => {
 								title="Best Store"
 								name={branchData?.data.nameLastMonth.name}
 								value={
-									branchData?.data.lastMonth[0]._count.clicked
+									branchData?.data.lastMonth[0]?._count
+										.clicked
 								}
 							/>
 							<StatisticsCard
@@ -150,7 +151,7 @@ const AdminAnalytics = () => {
 								title="Best Store"
 								name={branchData?.data.nameLastYear.name}
 								value={
-									branchData?.data.lastYear[0]._count.clicked
+									branchData?.data.lastYear[0]?._count.clicked
 								}
 							/>
 						</div>
@@ -160,7 +161,7 @@ const AdminAnalytics = () => {
 								title="Best user"
 								name={usersData?.data.nameLastWeek.name}
 								value={
-									usersData?.data.lastWeek[0]._count.clicked
+									usersData?.data.lastWeek[0]?._count.clicked
 								}
 							/>
 							<StatisticsCard
@@ -168,7 +169,7 @@ const AdminAnalytics = () => {
 								title="Best user"
 								name={usersData?.data.nameLastMonth.name}
 								value={
-									usersData?.data.lastMonth[0]._count.clicked
+									usersData?.data.lastMonth[0]?._count.clicked
 								}
 							/>
 							<StatisticsCard
@@ -176,7 +177,7 @@ const AdminAnalytics = () => {
 								title="Best user"
 								name={usersData?.data.nameLastYear.name}
 								value={
-									usersData?.data.lastYear[0]._count.clicked
+									usersData?.data.lastYear[0]?._count.clicked
 								}
 							/>
 						</div>
