@@ -216,9 +216,14 @@ const getBestUser = async (req, res) => {
 			orderBy: { _count: { clicked: "desc" } },
 			take: 1,
 		});
-		const nameLastWeek = await prisma.users.findFirst({
-			where: { id: userLastWeek[0].user_id },
-		});
+
+		let nameLastWeek = "";
+		if (userLastWeek.length > 0) {
+			const nameLastWeek = await prisma.users.findFirst({
+				where: { id: userLastWeek[0].user_id },
+			});
+		}
+
 		// get best user lastMonth
 		const userLastMonth = await prisma.notifications.groupBy({
 			by: ["user_id"],
@@ -227,9 +232,14 @@ const getBestUser = async (req, res) => {
 			orderBy: { _count: { clicked: "desc" } },
 			take: 1,
 		});
-		const nameLastMonth = await prisma.users.findFirst({
-			where: { id: userLastMonth[0].user_id },
-		});
+
+		let nameLastMonth = "";
+		if (userLastMonth.length > 0) {
+			nameLastMonth = await prisma.users.findFirst({
+				where: { id: userLastMonth[0].user_id },
+			});
+		}
+
 		// get best user lastYear
 		const userLastYear = await prisma.notifications.groupBy({
 			by: ["user_id"],
@@ -238,9 +248,14 @@ const getBestUser = async (req, res) => {
 			orderBy: { _count: { clicked: "desc" } },
 			take: 1,
 		});
-		const nameLastYear = await prisma.users.findFirst({
-			where: { id: userLastYear[0].user_id },
-		});
+		
+		let nameLastYear = "";
+		if (userLastYear.length > 0) {
+			nameLastYear = await prisma.users.findFirst({
+				where: { id: userLastYear[0].user_id },
+			});
+		}
+		
 		res.status(200).json({
 			status: "success",
 			lastWeek: userLastWeek,
@@ -265,9 +280,14 @@ const getBestBranch = async (req, res) => {
 			orderBy: { _count: { clicked: "desc" } },
 			take: 1,
 		});
-		const nameLastWeek = await prisma.branches.findFirst({
-			where: { id: branchLastWeek[0].branch_id },
-		});
+
+		let nameLastWeek = "";
+		if (branchLastWeek.length > 0) {
+			nameLastWeek = await prisma.branches.findFirst({
+				where: { id: branchLastWeek[0].branch_id },
+			});
+		}
+		
 		// get best branch lastMonth
 		const branchLastMonth = await prisma.notifications.groupBy({
 			by: ["branch_id"],
@@ -276,9 +296,14 @@ const getBestBranch = async (req, res) => {
 			orderBy: { _count: { clicked: "desc" } },
 			take: 1,
 		});
-		const nameLastMonth = await prisma.branches.findFirst({
-			where: { id: branchLastMonth[0].branch_id },
-		});
+
+		let nameLastMonth = "";
+		if (branchLastMonth.length > 0) {
+			nameLastMonth = await prisma.branches.findFirst({
+				where: { id: branchLastMonth[0].branch_id },
+			});
+		}
+		
 		// get best branch lastYear
 		const branchLastYear = await prisma.notifications.groupBy({
 			by: ["branch_id"],
@@ -287,9 +312,14 @@ const getBestBranch = async (req, res) => {
 			orderBy: { _count: { clicked: "desc" } },
 			take: 1,
 		});
-		const nameLastYear = await prisma.branches.findFirst({
-			where: { id: branchLastYear[0].branch_id },
-		});
+
+		let nameLastYear = "";
+		if (branchLastYear.length > 0) {
+			nameLastYear = await prisma.branches.findFirst({
+				where: { id: branchLastYear[0].branch_id },
+			});
+		}
+		
 		res.status(200).json({
 			status: "success",
 			lastWeek: branchLastWeek,
