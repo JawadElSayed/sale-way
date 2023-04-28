@@ -54,7 +54,6 @@ const AdminStores = () => {
 		let filteringData = [];
 		tableData.map((branch) => {
 			let newData = null;
-			console.log(branch?.[3]);
 			if (branch?.[3] === storeType) {
 				newData = branch;
 				filteringData.push(newData);
