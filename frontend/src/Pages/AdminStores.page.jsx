@@ -7,12 +7,20 @@ import Table from "../components/Table";
 const AdminStores = () => {
 	const navigate = useNavigate();
 
-	const [storeType, setStoreType] = useState("");
+	const [storeType, setStoreType] = useState("Store Type");
 	const [filteredData, setFilteredData] = useState([]);
 
 	const filters = [
 		[
-			["Store Type", "clothe", "Mobiles", "Laptops", "shoes", "mackups"],
+			[
+				"Store Type",
+				"clothe",
+				"mobiles",
+				"laptops",
+				"shoes",
+				"mackups",
+				"perfumes",
+			],
 			storeType,
 			(e) => setStoreType(e.target.value),
 		],
@@ -47,8 +55,7 @@ const AdminStores = () => {
 		});
 		setTableData(dataArray);
 		setFilteredData(dataArray);
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isLoading]);
+	}, [data, isLoading]);
 
 	useEffect(() => {
 		let filteringData = [];
