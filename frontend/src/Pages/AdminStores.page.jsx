@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../layouts/header";
 import { useAllBranches, useDeleteBranch } from "../Hooks/useBranches";
@@ -8,10 +8,11 @@ const AdminStores = () => {
 	const navigate = useNavigate();
 
 	const [storeType, setStoreType] = useState("");
+	const [filteredData, setFilteredData] = useState([]);
 
 	const filters = [
 		[
-			["Store Type", "Clothes", "Mobiles", "Laptops", "shoes", "mackups"],
+			["Store Type", "clothe", "Mobiles", "Laptops", "shoes", "mackups"],
 			storeType,
 			(e) => setStoreType(e.target.value),
 		],
@@ -23,10 +24,13 @@ const AdminStores = () => {
 
 	const tableTitles = ["Image", "Branch Name", "Type", "Location", "Actions"];
 
-	const { isLoading, data, isError, error } = useAllBranches();
+	const { isLoading, data } = useAllBranches();
 	const { mutate: deleteMutate } = useDeleteBranch();
-	let tableData = [];
-	if (!isLoading) {
+
+	const [tableData, setTableData] = useState([]);
+
+	useEffect(() => {
+		let dataArray = [];
 		data?.data.branches.map((branch) => {
 			const newData = [
 				branch.id,
@@ -39,9 +43,30 @@ const AdminStores = () => {
 				],
 				branch.id,
 			];
-			return tableData.push(newData);
+			return dataArray.push(newData);
 		});
-	}
+		setTableData(dataArray);
+		setFilteredData(dataArray);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isLoading]);
+
+	useEffect(() => {
+		let filteringData = [];
+		tableData.map((branch) => {
+			let newData = null;
+			console.log(branch?.[3]);
+			if (branch?.[3] === storeType) {
+				newData = branch;
+				filteringData.push(newData);
+			} else if (storeType === "Store Type") {
+				newData = branch;
+				filteringData.push(newData);
+			}
+			return null;
+		});
+		setFilteredData(filteringData);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [storeType]);
 
 	const deleteBranch = (id) => {
 		deleteMutate(parseInt(id));
@@ -63,7 +88,7 @@ const AdminStores = () => {
 				{isLoading && <h2>Loading...</h2>}
 				<Table
 					titles={tableTitles}
-					data={tableData}
+					data={filteredData}
 					deleteClick={deleteBranch}
 					edit={EditStore}
 					imageClick={goToStore}
