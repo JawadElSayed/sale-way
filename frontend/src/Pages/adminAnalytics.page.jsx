@@ -11,11 +11,14 @@ import {
 } from "../Hooks/useNotifications";
 
 const AdminAnalytics = () => {
-	const filterList = ["Last Week", "Last Month", "Last Year"];
+	const timeFilterList = ["Last Week", "Last Month", "Last Year"];
+	const genderFilterList = ["Gender", "Male", "Female"];
 	const [timeFilter, setTimeFilter] = useState("Last Week");
+	const [genderFilter, setGenderFilter] = useState("Gender");
 	const [graphData, setgraphData] = useState();
 	const [newFilter, setNewFilter] = useState(false);
 	const [analyticsData, setAnalyticsData] = useState([]);
+	const [filteredData, setFilteredData] = useState([]);
 	const day = 86400000;
 
 	const { isLoading: notificationLoading, data: notificationData } =
@@ -54,7 +57,7 @@ const AdminAnalytics = () => {
 	const [labels, setLabels] = useState(weekList);
 
 	// this function is for filling the graph data according to the time filter
-	const fillGraphData = (fillingData = true) => {
+	const fillGraphData = () => {
 		let dataList = [];
 		let limit = 6;
 		if (timeFilter === "Last Month") limit = 29;
@@ -63,7 +66,7 @@ const AdminAnalytics = () => {
 		if (timeFilter === "Last Week" || timeFilter === "Last Month") {
 			for (let i = limit; i >= 0; i--) {
 				dataList[limit - i] = 0;
-				for (var data of analyticsData) {
+				for (var data of filteredData) {
 					if (
 						new Date(data.clicked_at).getDate() ===
 							new Date(today - day * i).getDate() &&
@@ -79,7 +82,7 @@ const AdminAnalytics = () => {
 		} else {
 			for (let i = limit; i >= 0; i--) {
 				dataList[limit - i] = 0;
-				for (var aData of analyticsData) {
+				for (var aData of filteredData) {
 					if (
 						new Date(aData.clicked_at).getMonth() ===
 							new Date(today - day * i * 30).getMonth() &&
@@ -94,10 +97,23 @@ const AdminAnalytics = () => {
 		setgraphData(dataList);
 	};
 
+	const filterDataByGender = () => {
+		if (genderFilter !== genderFilterList[0]) {
+			let filteringData = [];
+			for (var data of filteredData) {
+				if (data.users.gender === genderFilter) {
+					filteringData.push(data);
+				}
+			}
+			setFilteredData(filteringData);
+		}
+	};
+
 	// this useEffect is to fill the graph data or update it when the filters change
 	useEffect(() => {
 		if (!notificationLoading) {
 			setAnalyticsData(notificationData?.data.analytics);
+			setFilteredData(notificationData?.data.analytics);
 			setNewFilter(true);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -105,8 +121,10 @@ const AdminAnalytics = () => {
 
 	// this useEffect is to update the graph data when the filters change
 	useEffect(() => {
+		filterDataByGender();
 		fillGraphData();
 		setNewFilter(false);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [newFilter]);
 
 	// this useEffect is to update the graph labels when the timeFilter changes
@@ -115,9 +133,10 @@ const AdminAnalytics = () => {
 		if (timeFilter === "Last Month") setLabels(monthList);
 		if (timeFilter === "Last Year") setLabels(yearList);
 
+		setFilteredData(analyticsData);
 		setNewFilter(true);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [timeFilter]);
+	}, [timeFilter, genderFilter]);
 
 	return (
 		<>
@@ -201,8 +220,14 @@ const AdminAnalytics = () => {
 					<div className="flex justify-between items-center pt-10">
 						<h1>Statistics</h1>
 						<DropList
+							value={genderFilter}
+							options={genderFilterList}
+							onChange={(e) => setGenderFilter(e.target.value)}
+							className=" text-right"
+						/>
+						<DropList
 							value={timeFilter}
-							options={filterList}
+							options={timeFilterList}
 							onChange={(e) => setTimeFilter(e.target.value)}
 							className=" text-right"
 						/>
