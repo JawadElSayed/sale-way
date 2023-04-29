@@ -38,6 +38,7 @@ const AdminStores = () => {
 
 	const [tableData, setTableData] = useState([]);
 
+	// this useEffect is for getting data from the api
 	useEffect(() => {
 		let dataArray = [];
 		data?.data.branches.map((branch) => {
@@ -58,6 +59,7 @@ const AdminStores = () => {
 		setFilteredData(dataArray);
 	}, [data, isLoading]);
 
+	// this useEffect is for filtering by store type
 	useEffect(() => {
 		let filteringData = [];
 		tableData.map((branch) => {
@@ -75,6 +77,7 @@ const AdminStores = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [storeType]);
 
+	// this useEffect is for searching
 	useEffect(() => {
 		let filteringData = [];
 		tableData.map((branch) => {
