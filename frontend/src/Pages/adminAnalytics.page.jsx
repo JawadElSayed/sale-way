@@ -2,18 +2,21 @@ import LineGraph from "../components/LineGraph";
 import StatisticsCard from "../components/statisticCard";
 import Header from "../layouts/header";
 import DropList from "../components/DropList";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
 	useAllNotifications,
 	useNumberClicks,
 	useBestUsers,
 	useBestBranches,
 } from "../Hooks/useNotifications";
-import { useEffect } from "react";
 
 const AdminAnalytics = () => {
 	const filterList = ["Last Week", "Last Month", "Last Year"];
-	const [filter, setFilter] = useState("");
+	const [timeFilter, setTimeFilter] = useState("Last Week");
+	const [graphData, setgraphData] = useState();
+	const [newFilter, setNewFilter] = useState(false);
+	const [analyticsData, setAnalyticsData] = useState([]);
+	const day = 86400000;
 
 	const { isLoading: notificationLoading, data: notificationData } =
 		useAllNotifications();
@@ -21,87 +24,100 @@ const AdminAnalytics = () => {
 	const { isLoading: userLoading, data: usersData } = useBestUsers();
 	const { isLoading: branchLoading, data: branchData } = useBestBranches();
 
-	let date = new Date();
+	let today = new Date();
 
 	const weekList = [
-		`${date.getDate() - 6}`,
-		`${date.getDate() - 5}`,
-		`${date.getDate() - 4}`,
-		`${date.getDate() - 3}`,
-		`${date.getDate() - 2}`,
-		`${date.getDate() - 1}`,
-		`${date.getDate()}`,
+		`${today.getDate() - 6}`,
+		`${today.getDate() - 5}`,
+		`${today.getDate() - 4}`,
+		`${today.getDate() - 3}`,
+		`${today.getDate() - 2}`,
+		`${today.getDate() - 1}`,
+		`${today.getDate()}`,
 	];
 	let monthList = [];
 	for (let i = 29; i >= 0; i--) {
-		if (date.getDate() - i === 0) monthList.push(`30`);
-		else if (date.getDate() - i < 0)
-			monthList.push(`${date.getDate() - i + 30}`);
-		else monthList.push(`${date.getDate() - i}`);
+		if (today.getDate() - i === 0) monthList.push(`30`);
+		else if (today.getDate() - i < 0)
+			monthList.push(`${today.getDate() - i + 30}`);
+		else monthList.push(`${today.getDate() - i}`);
 	}
 
 	let yearList = [];
 	for (let i = 11; i >= 0; i--) {
-		if (date.getMonth() - i === 0) yearList.push(`12`);
-		else if (date.getMonth() - i < 0)
-			yearList.push(`${date.getMonth() - i + 12}`);
-		else yearList.push(`${date.getMonth() - i}`);
+		if (today.getMonth() - i === 0) yearList.push(`12`);
+		else if (today.getMonth() - i < 0)
+			yearList.push(`${today.getMonth() - i + 12}`);
+		else yearList.push(`${today.getMonth() - i}`);
 	}
 
-	let graphDataList = [];
-
-	useEffect(() => {
-		if (filter === "Last Week") setLabels(weekList);
-		if (filter === "Last Month") setLabels(monthList);
-		if (filter === "Last Year") setLabels(yearList);
-
-		setgraphData(graphDataList);
-	}, [filter]);
-
 	const [labels, setLabels] = useState(weekList);
-	const [graphData, setgraphData] = useState();
 
-	const analyticsData = notificationData?.data.analytics;
-	const day = 86400000;
-
-	const fillGraphData = () => {
+	// this function is for filling the graph data according to the time filter
+	const fillGraphData = (fillingData = true) => {
+		let dataList = [];
 		let limit = 6;
-		if (filter === "Last Month") limit = 29;
-		if (filter === "Last Year") limit = 11;
+		if (timeFilter === "Last Month") limit = 29;
+		if (timeFilter === "Last Year") limit = 11;
 
-		if (filter === "Last Week" || filter === "Last Month") {
+		if (timeFilter === "Last Week" || timeFilter === "Last Month") {
 			for (let i = limit; i >= 0; i--) {
-				graphDataList[limit - i] = 0;
+				dataList[limit - i] = 0;
 				for (var data of analyticsData) {
 					if (
 						new Date(data.clicked_at).getDate() ===
-							new Date(date - day * i).getDate() &&
+							new Date(today - day * i).getDate() &&
 						new Date(data.clicked_at).getMonth() ===
-							new Date(date - day * i).getMonth() &&
+							new Date(today - day * i).getMonth() &&
 						new Date(data.clicked_at).getFullYear() ===
-							new Date(date - day * i).getFullYear()
+							new Date(today - day * i).getFullYear()
 					) {
-						graphDataList[limit - i] += 1;
+						dataList[limit - i] += 1;
 					}
 				}
 			}
 		} else {
 			for (let i = limit; i >= 0; i--) {
-				graphDataList[limit - i] = 0;
-				for (var data of analyticsData) {
+				dataList[limit - i] = 0;
+				for (var aData of analyticsData) {
 					if (
-						new Date(data.clicked_at).getMonth() ===
-							new Date(date - day * i * 30).getMonth() &&
-						new Date(data.clicked_at).getFullYear() ===
-							new Date(date - day * i * 30).getFullYear()
+						new Date(aData.clicked_at).getMonth() ===
+							new Date(today - day * i * 30).getMonth() &&
+						new Date(aData.clicked_at).getFullYear() ===
+							new Date(today - day * i * 30).getFullYear()
 					) {
-						graphDataList[limit - i] += 1;
+						dataList[limit - i] += 1;
 					}
 				}
 			}
 		}
+		setgraphData(dataList);
 	};
-	if (!notificationLoading) fillGraphData();
+
+	// this useEffect is to fill the graph data or update it when the filters change
+	useEffect(() => {
+		if (!notificationLoading) {
+			setAnalyticsData(notificationData?.data.analytics);
+			setNewFilter(true);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [notificationLoading]);
+
+	// this useEffect is to update the graph data when the filters change
+	useEffect(() => {
+		fillGraphData();
+		setNewFilter(false);
+	}, [newFilter]);
+
+	// this useEffect is to update the graph labels when the timeFilter changes
+	useEffect(() => {
+		if (timeFilter === "Last Week") setLabels(weekList);
+		if (timeFilter === "Last Month") setLabels(monthList);
+		if (timeFilter === "Last Year") setLabels(yearList);
+
+		setNewFilter(true);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [timeFilter]);
 
 	return (
 		<>
@@ -185,9 +201,9 @@ const AdminAnalytics = () => {
 					<div className="flex justify-between items-center pt-10">
 						<h1>Statistics</h1>
 						<DropList
-							value={filter}
+							value={timeFilter}
 							options={filterList}
-							onChange={(e) => setFilter(e.target.value)}
+							onChange={(e) => setTimeFilter(e.target.value)}
 							className=" text-right"
 						/>
 					</div>
