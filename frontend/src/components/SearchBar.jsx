@@ -1,12 +1,11 @@
 import TextInput from "./TextInput";
 import { GoSearch } from "react-icons/go";
 
-const SearchBar = ({ value, onChange }) => {
+const SearchBar = ({ onChange }) => {
 	return (
 		<div className="relative flex items-center">
 			<GoSearch className="absolute left-2" size={20}></GoSearch>
 			<TextInput
-				value={value}
 				rounded="full"
 				shadow="black"
 				placeholder="Search"
