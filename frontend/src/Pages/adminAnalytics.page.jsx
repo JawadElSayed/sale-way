@@ -209,26 +209,34 @@ const AdminAnalytics = () => {
 							<StatisticsCard
 								color="red"
 								title="Best Store"
-								name={branchData?.data.nameLastWeek.name}
+								name={
+									branchData?.data.nameLastWeek.name || "---"
+								}
 								value={
-									branchData?.data.lastWeek[0]?._count.clicked
+									branchData?.data.lastWeek[0]?._count
+										.clicked || 0
 								}
 							/>
 							<StatisticsCard
 								color="green"
 								title="Best Store"
-								name={branchData?.data.nameLastMonth.name}
+								name={
+									branchData?.data.nameLastMonth.name || "---"
+								}
 								value={
 									branchData?.data.lastMonth[0]?._count
-										.clicked
+										.clicked || 0
 								}
 							/>
 							<StatisticsCard
 								color="blue"
 								title="Best Store"
-								name={branchData?.data.nameLastYear.name}
+								name={
+									branchData?.data.nameLastYear.name || "---"
+								}
 								value={
-									branchData?.data.lastYear[0]?._count.clicked
+									branchData?.data.lastYear[0]?._count
+										.clicked || 0
 								}
 							/>
 						</div>
@@ -236,25 +244,31 @@ const AdminAnalytics = () => {
 							<StatisticsCard
 								color="red"
 								title="Best user"
-								name={usersData?.data.nameLastWeek.name}
+								name={
+									usersData?.data.nameLastWeek.name || "---"
+								}
 								value={
-									usersData?.data.lastWeek[0]?._count.clicked
+									usersData?.data.lastWeek[0]?._count
+										.clicked || 0
 								}
 							/>
 							<StatisticsCard
 								color="green"
 								title="Best user"
-								name={usersData?.data.nameLastMonth.name}
+								name={
+									usersData?.data.nameLastMonth.name || "---"
+								}
 								value={
-									usersData?.data.lastMonth[0]?._count.clicked
+									usersData?.data.lastMonth[0]?._count
+										.clicked || 0
 								}
 							/>
 							<StatisticsCard
 								color="blue"
 								title="Best user"
-								name={usersData?.data.nameLastYear.name}
+								name={usersData?.data.nameLastYear.name || "---"}
 								value={
-									usersData?.data.lastYear[0]?._count.clicked
+									usersData?.data.lastYear[0]?._count.clicked || 0
 								}
 							/>
 						</div>

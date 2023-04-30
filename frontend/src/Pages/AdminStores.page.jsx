@@ -9,6 +9,7 @@ const AdminStores = () => {
 
 	const [storeType, setStoreType] = useState("Store Type");
 	const [filteredData, setFilteredData] = useState([]);
+	const [finalData, setFinalData] = useState([]);
 	const [search, setSearch] = useState("");
 
 	const filters = [
@@ -57,6 +58,7 @@ const AdminStores = () => {
 		});
 		setTableData(dataArray);
 		setFilteredData(dataArray);
+		setFinalData(dataArray);
 	}, [data, isLoading]);
 
 	// this useEffect is for filtering by store type
@@ -74,13 +76,15 @@ const AdminStores = () => {
 			return null;
 		});
 		setFilteredData(filteringData);
+		setFinalData(filteringData);
+		setSearch("");
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [storeType]);
 
 	// this useEffect is for searching
 	useEffect(() => {
 		let filteringData = [];
-		tableData.map((branch) => {
+		filteredData.map((branch) => {
 			let newData = null;
 			if (branch?.[2]?.toLowerCase().includes(search.toLowerCase())) {
 				newData = branch;
@@ -88,7 +92,7 @@ const AdminStores = () => {
 			}
 			return null;
 		});
-		setFilteredData(filteringData);
+		setFinalData(filteringData);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [search]);
 
@@ -107,13 +111,14 @@ const AdminStores = () => {
 				title="Stores"
 				filters={filters}
 				secondRowButtons={secondRowButtons}
+				value={search}
 				onChange={(e) => setSearch(e.target.value)}
 			/>
 			<div className="overflow-y-scroll hide-scroll-bar pt-2">
 				{isLoading && <h2>Loading...</h2>}
 				<Table
 					titles={tableTitles}
-					data={filteredData}
+					data={finalData}
 					deleteClick={deleteBranch}
 					edit={EditStore}
 					imageClick={goToStore}

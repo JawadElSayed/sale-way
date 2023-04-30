@@ -12,6 +12,7 @@ const Header = ({
 	showSearchBar = true,
 	image,
 	onChange,
+	value,
 }) => {
 	//
 
@@ -54,7 +55,7 @@ const Header = ({
 				<div className="pt-8 flex items-center">
 					{showSearchBar && (
 						<div className="flex-grow">
-							<SearchBar onChange={onChange}></SearchBar>
+							<SearchBar onChange={onChange} value={value}></SearchBar>
 						</div>
 					)}
 					<div>
