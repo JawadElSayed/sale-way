@@ -13,13 +13,26 @@ import {
 const AdminAnalytics = () => {
 	const timeFilterList = ["Last Week", "Last Month", "Last Year"];
 	const genderFilterList = ["Gender", "Male", "Female"];
+	const ageFilterList = [
+		"Age",
+		"18-",
+		"18-25",
+		"25-35",
+		"35-45",
+		"45-55",
+		"55-65",
+		"65+",
+	];
 	const [timeFilter, setTimeFilter] = useState("Last Week");
 	const [genderFilter, setGenderFilter] = useState("Gender");
+	const [ageFilter, setAgeFilter] = useState("Age");
 	const [graphData, setgraphData] = useState();
 	const [newFilter, setNewFilter] = useState(false);
+	const [callAgeFilter, setCallAgeFilter] = useState(false);
 	const [analyticsData, setAnalyticsData] = useState([]);
 	const [filteredData, setFilteredData] = useState([]);
 	const day = 86400000;
+	const year = 31556952000;
 
 	const { isLoading: notificationLoading, data: notificationData } =
 		useAllNotifications();
@@ -97,12 +110,33 @@ const AdminAnalytics = () => {
 		setgraphData(dataList);
 	};
 
+	// this function is to filter the data according to Gender
 	const filterDataByGender = () => {
 		if (genderFilter !== genderFilterList[0]) {
 			let filteringData = [];
 			for (var data of filteredData) {
 				if (data.users.gender === genderFilter) {
 					filteringData.push(data);
+				}
+			}
+			setFilteredData(filteringData);
+		}
+	};
+
+	// this function is to filter the data according to Age
+	const filterDataByAge = () => {
+		if (ageFilter !== ageFilterList[0]) {
+			let filteringData = [];
+			for (var data of filteredData) {
+				const age = (today - Date.parse(data.users.DOB)) / year;
+				if (ageFilter === ageFilterList[1]) {
+					if (age <= 18) filteringData.push(data);
+				} else if (ageFilter === ageFilterList[7]) {
+					if (age > 65) filteringData.push(data);
+				} else {
+					let filteredAge = ageFilter.split("-");
+					if (age > filteredAge[0] && age <= filteredAge[1])
+						filteringData.push(data);
 				}
 			}
 			setFilteredData(filteringData);
@@ -119,13 +153,21 @@ const AdminAnalytics = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [notificationLoading]);
 
-	// this useEffect is to update the graph data when the filters change
+	// these useEffects is to update the graph data when the filters change
+	// ordered by gender, age, timeFilter
 	useEffect(() => {
 		filterDataByGender();
-		fillGraphData();
+		setCallAgeFilter(true);
 		setNewFilter(false);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [newFilter]);
+
+	useEffect(() => {
+		filterDataByAge();
+		fillGraphData();
+		setCallAgeFilter(false);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [callAgeFilter]);
 
 	// this useEffect is to update the graph labels when the timeFilter changes
 	useEffect(() => {
@@ -136,7 +178,7 @@ const AdminAnalytics = () => {
 		setFilteredData(analyticsData);
 		setNewFilter(true);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [timeFilter, genderFilter]);
+	}, [timeFilter, genderFilter, ageFilter]);
 
 	return (
 		<>
@@ -219,6 +261,12 @@ const AdminAnalytics = () => {
 					</div>
 					<div className="flex justify-between items-center pt-10">
 						<h1>Statistics</h1>
+						<DropList
+							value={ageFilter}
+							options={ageFilterList}
+							onChange={(e) => setAgeFilter(e.target.value)}
+							className=" text-right"
+						/>
 						<DropList
 							value={genderFilter}
 							options={genderFilterList}
