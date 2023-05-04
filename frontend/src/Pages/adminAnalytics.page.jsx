@@ -1,5 +1,5 @@
 import LineGraph from "../components/LineGraph";
-import StatisticsCard from "../components/statisticCard";
+import CardRow from "../components/CardRow";
 import Header from "../layouts/header";
 import DropList from "../components/DropList";
 import { useState, useEffect } from "react";
@@ -31,6 +31,8 @@ const AdminAnalytics = () => {
 	const [callAgeFilter, setCallAgeFilter] = useState(false);
 	const [analyticsData, setAnalyticsData] = useState([]);
 	const [filteredData, setFilteredData] = useState([]);
+	const [dataNumbers, setDataNumbers] = useState([]);
+	const [dataNames, setDataNames] = useState([]);
 	const day = 86400000;
 	const year = 31556952000;
 
@@ -143,11 +145,56 @@ const AdminAnalytics = () => {
 		}
 	};
 
+	const fillDataNumbers = () => {
+		let numberData = [];
+		let namesData = [];
+		let Numbers = [];
+		let names = [];
+
+		Numbers = [
+			clicksData?.data.lastWeek,
+			clicksData?.data.lastMonth,
+			clicksData?.data.lastYear,
+		];
+		numberData[0] = Numbers;
+		namesData[0] = [];
+
+		Numbers = [
+			branchData?.data.lastWeek[0]?._count.clicked,
+			branchData?.data.lastMonth[0]?._count.clicked,
+			branchData?.data.lastYear[0]?._count.clicked,
+		];
+		names = [
+			branchData?.data.nameLastWeek.name,
+			branchData?.data.nameLastMonth.name,
+			branchData?.data.nameLastYear.name,
+		];
+		numberData[1] = Numbers;
+		namesData[1] = names;
+
+		Numbers = [
+			usersData?.data.lastWeek[0]?._count.clicked,
+			usersData?.data.lastMonth[0]?._count.clicked,
+			usersData?.data.lastYear[0]?._count.clicked,
+		];
+		names = [
+			usersData?.data.nameLastWeek.name,
+			usersData?.data.nameLastMonth.name,
+			usersData?.data.nameLastYear.name,
+		];
+		numberData[2] = Numbers;
+		namesData[2] = names;
+
+		setDataNumbers(numberData);
+		setDataNames(namesData);
+	};
+
 	// this useEffect is to fill the graph data or update it when the filters change
 	useEffect(() => {
 		if (!notificationLoading) {
 			setAnalyticsData(notificationData?.data.analytics);
 			setFilteredData(notificationData?.data.analytics);
+			fillDataNumbers();
 			setNewFilter(true);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -188,90 +235,21 @@ const AdminAnalytics = () => {
 			) : (
 				<div className="pt-8">
 					<div className="flex flex-col gap-4">
-						<div className="flex gap-8">
-							<StatisticsCard
-								color="red"
-								title="Number of clicks"
-								value={clicksData.data.lastWeek}
-							/>
-							<StatisticsCard
-								color="green"
-								title="Number of clicks"
-								value={clicksData.data.lastMonth}
-							/>
-							<StatisticsCard
-								color="blue"
-								title="Number of clicks"
-								value={clicksData.data.lastYear}
-							/>
-						</div>
-						<div className="flex gap-8">
-							<StatisticsCard
-								color="red"
-								title="Best Store"
-								name={
-									branchData?.data.nameLastWeek.name || "---"
-								}
-								value={
-									branchData?.data.lastWeek[0]?._count
-										.clicked || 0
-								}
-							/>
-							<StatisticsCard
-								color="green"
-								title="Best Store"
-								name={
-									branchData?.data.nameLastMonth.name || "---"
-								}
-								value={
-									branchData?.data.lastMonth[0]?._count
-										.clicked || 0
-								}
-							/>
-							<StatisticsCard
-								color="blue"
-								title="Best Store"
-								name={
-									branchData?.data.nameLastYear.name || "---"
-								}
-								value={
-									branchData?.data.lastYear[0]?._count
-										.clicked || 0
-								}
-							/>
-						</div>
-						<div className="flex gap-8">
-							<StatisticsCard
-								color="red"
-								title="Best user"
-								name={
-									usersData?.data.nameLastWeek.name || "---"
-								}
-								value={
-									usersData?.data.lastWeek[0]?._count
-										.clicked || 0
-								}
-							/>
-							<StatisticsCard
-								color="green"
-								title="Best user"
-								name={
-									usersData?.data.nameLastMonth.name || "---"
-								}
-								value={
-									usersData?.data.lastMonth[0]?._count
-										.clicked || 0
-								}
-							/>
-							<StatisticsCard
-								color="blue"
-								title="Best user"
-								name={usersData?.data.nameLastYear.name || "---"}
-								value={
-									usersData?.data.lastYear[0]?._count.clicked || 0
-								}
-							/>
-						</div>
+						<CardRow
+							title="Number of clicks"
+							names={dataNames[0]}
+							data={dataNumbers[0]}
+						></CardRow>
+						<CardRow
+							title="Best Store"
+							names={dataNames[1]}
+							data={dataNumbers[1]}
+						></CardRow>
+						<CardRow
+							title="Best user"
+							names={dataNames[2]}
+							data={dataNumbers[2]}
+						></CardRow>
 					</div>
 					<div className="flex justify-between items-center pt-10">
 						<h1>Statistics</h1>
